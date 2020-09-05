@@ -22,7 +22,7 @@ def FirstAlgorithm(file_loc, clean):
   
   
   # Training and Testing for 5 x 2 Cross Validation
-  len(data)
+  len_data = len(data)
   for i in range(0,4):
     shuffle = rawdata
   
