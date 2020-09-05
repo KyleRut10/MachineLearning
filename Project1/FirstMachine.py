@@ -12,7 +12,7 @@ def FirstAlgorithm(file_loc, clean):
   # Data Cleaning Station
   if clean == 1:
     # Remove rows with ?s
-    data = Remove?(rawdata)
+    data = RemoveQ(rawdata)
   elif clean == 2:
     # Replace ? with most probable answer for that class
     data =
@@ -44,4 +44,4 @@ def ReplaceAvg(raw):
   return data
   
 breastdatastr = 'C:\\Users\\Kyle\\MachineLearning\\Project1\\Data\\breast-cancer-wisconsin.csv'
-FirstAlgorithm(breastdatastr, 11, 1)
+FirstAlgorithm(breastdatastr, 1)
