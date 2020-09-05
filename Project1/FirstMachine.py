@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import os
 import random
 
 def FirstAlgorithm(file_loc, clean):
@@ -15,7 +16,7 @@ def FirstAlgorithm(file_loc, clean):
     data = RemoveQ(rawdata)
   elif clean == 2:
     # Replace ? with most probable answer for that class
-    data =
+    data = rawdata
   else:
     data = rawdata
   
@@ -43,5 +44,9 @@ def ReplaceAvg(raw):
   # output - data: Cleaned output data
   return data
   
+<<<<<<< HEAD
 breastdatastr = 'C:\\Users\\Kyle\\MachineLearning\\Project1\\Data\\breast-cancer-wisconsin.csv'
+=======
+breastdatastr = os.path.join('Data', 'breast-cancer-wisconsin.csv')
+>>>>>>> 5e4eacf32c1b894f5fefb712083438adee3c43c4
 FirstAlgorithm(breastdatastr, 1)
