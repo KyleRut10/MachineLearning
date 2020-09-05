@@ -1,27 +1,30 @@
 import numpy as np
 import pandas as pd
 import os
+import random
 
-def FirstAlgorithm(file_loc, classrow, clean):
+def FirstAlgorithm(file_loc, clean):
   #
   
   
   # Reading in the file
-  f = open(file_loc, "r")
-  rawdata = f.read()
+  rawdata = pd.read_csv(file_loc)
   
   # Data Cleaning Station
   if clean == 1:
-    data = rawdata
     # Remove rows with ?s
+    data = RemoveQ(rawdata)
   elif clean == 2:
     # Replace ? with most probable answer for that class
     data = rawdata
   else:
     data = rawdata
-    
+  
+  
   # Training and Testing for 5 x 2 Cross Validation
-  #for 
+  len(data)
+  for i in range(0,4):
+    shuffle = rawdata
   
     
 
@@ -29,6 +32,8 @@ def RemoveQ(raw):
   # A function which removes ? values
   # input - raw: Raw data to clean
   # output - data: Cleaned output data
+  raw = raw.replace(["?"],"NA")
+  data = raw.dropna()
   return data
   
 def ReplaceAvg(raw):
@@ -40,4 +45,4 @@ def ReplaceAvg(raw):
   return data
   
 breastdatastr = os.path.join('Data', 'breast-cancer-wisconsin.csv')
-FirstAlgorithm(breastdatastr, 11, 1)
+FirstAlgorithm(breastdatastr, 1)
