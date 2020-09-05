@@ -1,13 +1,13 @@
 import numpy as np
 import pandas as pd
+import random
 
-def FirstAlgorithm(file_loc, classrow, clean):
+def FirstAlgorithm(file_loc, clean):
   #
   
   
   # Reading in the file
-  f = open(file_loc, "r")
-  rawdata = f.read()
+  rawdata = pd.read_csv(file_loc)
   
   # Data Cleaning Station
   if clean == 1:
@@ -18,9 +18,12 @@ def FirstAlgorithm(file_loc, classrow, clean):
     data =
   else:
     data = rawdata
-    
+  
+  
   # Training and Testing for 5 x 2 Cross Validation
-  for 
+  len(data)
+  for i in range(0,4):
+    shuffle = rawdata
   
     
 
@@ -38,5 +41,5 @@ def ReplaceAvg(raw):
   # output - data: Cleaned output data
   return data
   
-breastdatastr = 'C:\\Users\\Kyle\\MachineLearning\\Project 1\\Data\\breast-cancer-wisconsin.data'
+breastdatastr = 'C:\\Users\\Kyle\\MachineLearning\\Project1\\Data\\breast-cancer-wisconsin.csv'
 FirstAlgorithm(breastdatastr, 11, 1)
