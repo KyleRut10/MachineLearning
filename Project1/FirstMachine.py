@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import os
 
 def FirstAlgorithm(file_loc, classrow, clean):
   #
@@ -11,20 +12,20 @@ def FirstAlgorithm(file_loc, classrow, clean):
   
   # Data Cleaning Station
   if clean == 1:
-    data =
+    data = rawdata
     # Remove rows with ?s
   elif clean == 2:
     # Replace ? with most probable answer for that class
-    data =
+    data = rawdata
   else:
     data = rawdata
     
   # Training and Testing for 5 x 2 Cross Validation
-  for 
+  #for 
   
     
 
-def Remove?(raw):
+def RemoveQ(raw):
   # A function which removes ? values
   # input - raw: Raw data to clean
   # output - data: Cleaned output data
@@ -38,5 +39,5 @@ def ReplaceAvg(raw):
   # output - data: Cleaned output data
   return data
   
-breastdatastr = 'C:\\Users\\Kyle\\MachineLearning\\Project 1\\Data\\breast-cancer-wisconsin.data'
+breastdatastr = os.path.join('Data', 'breast-cancer-wisconsin.csv')
 FirstAlgorithm(breastdatastr, 11, 1)
