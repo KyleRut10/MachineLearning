@@ -11,8 +11,8 @@ def FirstAlgorithm(file_loc, clean):
   
   # Data Cleaning Station
   if clean == 1:
-    data =
     # Remove rows with ?s
+    data = Remove?(rawdata)
   elif clean == 2:
     # Replace ? with most probable answer for that class
     data =
@@ -27,10 +27,12 @@ def FirstAlgorithm(file_loc, clean):
   
     
 
-def Remove?(raw):
+def RemoveQ(raw):
   # A function which removes ? values
   # input - raw: Raw data to clean
   # output - data: Cleaned output data
+  raw = raw.replace(["?"],"NA")
+  data = raw.dropna()
   return data
   
 def ReplaceAvg(raw):
