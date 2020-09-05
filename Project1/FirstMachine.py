@@ -8,7 +8,7 @@ def FirstAlgorithm(file_loc, clean):
   
   
   # Reading in the file
-  rawdata = pd.read_csv(file_loc)
+  rawdata = pd.read_csv(file_loc, header=None)
   
   # Data Cleaning Station
   if clean == 1:
@@ -24,8 +24,7 @@ def FirstAlgorithm(file_loc, clean):
   # Training and Testing for 5 x 2 Cross Validation
   len_data = len(data)
   for i in range(0,4):
-    shuffle = rawdata
-  
+    pass
     
 
 def RemoveQ(raw):
