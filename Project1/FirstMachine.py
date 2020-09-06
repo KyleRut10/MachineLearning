@@ -6,12 +6,12 @@ def FirstAlgorithm(rawdata, clean = 0):
   # A function to implement a basic machine learning algorithm
   #
   # Inputs -
-  #     rawdata: A pandas dataframe where the first column
-  #              contains the class and the following ones
-  #              contain the attributes
-  #     clean: A value specifying which of the cleaning
-  #            functions should be used. Defaults to
-  #            removing rows with na values
+  #   rawdata: A pandas dataframe where the first column
+  #            contains the class and the following ones
+  #            contain the attributes
+  #   clean: A value specifying which of the cleaning
+  #          functions should be used. Defaults to
+  #          removing rows with na values
   
   # Data Cleaning Station
   if clean == 1:
@@ -44,10 +44,36 @@ def FirstAlgorithm(rawdata, clean = 0):
     right = shuffle[split:]
     
     # Training on the Left and Testing on the Right
-    results[2i] = test(right, train(left))
+    results[2i] = test(right, train(left, classes))
     
     # Training on the Right and Testing on the Left
-    results[2i + 1] = test(left, train(right))
+    results[2i + 1] = test(left, train(right), Q_C)
+
+def train(data, classes):
+  # The training function for this algorithm
+  #
+  # Inputs - 
+  #   data: The training data for this algorithm
+  #   classes: The list of classes in the dataset
+  # Output - matrix: Returns the functions F which specify
+  #          the number of examples that match an attribute
+  #          value (plus one) divided by the number of examples
+  #          in the class (plus the total number of attributes)
+  #          for each class in the training data
+  
+  matrix = np.zeros((len(classes),data.shape[1] - 1))
+  
+  return matrix
+
+def test(data, matrix, Q_C)
+  # The testing function for this algorithm
+  #
+  # Inputs - 
+  #   data: The testing data for this algorithm
+  #   matrix: The values used to predict a class given a
+  #           set of attributes
+  #   Q_C: The array of Q(C = ci) values to multiply
+  # Output - result: The confusion matrix of the classification
 
 
 
