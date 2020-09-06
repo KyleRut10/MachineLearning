@@ -27,17 +27,11 @@ def FirstAlgorithm(rawdata, clean = 0):
   # Precalculated Values for Efficiency
   len_data = len(data)
   split = round(len_data/2)
-  classify = data.shape[1] - 1
-  
-  if file_loc == os.path.join('Data', 'house-votes-84.csv'):
-    classes = data[0].unique().tolist()
-  else:
-    classes = data[classify].unique().tolist()
+  classes = data[0].unique().tolist()
   
   Q_C = {}
   for i in classes:
-    print(i)
-    Q_C[i] = sum(data[classify] == i)/len_data
+    Q_C[i] = sum(data[0] == i)/len_data
   
   # Loops 5 times for performing 5 x 2 Cross Validation
   for i in range(0,4):
@@ -49,6 +43,19 @@ def FirstAlgorithm(rawdata, clean = 0):
 
 
 # Function execution
+# The datasets have been modified to have the class column first followed
+# only by the attribute columns. (Index columns have been removed)
+
 # Breast Cancer
 breastdatastr = os.path.join('Data', 'breast-cancer-wisconsin.csv')
 FirstAlgorithm(breastdatastr, 1)
+
+# Glass
+
+# House Votes
+
+# Iris
+
+# Soybean Small
+
+
