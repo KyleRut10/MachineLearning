@@ -78,8 +78,21 @@ FirstAlgorithm(df, 1)
 
 # Iris
 iris_path = os.path.join('Data', 'iris.csv')
+df = pd.read_csv(iris_path)
+# put class first
+df = df.reindex(columns=['class', '1', '2', '3,', '4'])
+# put columns back to integers
+df.columns = range(df.shape[1])
+FirstAlgorithm(df, 1)
+
 
 # Soybean Small
 soybean_path = os.path.join('Data', 'soybean-small.csv')
-
+df = pd.read_csv(soybean_path)
+df = df.reindex(columns=['class', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
+                         'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+                         'w', 'x', 'y', 'z'])
+df.columns = range(df.shape[1])
+FirstAlgorithm(df, 1)
 
