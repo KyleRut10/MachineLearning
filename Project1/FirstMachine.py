@@ -3,8 +3,13 @@ import pandas as pd
 import os
 import random
 
-def FirstAlgorithm(file_loc, clean):
+def FirstAlgorithm(file_loc, clean = 0):
+  # A function to implement a basic machine learning algorithm
   #
+  # Inputs -
+  #     file_loc: The relative location of the csv file
+  #     clean: A value specifying which of the cleaning
+  #            functions should be used
   
   
   # Reading in the file
@@ -38,5 +43,7 @@ def RemoveQ(raw):
   data = raw.dropna()
   return data
 
+
+#Function execution
 breastdatastr = os.path.join('Data', 'breast-cancer-wisconsin.csv')
 FirstAlgorithm(breastdatastr, 1)
