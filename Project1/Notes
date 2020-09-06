@@ -3,3 +3,10 @@ The glass dataset has no unkown values. [Method 0]
 For house.votes.84 the question marks should be replaced with the character 'a'. [Method 2]
 The iris dataset has no unkown values. [Method 0]
 For soybean.small no unkown values exist. [Method 0]
+
+Organizing Data
+breast.cancer.wisconsin needs index removed and class moved to first column
+glass needs index removed, class moved to first column, and values discretized
+house.votes.84 needs no work
+iris needs class moved to first column and values discretized
+soybean.small needs class moved to first column

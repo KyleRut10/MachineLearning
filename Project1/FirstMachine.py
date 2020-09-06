@@ -30,17 +30,13 @@ def FirstAlgorithm(file_loc, clean = 0):
   # Precalculated Values for Efficiency
   len_data = len(data)
   split = round(len_data/2)
-  classify = data.shape[1] - 1
   
-  if file_loc == os.path.join('Data', 'house-votes-84.csv'):
-    classes = data[0].unique().tolist()
-  else:
-    classes = data[classify].unique().tolist()
+  classes = data[0].unique().tolist()
+  classes = data[class_col].unique().tolist()
   
   Q_C = {}
   for i in classes:
-    print(i)
-    Q_C[i] = sum(data[classify] == i)/len_data
+    Q_C[i] = sum(data[class_col] == i)/len_data
   
   # Loops 5 times for performing 5 x 2 Cross Validation
   for i in range(0,4):
@@ -55,3 +51,4 @@ def FirstAlgorithm(file_loc, clean = 0):
 # Breast Cancer
 breastdatastr = os.path.join('Data', 'breast-cancer-wisconsin.csv')
 FirstAlgorithm(breastdatastr, 1)
+
