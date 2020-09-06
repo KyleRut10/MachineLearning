@@ -28,8 +28,15 @@ def FirstAlgorithm(file_loc, clean = 0):
   
   # Training and Testing Area
   # Precalculated Values for Efficiency
-  split = round(len(data)/2)
+  len_data = len(data)
+  split = round(len_data/2)
+  if file_loc
   classes = data[data.shape[1] - 1].unique().tolist()
+  
+  Q_C = {}
+  for i in classes:
+    print(i)
+    Q_C[i] = sum(data[data.shape[1]-1] == i)/len_data
   
   # Loops 5 times for performing 5 x 2 Cross Validation
   for i in range(0,4):
@@ -46,6 +53,7 @@ def FirstAlgorithm(file_loc, clean = 0):
   
 
 
-#Function execution
+# Function execution
+# Breast Cancer
 breastdatastr = os.path.join('Data', 'breast-cancer-wisconsin.csv')
 FirstAlgorithm(breastdatastr, 1)
