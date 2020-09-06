@@ -12,7 +12,7 @@ def FirstAlgorithm(file_loc, clean = 0):
   
   
   # Reading in the file
-  rawdata = pd.read_csv(file_loc)
+  rawdata = pd.read_csv(file_loc, header = None)
   
   # Data Cleaning Station
   if clean == 1:
@@ -25,10 +25,22 @@ def FirstAlgorithm(file_loc, clean = 0):
     # exist for the dataset in question
     data = rawdata.replace(["?"],'a')
   
-  # Training and Testing for 5 x 2 Cross Validation
-  len_data = len(data)
+  
+  # Training and Testing Area
+  # Precalculated Values for Efficiency
+  split = round(len(data)/2)
+  classes = data[data.shape[1] - 1].unique().tolist()
+  
+  # Loops 5 times for performing 5 x 2 Cross Validation
   for i in range(0,4):
     shuffle = data.sample(frac = 1)
+    left = shuffle[:split]
+    right = shuffle[split:]
+    
+    # Training on the Left and Testing on the Right
+    
+    
+    # Training on the Right and Testing on the Left
 
   
   
