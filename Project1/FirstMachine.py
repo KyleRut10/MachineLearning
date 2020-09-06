@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 
-def FirstAlgorithm(file_loc, clean = 0):
+def FirstAlgorithm(rawdata, clean = 0):
   # A function to implement a basic machine learning algorithm
   #
   # Inputs -
@@ -10,10 +10,7 @@ def FirstAlgorithm(file_loc, clean = 0):
   #     clean: A value specifying which of the cleaning
   #            functions should be used
   
-  
-  # Reading in the file
-  rawdata = pd.read_csv(file_loc, header=None)
-  
+
   # Data Cleaning Station
   if clean == 1:
     # Remove rows with ?s
