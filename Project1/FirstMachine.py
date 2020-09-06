@@ -24,9 +24,8 @@ def FirstAlgorithm(file_loc, clean):
   # Training and Testing for 5 x 2 Cross Validation
   len_data = len(data)
   for i in range(0,4):
-    print(data[0:10])
+    # Reshuffle the dataset for 5x2 cross validation
     df = data.reindex(np.random.permutation(data.index))
-    print(df[0:10])
     
 
 def RemoveQ(raw):
