@@ -12,7 +12,7 @@ def FirstAlgorithm(file_loc, clean = 0):
   
   
   # Reading in the file
-  rawdata = pd.read_csv(file_loc, header = None)
+  rawdata = pd.read_csv(file_loc, header=None)
   
   # Data Cleaning Station
   if clean == 1:
@@ -49,12 +49,6 @@ def FirstAlgorithm(file_loc, clean = 0):
     right = shuffle[split:]
     
     # Training on the Left and Testing on the Right
-    
-    
-    # Training on the Right and Testing on the Left
-
-  
-  
 
 
 # Function execution
