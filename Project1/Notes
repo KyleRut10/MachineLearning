@@ -1,2 +1,5 @@
-For breast.cancer.wisconsin rows with na's were removed
-
+For breast.cancer.wisconsin rows with question marks (?) should be removed. [Method 1]
+The glass dataset has no unkown values. [Method 0]
+For house.votes.84 the question marks should be replaced with the character 'a'. [Method 2]
+The iris dataset has no unkown values. [Method 0]
+For soybean.small no unkown values exist. [Method 0]
