@@ -48,7 +48,13 @@ def FirstAlgorithm(rawdata, clean = 0):
 
 # Breast Cancer
 breastdatastr = os.path.join('Data', 'breast-cancer-wisconsin.csv')
-FirstAlgorithm(breastdatastr, 1)
+brest_df = pd.read_csv(breastdatastr)
+# drop index column
+brest_df = brest_df.drop(columns=['index'])
+# put class first
+brest_df = brest_df.reindex(columns=['class', '1', '2', '3,', '4', '5', '6', 
+                            '7', '8', '9'])
+FirstAlgorithm(brest_df, 1)
 
 # Glass
 
