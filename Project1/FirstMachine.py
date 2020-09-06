@@ -80,25 +80,21 @@ def test(data, matrix, Q_C)
 # The datasets have been modified to have the class column first followed
 # only by the attribute columns. (Index columns have been removed)
 
-## Respository Datasets
+### Respository Datasets
 
-# Breast Cancer
+## Breast Cancer
 breastdatastr = os.path.join('Data', 'breast-cancer-wisconsin.csv')
-<<<<<<< HEAD
-brest_df = pd.read_csv(breastdatastr)
+df = pd.read_csv(breastdatastr)
 # drop index column
-brest_df = brest_df.drop(columns=['index'])
+df = df.drop(columns=['index'])
 # put class first
-brest_df = brest_df.reindex(columns=['class', '1', '2', '3,', '4', '5', '6', 
+df = df.reindex(columns=['class', '1', '2', '3,', '4', '5', '6', 
                             '7', '8', '9'])
 # put columns back to integers
-brest_df.columns = range(brest_df.shape[1])
-FirstAlgorithm(brest_df, 1)
-=======
-FirstAlgorithm(breastdatastr)
->>>>>>> c4250f6fa64b62427f6569b80458411703332c85
+df.columns = range(df.shape[1])
+FirstAlgorithm(df, 1)
 
-# Glass
+## Glass
 glass_path = os.path.join('Data', 'glass.csv')
 df = pd.read_csv(glass_path)
 df = df.drop(columns=['index'])
@@ -110,13 +106,13 @@ df.columns = range(df.shape[1])
 FirstAlgorithm(df, 1)
 
 
-# House Votes
+## House Votes
 house_path = os.path.join('Data', 'house-votes-84.csv')
 df = pd.read_csv(house_path, header=None)
 FirstAlgorithm(df, 1)
 
 
-# Iris
+## Iris
 iris_path = os.path.join('Data', 'iris.csv')
 df = pd.read_csv(iris_path)
 # put class first
@@ -126,7 +122,7 @@ df.columns = range(df.shape[1])
 FirstAlgorithm(df, 1)
 
 
-# Soybean Small
+## Soybean Small
 soybean_path = os.path.join('Data', 'soybean-small.csv')
 df = pd.read_csv(soybean_path)
 df = df.reindex(columns=['class', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -135,3 +131,5 @@ df = df.reindex(columns=['class', '1', '2', '3', '4', '5', '6', '7', '8', '9',
                          'w', 'x', 'y', 'z'])
 df.columns = range(df.shape[1])
 FirstAlgorithm(df, 1)
+
+### Noisy Datasets
