@@ -84,24 +84,54 @@ def test(data, matrix, Q_C)
 
 # Breast Cancer
 breastdatastr = os.path.join('Data', 'breast-cancer-wisconsin.csv')
+<<<<<<< HEAD
+brest_df = pd.read_csv(breastdatastr)
+# drop index column
+brest_df = brest_df.drop(columns=['index'])
+# put class first
+brest_df = brest_df.reindex(columns=['class', '1', '2', '3,', '4', '5', '6', 
+                            '7', '8', '9'])
+# put columns back to integers
+brest_df.columns = range(brest_df.shape[1])
+FirstAlgorithm(brest_df, 1)
+=======
 FirstAlgorithm(breastdatastr)
+>>>>>>> c4250f6fa64b62427f6569b80458411703332c85
 
 # Glass
+glass_path = os.path.join('Data', 'glass.csv')
+df = pd.read_csv(glass_path)
+df = df.drop(columns=['index'])
+# put class first
+df = df.reindex(columns=['class', '1', '2', '3,', '4', '5', '6', 
+                         '7', '8', '9'])
+# put columns back to integers
+df.columns = range(df.shape[1])
+FirstAlgorithm(df, 1)
+
 
 # House Votes
+house_path = os.path.join('Data', 'house-votes-84.csv')
+df = pd.read_csv(house_path, header=None)
+FirstAlgorithm(df, 1)
+
 
 # Iris
+iris_path = os.path.join('Data', 'iris.csv')
+df = pd.read_csv(iris_path)
+# put class first
+df = df.reindex(columns=['class', '1', '2', '3,', '4'])
+# put columns back to integers
+df.columns = range(df.shape[1])
+FirstAlgorithm(df, 1)
+
 
 # Soybean Small
-
-## Noisy Datasets (Pulls from pandas datasets above and adds noise to them)
-
-# Breast Cancer
-
-# Glass
-
-# House Votes
-
-# Iris
-
-# Soybean Small
+soybean_path = os.path.join('Data', 'soybean-small.csv')
+df = pd.read_csv(soybean_path)
+df = df.reindex(columns=['class', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
+                         'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+                         'w', 'x', 'y', 'z'])
+df.columns = range(df.shape[1])
+FirstAlgorithm(df, 1)
