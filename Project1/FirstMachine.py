@@ -72,6 +72,9 @@ FirstAlgorithm(df, 1)
 
 # House Votes
 house_path = os.path.join('Data', 'house-votes-84.csv')
+df = pd.read_csv(house_path, header=None)
+FirstAlgorithm(df, 1)
+
 
 # Iris
 iris_path = os.path.join('Data', 'iris.csv')
