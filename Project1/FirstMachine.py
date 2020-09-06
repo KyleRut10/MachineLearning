@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import os
-import random
 
 def FirstAlgorithm(file_loc, clean = 0):
   # A function to implement a basic machine learning algorithm
@@ -18,20 +17,18 @@ def FirstAlgorithm(file_loc, clean = 0):
   # Data Cleaning Station
   if clean == 1:
     # Remove rows with ?s
-    raw = rawdata.replace(["?"],"NA")
-    data = raw.dropna()
+    raw = rawdata.replace(["?"],np.nan)
+    data = raw.dropna(axis=0,how='any')
   else:
     # Leave the ? as it's own answer (a for simplicity)
     # This method is also used if know unkown values
     # exist for the dataset in question
-    data = rawdata.replace(["?"],"NA")
+    data = rawdata.replace(["?"],'a')
   
   # Training and Testing for 5 x 2 Cross Validation
   len_data = len(data)
   for i in range(0,4):
-    shuffle = rawdata
-  
-    
+    shuffle = data.sample(frac = 1)
 
   
   
