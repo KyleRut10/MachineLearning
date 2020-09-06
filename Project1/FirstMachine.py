@@ -54,14 +54,29 @@ brest_df = brest_df.drop(columns=['index'])
 # put class first
 brest_df = brest_df.reindex(columns=['class', '1', '2', '3,', '4', '5', '6', 
                             '7', '8', '9'])
+# put columns back to integers
+brest_df.columns = range(brest_df.shape[1])
 FirstAlgorithm(brest_df, 1)
 
 # Glass
+glass_path = os.path.join('Data', 'glass.csv')
+df = pd.read_csv(glass_path)
+df = df.drop(columns=['index'])
+# put class first
+df = df.reindex(columns=['class', '1', '2', '3,', '4', '5', '6', 
+                         '7', '8', '9'])
+# put columns back to integers
+df.columns = range(df.shape[1])
+FirstAlgorithm(df, 1)
+
 
 # House Votes
+house_path = os.path.join('Data', 'house-votes-84.csv')
 
 # Iris
+iris_path = os.path.join('Data', 'iris.csv')
 
 # Soybean Small
+soybean_path = os.path.join('Data', 'soybean-small.csv')
 
 
