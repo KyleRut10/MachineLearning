@@ -75,6 +75,7 @@ def test(data, matrix, Q_C)
   #   Q_C: The array of Q(C = ci) values to multiply
   # Output - result: The confusion matrix of the classification
 
+  #For loop of classes
 
 
 # The datasets have been modified to have the class column first followed
