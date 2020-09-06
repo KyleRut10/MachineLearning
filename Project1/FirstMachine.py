@@ -13,8 +13,6 @@ def FirstAlgorithm(rawdata, clean = 0):
   #            functions should be used. Defaults to
   #            removing rows with na values
   
-  
-  
   # Data Cleaning Station
   if clean == 1:
     # Leave the ? as it's own answer (a for simplicity)
@@ -38,7 +36,7 @@ def FirstAlgorithm(rawdata, clean = 0):
   for i in classes:
     Q_C[i] = sum(data[0] == i)/len_data
   
-  results[]
+  results = []
   # Loops 5 times for performing 5 x 2 Cross Validation
   for i in range(0,4):
     shuffle = data.sample(frac = 1)
