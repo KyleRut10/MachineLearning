@@ -2,9 +2,14 @@ import numpy as np
 import pandas as pd
 import os
 import math
+import random
 
 
+def FirstAlgorithm(rawdata, clean=0):
+  pass
+'''
 def FirstAlgorithm(rawdata, clean = 0):
+
   # A function to implement a basic machine learning algorithm
   #
   # Inputs 
@@ -86,6 +91,8 @@ def test(data, params):
 
   #For loop of classes
   pass
+'''
+
 
 
 def bin_column(df, column, bin_points):
@@ -127,11 +134,16 @@ def scramble_features(df):
   # select how many attributes going to scramble
   # subtract 2 from len becuase class is also a column
   # add one at end becuase flooring and results could be 0
-  atr_to_shuffle = math.floor(.1*(len(df.columns.values)-2))+1
-  print(len(df.columns.values), ' ', atr_to_shuffle)
+  num_atr_to_shuffle = math.floor(.1*(len(df.columns.values)-2))+1
+  
   # randomly select those attributes
+  atrs_to_shuffle = random.sample(set(df.columns.values[1:]), 
+                                  num_atr_to_shuffle)
+  print('reshuffling attribute(s): {}'.format(atrs_to_shuffle))
 
   # reshuffle values in the columns
+  
+
 
   # return the dataframe with shuffled columns
   return df
@@ -153,11 +165,12 @@ df = df.reindex(columns=['class', '1', '2', '3', '4', '5', '6',
                             '7', '8', '9'])
 # put columns back to integers
 df.columns = range(df.shape[1])
-
 FirstAlgorithm(df, 1)
 
 # reshuffle
 df = scramble_features(df)
+
+
 
 ## Glass
 glass_path = os.path.join('Data', 'glass.csv')
@@ -180,11 +193,20 @@ df = bin_column(df, '9', [.0001, .13, .2, .26])
 df.columns = range(df.shape[1])
 FirstAlgorithm(df, 1)
 
+# reshuffle
+df = scramble_features(df)
+FirstAlgorithm(df, 1)
+
 
 ## House Votes
 house_path = os.path.join('Data', 'house-votes-84.csv')
 df = pd.read_csv(house_path, header=None)
 FirstAlgorithm(df, 1)
+
+# reshuffle
+df = scramble_features(df)
+FirstAlgorithm(df, 1)
+
 
 
 ## Iris
@@ -200,6 +222,9 @@ df = bin_column(df, '4', [0.7, 1.6])
 # put columns back to integers
 df.columns = range(df.shape[1])
 FirstAlgorithm(df, 1)
+# reshuffle
+df = scramble_features(df)
+FirstAlgorithm(df, 1)
 
 
 ## Soybean Small
@@ -212,4 +237,6 @@ df = df.reindex(columns=['class', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 df.columns = range(df.shape[1])
 FirstAlgorithm(df, 1)
 
-### Noisy Datasets
+# reshuffle
+df = scramble_features(df)
+FirstAlgorithm(df, 1)
