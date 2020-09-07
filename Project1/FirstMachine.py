@@ -2,9 +2,11 @@ import numpy as np
 import pandas as pd
 import os
 import math
+import random
 
 
 def FirstAlgorithm(rawdata, clean = 0):
+
   # A function to implement a basic machine learning algorithm
   #
   # Inputs 
@@ -65,19 +67,23 @@ def train(data, classes):
   
   storage[0] = Q_C
   
-  for k in range(1: data.shape[1] - 1):
+  for k in range(1, data.shape[1] - 1):
     levels = data[k].unique.tolist()
     matrix = np.zeros((len(classes),len(levels)))
     for i in range(0, len(classes)):
       nc = sum(data[0] = classes[i])
       for j in range(0, len(levels)):
+<<<<<<< HEAD
         matrix[i][j] = (sum(data[0] = classes[i] && data[k] = levels[j])\
+=======
+        matrix[i,j] = (sum(data[0] = classes[i],  data[k] = levels[j])\
+>>>>>>> 9397bf6b485c93ac2a9bb3cf2c037dfa9e7acbcc
         + 1)/(nc + data.shape[1] - 2)
     storage[k] = matrix
 
 return(storage)
 
-def test(data, params)
+def test(data, params):
   # The testing function for this algorithm
   #
   # Inputs - 
@@ -89,6 +95,7 @@ def test(data, params)
   for r in range(0, len(data)):
     for i in range(0, len(classes)):
       confusion[i][j]
+
 
 
 def bin_column(df, column, bin_points):
@@ -120,6 +127,31 @@ def bin_column(df, column, bin_points):
 
 
 
+def scramble_features(df):
+  # Shuffle values in ~10% of the attributes in the df
+  #
+  # Inputs - 
+  #     df: The dataframe for the dataset
+  # Output - df: original dataframe but with 10% of attributes shuffled
+  
+  # select how many attributes going to scramble
+  # subtract 2 from len becuase class is also a column
+  # add one at end becuase flooring and results could be 0
+  num_atr_to_shuffle = math.floor(.1*(len(df.columns.values)-2))+1
+  
+  # randomly select those attributes
+  atrs_to_shuffle = random.sample(set(df.columns.values[1:]), 
+                                  num_atr_to_shuffle)
+  print('reshuffling attribute(s): {}'.format(atrs_to_shuffle))
+
+  # reshuffle values in the columns
+  for atr in atrs_to_shuffle:
+    df[atr] = np.random.permutation(df[atr].values)
+
+  # return the dataframe with shuffled columns
+  return df
+
+
 
 # The datasets have been modified to have the class column first followed
 # only by the attribute columns. (Index columns have been removed)
@@ -127,6 +159,7 @@ def bin_column(df, column, bin_points):
 ### Respository Datasets
 
 ## Breast Cancer
+print('*** Brest Cancer Dataset ***')
 breastdatastr = os.path.join('Data', 'breast-cancer-wisconsin.csv')
 df = pd.read_csv(breastdatastr)
 # drop index column
@@ -136,10 +169,16 @@ df = df.reindex(columns=['class', '1', '2', '3', '4', '5', '6',
                             '7', '8', '9'])
 # put columns back to integers
 df.columns = range(df.shape[1])
-
 FirstAlgorithm(df, 1)
 
+# reshuffle
+df = scramble_features(df)
+FirstAlgorithm(df, 1)
+
+
+
 ## Glass
+print('\n*** Glass Dataset ***')
 glass_path = os.path.join('Data', 'glass.csv')
 df = pd.read_csv(glass_path)
 df = df.drop(columns=['index'])
@@ -147,6 +186,7 @@ df = df.drop(columns=['index'])
 df = df.reindex(columns=['class', '1', '2', '3', '4', '5', '6', 
                          '7', '8', '9'])
 # bin the columns
+print('binning all attributes')
 df = bin_column(df, '1', [1.515, 1.52, 1.525])
 df = bin_column(df, '2', [12.75])
 df = bin_column(df, '3', [1.5, 3])
@@ -160,19 +200,31 @@ df = bin_column(df, '9', [.0001, .13, .2, .26])
 df.columns = range(df.shape[1])
 FirstAlgorithm(df, 1)
 
+# reshuffle
+df = scramble_features(df)
+FirstAlgorithm(df, 1)
+
 
 ## House Votes
+print('\n*** House Votes Dataset ***')
 house_path = os.path.join('Data', 'house-votes-84.csv')
 df = pd.read_csv(house_path, header=None)
 FirstAlgorithm(df, 1)
 
+# reshuffle
+df = scramble_features(df)
+FirstAlgorithm(df, 1)
+
+
 
 ## Iris
+print('\n*** Iris Dataset ***')
 iris_path = os.path.join('Data', 'iris.csv')
 df = pd.read_csv(iris_path)
 # put class first
 df = df.reindex(columns=['class', '1', '2', '3', '4'])
 # bin the columns
+print('binning all attributes')
 df = bin_column(df, '1', [5.3, 6, 6.5])
 df = bin_column(df, '2', [2.85, 3.2, 3.5])
 df = bin_column(df, '3', [2])
@@ -180,9 +232,13 @@ df = bin_column(df, '4', [0.7, 1.6])
 # put columns back to integers
 df.columns = range(df.shape[1])
 FirstAlgorithm(df, 1)
+# reshuffle
+df = scramble_features(df)
+FirstAlgorithm(df, 1)
 
 
 ## Soybean Small
+print('\n*** Soybean (Small) Dataset ***')
 soybean_path = os.path.join('Data', 'soybean-small.csv')
 df = pd.read_csv(soybean_path)
 df = df.reindex(columns=['class', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -192,4 +248,6 @@ df = df.reindex(columns=['class', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 df.columns = range(df.shape[1])
 FirstAlgorithm(df, 1)
 
-### Noisy Datasets
+# reshuffle
+df = scramble_features(df)
+FirstAlgorithm(df, 1)
