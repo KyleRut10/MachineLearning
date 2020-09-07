@@ -5,6 +5,17 @@ import math
 import random
 
 
+def calc_loss01(confusion):
+  total = 0
+  incorrect = 0
+  for ind,row in enumerate(confusion):
+    for col,val in enumerate(row):
+      total += val
+      if ind != col:
+        incorrect += val
+  return incorrect/total
+  
+
 def FirstAlgorithm(rawdata, clean = 0):
   # A function to implement a basic machine learning algorithm
   #
@@ -48,12 +59,32 @@ def FirstAlgorithm(rawdata, clean = 0):
     
     # Training on the Right and Testing on the Left
     results[2*i + 1] = test(left, train(right, classes), classes)
-    
+  
+  loss01_arr = []
+  f1_arr = []
+  # print out confusion matricies
   for i in range(len(results)):
+    print('Confusion Matrix:')
     for row in results[i]:
       print(', '.join([str(x) for x in row.tolist()]))
+    
+    # calculate 0/1-loss
+    loss01 = calc_loss01(results[i])
+    loss01_arr.append(loss01)
+
+    # calculate F1-loss
+    f1 = 'dun dun'
+    print('0/1-loss: {:.3f}, F1-loss: {}'.format(loss01, f1))
+
     print()
-  pass
+    
+
+  print('Average Losses')
+  avg_01 = sum(loss01_arr)/len(loss01_arr)
+  #avg_f1 = sum(f1_arr)/len(f1_arr)
+  avg_f1 = 'dun dun avg'
+  print('0/1-loss: {:.3f}, F1-loss: {}'.format(avg_01, avg_f1))
+
 
 def train(data, classes):
   # The training function for this algorithm
