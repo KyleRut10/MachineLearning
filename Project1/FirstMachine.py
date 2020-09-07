@@ -106,15 +106,15 @@ def test(data, params, classes):
     
     # Populate with Classification Step
     for i in range(0, len(classes)):
-      Cx[i] = Cx[i] * (params[0][i])(params[len(params)])
+      Cx[i] = Cx[i] * (params[0][i])/(params[len(params) - 1])
       # Loop through Attributes
       for k in range(1, data.shape[1] - 1):
         try:
           lvl = params[2*k - 1].index(data.iloc[r,k])
+          Cx[i] = Cx[i] * params[2*k][i][lvl]
         except ValueError:
-          # TODO: Make this correct to match equation
-          lvl = 1/(params[0][i] + data.shape[1] - 1)
-        Cx[i] = Cx[i] * params[2*k][i][lvl]
+          Cx[i] = Cx[i] * 1/(params[0][i] + data.shape[1] - 1)
+          
       
     # Find Positions of the Prediction and Ground Truth
     pred = np.argmax(Cx)
@@ -185,6 +185,9 @@ def scramble_features(df):
 # only by the attribute columns. (Index columns have been removed)
 
 ### Respository Datasets
+
+## Setting Seed
+random.seed(112358)
 
 ## Breast Cancer
 print('*** Brest Cancer Dataset ***')
