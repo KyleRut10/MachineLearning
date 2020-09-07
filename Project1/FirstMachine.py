@@ -62,11 +62,11 @@ def train(data, classes):
   
   storage = {}
   
-  Q_C = {}
+  class_sz = {}
   for i in range(0, len(classes)):
-    Q_C[i] = sum(data[0] == classes[i])/len(data)
+    class_sz[i] = sum(data[0] == classes[i])
   
-  storage[0] = Q_C
+  storage[0] = class_sz
   
   for k in range(1, data.shape[1] - 1):
     levels = data[k].unique().tolist()
@@ -78,10 +78,11 @@ def train(data, classes):
         for r in range(0, len(data)):
           if (data.iloc[r, 0] == classes[i] and data.iloc[r, k] == levels[j]):
             count += 1
-        matrix[i][j] = (count + 1)/(nc + data.shape[1] - 2)
+        matrix[i][j] = (count + 1)/(nc + data.shape[1] - 1)
     storage[2*k - 1] = levels
     storage[2*k] = matrix
-
+  
+  storage[len(storage)] = len(data)
   return(storage)
 
 def test(data, params, classes):
@@ -105,14 +106,14 @@ def test(data, params, classes):
     
     # Populate with Classification Step
     for i in range(0, len(classes)):
-      Cx[i] = Cx[i] * params[0][i]
+      Cx[i] = Cx[i] * (params[0][i])(params[len(params)])
       # Loop through Attributes
       for k in range(1, data.shape[1] - 1):
         try:
           lvl = params[2*k - 1].index(data.iloc[r,k])
         except ValueError:
           # TODO: Make this correct to match equation
-          lvl = 1
+          lvl = 1/(params[0][i] + data.shape[1] - 1)
         Cx[i] = Cx[i] * params[2*k][i][lvl]
       
     # Find Positions of the Prediction and Ground Truth
