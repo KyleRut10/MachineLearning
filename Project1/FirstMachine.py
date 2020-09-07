@@ -49,6 +49,10 @@ def FirstAlgorithm(rawdata, clean = 0):
     # Training on the Right and Testing on the Left
     results[2*i + 1] = test(left, train(right, classes), classes)
     
+  for i in range(len(results)):
+    for row in results[i]:
+      print(', '.join([str(x) for x in row.tolist()]))
+    print()
   pass
 
 def train(data, classes):
