@@ -36,7 +36,7 @@ def FirstAlgorithm(rawdata, clean = 0):
   
   classes = data[0].unique().tolist()
   
-  results = np.zeros(10)
+  results = {}
   # Loops 5 times for performing 5 x 2 Cross Validation
   for i in range(0,4):
     shuffle = data.sample(frac = 1)
@@ -108,7 +108,11 @@ def test(data, params, classes):
       Cx[i] = Cx[i] * params[0][i]
       # Loop through Attributes
       for k in range(1, data.shape[1] - 1):
-        lvl = params[2*k - 1].index(data.iloc[r,k])
+        try:
+          lvl = params[2*k - 1].index(data.iloc[r,k])
+        except ValueError:
+          # TODO: Make this correct to match equation
+          lvl = 1
         Cx[i] = Cx[i] * params[2*k][i][lvl]
       
     # Find Positions of the Prediction and Ground Truth
