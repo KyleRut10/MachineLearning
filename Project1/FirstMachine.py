@@ -5,9 +5,6 @@ import math
 import random
 
 
-def FirstAlgorithm(rawdata, clean=0):
-  pass
-'''
 def FirstAlgorithm(rawdata, clean = 0):
 
   # A function to implement a basic machine learning algorithm
@@ -91,7 +88,6 @@ def test(data, params):
 
   #For loop of classes
   pass
-'''
 
 
 
