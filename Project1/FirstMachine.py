@@ -27,14 +27,9 @@ def FirstAlgorithm(rawdata, clean = 0):
   
   # Training and Testing Area
   
-  # Precalculated Values for Efficiency
+  # Values for splitting the data
   len_data = len(data)
   split = round(len_data/2)
-  classes = data[0].unique().tolist()
-  
-  Q_C = {}
-  for i in classes:
-    Q_C[i] = sum(data[0] == i)/len_data
   
   results = []
   # Loops 5 times for performing 5 x 2 Cross Validation
@@ -44,35 +39,45 @@ def FirstAlgorithm(rawdata, clean = 0):
     right = shuffle[split:]
     
     # Training on the Left and Testing on the Right
-    results[2i] = test(right, train(left, classes))
+    results[2i] = test(right, train(left))
     
     # Training on the Right and Testing on the Left
-    results[2i + 1] = test(left, train(right), Q_C)
+    results[2i + 1] = test(left, train(right))
 
-def train(data, classes):
+def train(data):
   # The training function for this algorithm
   #
-  # Inputs - 
-  #   data: The training data for this algorithm
-  #   classes: The list of classes in the dataset
-  # Output - matrix: Returns the functions F which specify
-  #          the number of examples that match an attribute
-  #          value (plus one) divided by the number of examples
-  #          in the class (plus the total number of attributes)
-  #          for each class in the training data
+  # Input - data: The training data for this algorithm
+  # Output - storage
   
-  matrix = np.zeros((len(classes),data.shape[1] - 1))
+  storage = {}
   
-  return matrix
+  classes = data[0].unique().tolist()
+  
+  Q_C = {}
+  for i in classes:
+    Q_C[i] = sum(data[0] == i)/len_data
+  
+  storage[0] = Q_C
+  
+  for k in range(1: data.shape[1] - 1):
+    levels = data[k].unique.tolist()
+    matrix = np.zeroes((len(classes),len(levels)))
+    for i in range(0, len(classes)):
+      nc = sum(data[0] = classes[i])
+      for j in range(0, len(levels)):
+        matrix[i,j] = (sum(data[0] = classes[i] && data[k] = levels[j])\
+        + 1)/(nc + data.shape[1] - 2)
+    storage[k] = matrix
 
-def test(data, matrix, Q_C)
+return(storage)
+
+def test(data, trained)
   # The testing function for this algorithm
   #
   # Inputs - 
   #   data: The testing data for this algorithm
-  #   matrix: The values used to predict a class given a
-  #           set of attributes
-  #   Q_C: The array of Q(C = ci) values to multiply
+  #   trained:
   # Output - result: The confusion matrix of the classification
 
   #For loop of classes
