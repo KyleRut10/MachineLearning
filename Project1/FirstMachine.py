@@ -117,6 +117,23 @@ def bin_column(df, column, bin_points):
 
 
 
+def scramble_features(df):
+  # Shuffle values in ~10% of the attributes in the df
+  #
+  # Inputs - 
+  #     df: The dataframe for the dataset
+  # Output - df: original dataframe but with 10% of attributes shuffled
+  
+  # select how many attributes going to scramble
+
+  # randomly select those attributes
+
+  # reshuffle values in the columns
+
+  # return the dataframe with shuffled columns
+  return df
+
+
 
 # The datasets have been modified to have the class column first followed
 # only by the attribute columns. (Index columns have been removed)
