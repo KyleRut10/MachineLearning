@@ -69,14 +69,14 @@ def train(data, classes):
   storage[0] = Q_C
   
   for k in range(1, data.shape[1] - 1):
-    levels = data[k].unique.tolist()
+    levels = data[k].unique().tolist()
     matrix = np.zeros((len(classes),len(levels)))
     for i in range(0, len(classes)):
       nc = sum(data[0] == classes[i])
       for j in range(0, len(levels)):
         count = 0
         for r in range(0, len(data)):
-          if (data[0][r] == classes[i] & data[k][r] == levels[j]):
+          if (data[0][r] == classes[i] and data[k][r] == levels[j]):
             count += 1
         matrix[i][j] = (count + 1)/(nc + data.shape[1] - 2)
     storage[2*k - 1] = levels
