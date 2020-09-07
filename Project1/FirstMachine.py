@@ -1,11 +1,13 @@
 import numpy as np
 import pandas as pd
 import os
+import math
+
 
 def FirstAlgorithm(rawdata, clean = 0):
   # A function to implement a basic machine learning algorithm
   #
-  # Inputs -
+  # Inputs 
   #   rawdata: A pandas dataframe where the first column
   #            contains the class and the following ones
   #            contain the attributes
@@ -81,6 +83,37 @@ def test(data, trained)
   # Output - result: The confusion matrix of the classification
 
   #For loop of classes
+  pass
+
+
+def bin_column(df, column, bin_points):
+  # Puts values in a column into bins acording to bin_points
+  #
+  # Inputs - 
+  #     df: The dataframe for the dataset
+  #     column: the column name that is desired to bin
+  #     bin_points: A list of the bin points, min is assumed to be less than the
+  #                 first point and max is added on as infinity
+  # Output - df: original dataframe but with column replaced with bin values
+  
+  # add infinity onto end of bin_points so it'll go until the max
+  bin_points.append(math.inf)
+  binned = []
+  for data in df[column]:
+    for i,bin_point in enumerate(bin_points):
+      # check if less than point
+      # don't need to check between, becuase if less than it'd have been
+      # caught earlier
+        if data < bin_point: 
+          binned.append('bin{}'.format(i+1))
+          # break out of loop, because will also be less than others
+          #print(data, ' ', bin_point, ' ', binned[-1])
+          break
+  #print(binned)
+  df[column] = binned
+  return df
+
+
 
 
 # The datasets have been modified to have the class column first followed
@@ -94,7 +127,7 @@ df = pd.read_csv(breastdatastr)
 # drop index column
 df = df.drop(columns=['index'])
 # put class first
-df = df.reindex(columns=['class', '1', '2', '3,', '4', '5', '6', 
+df = df.reindex(columns=['class', '1', '2', '3', '4', '5', '6', 
                             '7', '8', '9'])
 # put columns back to integers
 df.columns = range(df.shape[1])
@@ -105,8 +138,18 @@ glass_path = os.path.join('Data', 'glass.csv')
 df = pd.read_csv(glass_path)
 df = df.drop(columns=['index'])
 # put class first
-df = df.reindex(columns=['class', '1', '2', '3,', '4', '5', '6', 
+df = df.reindex(columns=['class', '1', '2', '3', '4', '5', '6', 
                          '7', '8', '9'])
+# bin the columns
+df = bin_column(df, '1', [1.515, 1.52, 1.525])
+df = bin_column(df, '2', [12.75])
+df = bin_column(df, '3', [1.5, 3])
+df = bin_column(df, '4', [1, 1.7, 2.3])
+df = bin_column(df, '5', [71, 72.5, 73.4])
+df = bin_column(df, '6', [0.4, 1, 4])
+df = bin_column(df, '7', [7.5, 9.5, 11.5, 13.25])
+df = bin_column(df, '8', [.0001, 0.5, 1, 1.5, 2])
+df = bin_column(df, '9', [.0001, .13, .2, .26])
 # put columns back to integers
 df.columns = range(df.shape[1])
 FirstAlgorithm(df, 1)
@@ -122,7 +165,12 @@ FirstAlgorithm(df, 1)
 iris_path = os.path.join('Data', 'iris.csv')
 df = pd.read_csv(iris_path)
 # put class first
-df = df.reindex(columns=['class', '1', '2', '3,', '4'])
+df = df.reindex(columns=['class', '1', '2', '3', '4'])
+# bin the columns
+df = bin_column(df, '1', [5.3, 6, 6.5])
+df = bin_column(df, '2', [2.85, 3.2, 3.5])
+df = bin_column(df, '3', [2])
+df = bin_column(df, '4', [0.7, 1.6])
 # put columns back to integers
 df.columns = range(df.shape[1])
 FirstAlgorithm(df, 1)
