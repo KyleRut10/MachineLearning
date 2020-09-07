@@ -33,7 +33,7 @@ def FirstAlgorithm(rawdata, clean = 0):
   len_data = len(data)
   split = round(len_data/2)
   
-  results = []
+  results = np.zeros(10)
   # Loops 5 times for performing 5 x 2 Cross Validation
   for i in range(0,4):
     shuffle = data.sample(frac = 1)
@@ -41,16 +41,17 @@ def FirstAlgorithm(rawdata, clean = 0):
     right = shuffle[split:]
     
     # Training on the Left and Testing on the Right
-    results[2i] = test(right, train(left))
+    results[2*i] = test(right, train(left))
     
     # Training on the Right and Testing on the Left
-    results[2i + 1] = test(left, train(right))
+    results[2*i + 1] = test(left, train(right))
 
 def train(data):
   # The training function for this algorithm
   #
   # Input - data: The training data for this algorithm
-  # Output - storage
+  # Output - storage: An Array holding the Q_C array
+  #          and the F values for each attribute
   
   storage = {}
   
@@ -74,12 +75,13 @@ def train(data):
 
 return(storage)
 
-def test(data, trained)
+def test(data, params)
   # The testing function for this algorithm
   #
   # Inputs - 
   #   data: The testing data for this algorithm
-  #   trained:
+  #   params: The parameters calculated in training the algorithm
+  #   which are used to classify the test set of 'data'
   # Output - result: The confusion matrix of the classification
 
   #For loop of classes
