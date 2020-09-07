@@ -64,7 +64,7 @@ def train(data):
   
   for k in range(1: data.shape[1] - 1):
     levels = data[k].unique.tolist()
-    matrix = np.zeroes((len(classes),len(levels)))
+    matrix = np.zeros((len(classes),len(levels)))
     for i in range(0, len(classes)):
       nc = sum(data[0] = classes[i])
       for j in range(0, len(levels)):
@@ -131,6 +131,7 @@ df = df.reindex(columns=['class', '1', '2', '3', '4', '5', '6',
                             '7', '8', '9'])
 # put columns back to integers
 df.columns = range(df.shape[1])
+
 FirstAlgorithm(df, 1)
 
 ## Glass
