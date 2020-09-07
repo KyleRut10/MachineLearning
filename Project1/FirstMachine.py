@@ -49,6 +49,8 @@ def FirstAlgorithm(rawdata, clean = 0):
     
     # Training on the Right and Testing on the Left
     results[2*i + 1] = test(left, train(right, classes), classes)
+    
+  pass
 
 def train(data, classes):
   # The training function for this algorithm
@@ -71,14 +73,14 @@ def train(data, classes):
     levels = data[k].unique.tolist()
     matrix = np.zeros((len(classes),len(levels)))
     for i in range(0, len(classes)):
-      nc = sum(data[0] = classes[i])
+      nc = sum(data[0] == classes[i])
       for j in range(0, len(levels)):
-        matrix[i][j] = (sum(data[0] = classes[i] && data[k] = levels[j])\
+        matrix[i][j] = (sum(data[0] == classes[i] & data[k] == levels[j])\
         + 1)/(nc + data.shape[1] - 2)
     storage[2*k - 1] = levels
     storage[2*k] = matrix
 
-return(storage)
+  return(storage)
 
 def test(data, params, classes):
   # The testing function for this algorithm
