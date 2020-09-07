@@ -48,7 +48,7 @@ def FirstAlgorithm(rawdata, clean = 0):
     results[2*i] = test(right, train(left, classes))
     
     # Training on the Right and Testing on the Left
-    results[2*i + 1] = test(left, train(right), classes)
+    results[2*i + 1] = test(left, train(right, classes), classes)
 
 def train(data, classes):
   # The training function for this algorithm
@@ -73,29 +73,48 @@ def train(data, classes):
     for i in range(0, len(classes)):
       nc = sum(data[0] = classes[i])
       for j in range(0, len(levels)):
-<<<<<<< HEAD
         matrix[i][j] = (sum(data[0] = classes[i] && data[k] = levels[j])\
-=======
-        matrix[i,j] = (sum(data[0] = classes[i],  data[k] = levels[j])\
->>>>>>> 9397bf6b485c93ac2a9bb3cf2c037dfa9e7acbcc
         + 1)/(nc + data.shape[1] - 2)
-    storage[k] = matrix
+    storage[2*k - 1] = levels
+    storage[2*k] = matrix
 
 return(storage)
 
-def test(data, params):
+def test(data, params, classes):
   # The testing function for this algorithm
   #
   # Inputs - 
   #   data: The testing data for this algorithm
   #   params: The parameters calculated in training the algorithm
   #   which are used to classify the test set of 'data'
-  # Output - result: The confusion matrix of the classification
+  # Output - confusion: The confusion matrix of the classification
+  
+  # Initialize our confusion Matrix
   confusion = np.zeros((len(classes), len(classes)))
+  
+  
+  # Loop through the rows of our testing data
   for r in range(0, len(data)):
+    
+    # Initialize prediction value array
+    Cx = np.ones(len(classes))
+    
+    # Populate with Classification Step
     for i in range(0, len(classes)):
-      confusion[i][j]
+      Cx[i] = Cx[i] * params[0][i]
+      # Loop through Attributes
+      for k in range(1, data.shape[1] - 1):
+        lvl = storage[2*k - 1].index(data[k][r])
+        Cx[i] = Cx[i] * storage[2*k][i][lvl]
+      
+    # Find Positions of the Prediction and Ground Truth
+    pred = np.argmax(Cx)
+    true = classes.index(data[0][r])
+    
+    # Increment the correct element of the confusion matrix
+    confusion[pred][true] = confusion[pred][true] + 1
 
+  return confusion
 
 
 def bin_column(df, column, bin_points):
