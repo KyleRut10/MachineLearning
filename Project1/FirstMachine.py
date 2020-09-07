@@ -74,8 +74,11 @@ def train(data, classes):
     for i in range(0, len(classes)):
       nc = sum(data[0] == classes[i])
       for j in range(0, len(levels)):
-        matrix[i][j] = (sum(data[0] == classes[i] & data[k] == levels[j])\
-        + 1)/(nc + data.shape[1] - 2)
+        count = 0
+        for r in range(0, len(data)):
+          if (data[0][r] == classes[i] & data[k][r] == levels[j]):
+            count += 1
+        matrix[i][j] = (count + 1)/(nc + data.shape[1] - 2)
     storage[2*k - 1] = levels
     storage[2*k] = matrix
 
