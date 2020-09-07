@@ -79,6 +79,27 @@ def test(data, matrix, Q_C)
   pass
 
 
+def bin_column(df, column, bin_points):
+  # TODO input output thing
+  # add infinity onto end of bin_points so it'll go until the max
+  bin_points.append(math.inf)
+  binned = []
+  for data in df[column]:
+    for i,bin_point in enumerate(bin_points):
+      # check if less than point
+      # don't need to check between, becuase if less than it'd have been
+      # caught earlier
+        if data < bin_point: 
+          binned.append('bin{}'.format(i+1))
+          # break out of loop, because will also be less than others
+          break
+  print(binned)
+  df[column] = binned
+  return df
+
+
+
+
 # The datasets have been modified to have the class column first followed
 # only by the attribute columns. (Index columns have been removed)
 
