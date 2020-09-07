@@ -44,7 +44,7 @@ def FirstAlgorithm(rawdata, clean = 0):
     right = shuffle[split:]
     
     # Training on the Left and Testing on the Right
-    results[2*i] = test(right, train(left, classes))
+    results[2*i] = test(right, train(left, classes), classes)
     
     # Training on the Right and Testing on the Left
     results[2*i + 1] = test(left, train(right, classes), classes)
@@ -108,12 +108,12 @@ def test(data, params, classes):
       Cx[i] = Cx[i] * params[0][i]
       # Loop through Attributes
       for k in range(1, data.shape[1] - 1):
-        lvl = storage[2*k - 1].index(data[k][r])
-        Cx[i] = Cx[i] * storage[2*k][i][lvl]
+        lvl = params[2*k - 1].index(data.iloc[r,k])
+        Cx[i] = Cx[i] * params[2*k][i][lvl]
       
     # Find Positions of the Prediction and Ground Truth
     pred = np.argmax(Cx)
-    true = classes.index(data[0][r])
+    true = classes.index(data.iloc[r,0])
     
     # Increment the correct element of the confusion matrix
     confusion[pred][true] = confusion[pred][true] + 1
