@@ -33,6 +33,8 @@ def FirstAlgorithm(rawdata, clean = 0):
   len_data = len(data)
   split = round(len_data/2)
   
+  classes = data[0].unique().tolist()
+  
   results = np.zeros(10)
   # Loops 5 times for performing 5 x 2 Cross Validation
   for i in range(0,4):
@@ -41,21 +43,21 @@ def FirstAlgorithm(rawdata, clean = 0):
     right = shuffle[split:]
     
     # Training on the Left and Testing on the Right
-    results[2*i] = test(right, train(left))
+    results[2*i] = test(right, train(left, classes))
     
     # Training on the Right and Testing on the Left
-    results[2*i + 1] = test(left, train(right))
+    results[2*i + 1] = test(left, train(right), classes)
 
-def train(data):
+def train(data, classes):
   # The training function for this algorithm
   #
-  # Input - data: The training data for this algorithm
+  # Inputs - 
+  #   data: The training data for this algorithm
+  #   classes: The classes found in the original dataset
   # Output - storage: An Array holding the Q_C array
   #          and the F values for each attribute
   
   storage = {}
-  
-  classes = data[0].unique().tolist()
   
   Q_C = {}
   for i in range(0, len(classes)):
@@ -69,7 +71,7 @@ def train(data):
     for i in range(0, len(classes)):
       nc = sum(data[0] = classes[i])
       for j in range(0, len(levels)):
-        matrix[i,j] = (sum(data[0] = classes[i] && data[k] = levels[j])\
+        matrix[i][j] = (sum(data[0] = classes[i] && data[k] = levels[j])\
         + 1)/(nc + data.shape[1] - 2)
     storage[k] = matrix
 
@@ -83,9 +85,10 @@ def test(data, params)
   #   params: The parameters calculated in training the algorithm
   #   which are used to classify the test set of 'data'
   # Output - result: The confusion matrix of the classification
-
-  #For loop of classes
-  pass
+  confusion = np.zeros((len(classes), len(classes)))
+  for r in range(0, len(data)):
+    for i in range(0, len(classes)):
+      confusion[i][j]
 
 
 def bin_column(df, column, bin_points):
