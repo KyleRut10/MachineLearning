@@ -58,8 +58,8 @@ def train(data):
   classes = data[0].unique().tolist()
   
   Q_C = {}
-  for i in classes:
-    Q_C[i] = sum(data[0] == i)/len(data)
+  for i in range(0, len(classes)):
+    Q_C[i] = sum(data[0] == classes[i])/len(data)
   
   storage[0] = Q_C
   
