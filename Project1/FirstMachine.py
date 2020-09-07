@@ -63,19 +63,19 @@ def train(data):
   
   storage[0] = Q_C
   
-  for k in range(1: data.shape[1] - 1):
+  for k in range(1, data.shape[1] - 1):
     levels = data[k].unique.tolist()
     matrix = np.zeros((len(classes),len(levels)))
     for i in range(0, len(classes)):
       nc = sum(data[0] = classes[i])
       for j in range(0, len(levels)):
-        matrix[i,j] = (sum(data[0] = classes[i] && data[k] = levels[j])\
+        matrix[i,j] = (sum(data[0] = classes[i],  data[k] = levels[j])\
         + 1)/(nc + data.shape[1] - 2)
     storage[k] = matrix
 
 return(storage)
 
-def test(data, params)
+def test(data, params):
   # The testing function for this algorithm
   #
   # Inputs - 
@@ -125,7 +125,10 @@ def scramble_features(df):
   # Output - df: original dataframe but with 10% of attributes shuffled
   
   # select how many attributes going to scramble
-
+  # subtract 2 from len becuase class is also a column
+  # add one at end becuase flooring and results could be 0
+  atr_to_shuffle = math.floor(.1*(len(df.columns.values)-2))+1
+  print(len(df.columns.values), ' ', atr_to_shuffle)
   # randomly select those attributes
 
   # reshuffle values in the columns
@@ -152,6 +155,9 @@ df = df.reindex(columns=['class', '1', '2', '3', '4', '5', '6',
 df.columns = range(df.shape[1])
 
 FirstAlgorithm(df, 1)
+
+# reshuffle
+df = scramble_features(df)
 
 ## Glass
 glass_path = os.path.join('Data', 'glass.csv')
