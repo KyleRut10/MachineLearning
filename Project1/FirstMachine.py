@@ -156,6 +156,7 @@ def scramble_features(df):
 ### Respository Datasets
 
 ## Breast Cancer
+print('*** Brest Cancer Dataset ***')
 breastdatastr = os.path.join('Data', 'breast-cancer-wisconsin.csv')
 df = pd.read_csv(breastdatastr)
 # drop index column
@@ -169,10 +170,12 @@ FirstAlgorithm(df, 1)
 
 # reshuffle
 df = scramble_features(df)
+FirstAlgorithm(df, 1)
 
 
 
 ## Glass
+print('\n*** Glass Dataset ***')
 glass_path = os.path.join('Data', 'glass.csv')
 df = pd.read_csv(glass_path)
 df = df.drop(columns=['index'])
@@ -180,6 +183,7 @@ df = df.drop(columns=['index'])
 df = df.reindex(columns=['class', '1', '2', '3', '4', '5', '6', 
                          '7', '8', '9'])
 # bin the columns
+print('binning all attributes')
 df = bin_column(df, '1', [1.515, 1.52, 1.525])
 df = bin_column(df, '2', [12.75])
 df = bin_column(df, '3', [1.5, 3])
@@ -199,6 +203,7 @@ FirstAlgorithm(df, 1)
 
 
 ## House Votes
+print('\n*** House Votes Dataset ***')
 house_path = os.path.join('Data', 'house-votes-84.csv')
 df = pd.read_csv(house_path, header=None)
 FirstAlgorithm(df, 1)
@@ -210,11 +215,13 @@ FirstAlgorithm(df, 1)
 
 
 ## Iris
+print('\n*** Iris Dataset ***')
 iris_path = os.path.join('Data', 'iris.csv')
 df = pd.read_csv(iris_path)
 # put class first
 df = df.reindex(columns=['class', '1', '2', '3', '4'])
 # bin the columns
+print('binning all attributes')
 df = bin_column(df, '1', [5.3, 6, 6.5])
 df = bin_column(df, '2', [2.85, 3.2, 3.5])
 df = bin_column(df, '3', [2])
@@ -228,6 +235,7 @@ FirstAlgorithm(df, 1)
 
 
 ## Soybean Small
+print('\n*** Soybean (Small) Dataset ***')
 soybean_path = os.path.join('Data', 'soybean-small.csv')
 df = pd.read_csv(soybean_path)
 df = df.reindex(columns=['class', '1', '2', '3', '4', '5', '6', '7', '8', '9',
