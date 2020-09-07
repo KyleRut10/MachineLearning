@@ -142,8 +142,8 @@ def scramble_features(df):
   print('reshuffling attribute(s): {}'.format(atrs_to_shuffle))
 
   # reshuffle values in the columns
-  
-
+  for atr in atrs_to_shuffle:
+    df[atr] = np.random.permutation(df[atr].values)
 
   # return the dataframe with shuffled columns
   return df
