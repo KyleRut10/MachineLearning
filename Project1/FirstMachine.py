@@ -59,7 +59,7 @@ def train(data):
   
   Q_C = {}
   for i in classes:
-    Q_C[i] = sum(data[0] == i)/len_data
+    Q_C[i] = sum(data[0] == i)/len(data)
   
   storage[0] = Q_C
   
