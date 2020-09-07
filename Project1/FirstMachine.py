@@ -6,7 +6,6 @@ import random
 
 
 def FirstAlgorithm(rawdata, clean = 0):
-
   # A function to implement a basic machine learning algorithm
   #
   # Inputs 
