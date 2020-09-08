@@ -16,6 +16,41 @@ def calc_loss01(confusion):
   return incorrect/total
   
 
+
+def calc_f1_loss(confusion):
+  # empty array to hold error for classes
+  error = []
+  # for each class
+  num_classes = len(confusion)
+  for c in range(num_classes):
+    # Number class corectly classified as class
+    TP = confusion[c][c]
+    # Number not of class correctly classified as not class
+    TN = 0
+    for cc in range(num_classes):
+       if cc != c:
+         TN += confusion[cc][cc]
+    # Non-members of class, classified as such (row)
+    FP = 0
+    for cc in range(num_classes):
+      if cc != c:
+        # index in by row, col
+        FP += confusion[c][cc]
+    # Members of class that were classified as class (columns)
+    FN = 0
+    for cc in range(num_classes):
+      if cc != c:
+        FN += confusion[cc][c]
+
+    precision = TP/(TP + FP)
+    recall = TP/(TP + FN)
+    print(type(precision))
+    print('{} {} {} {}'.format(TP, TN, FP, FN))
+
+    f1 = 2* (precision*recall)/(precision+recall)
+    return f1
+
+
 def FirstAlgorithm(rawdata, clean = 0):
   # A function to implement a basic machine learning algorithm
   #
@@ -70,20 +105,25 @@ def FirstAlgorithm(rawdata, clean = 0):
     
     # calculate 0/1-loss
     loss01 = calc_loss01(results[i])
+    if np.isnan(loss01):
+      loss01 = 0
     loss01_arr.append(loss01)
 
     # calculate F1-loss
-    f1 = 'dun dun'
-    print('0/1-loss: {:.3f}, F1-loss: {}'.format(loss01, f1))
-
+    f1 = calc_f1_loss(results[i])
+    if np.isnan(f1):
+      f1 = 0
+    f1_arr.append(f1)
+    print('0/1-loss: {:.3f}, F1-loss: {:.3f}'.format(loss01, f1))
+    # check if value is nan and set to 0????
     print()
     
 
   print('Average Losses')
   avg_01 = sum(loss01_arr)/len(loss01_arr)
-  #avg_f1 = sum(f1_arr)/len(f1_arr)
-  avg_f1 = 'dun dun avg'
-  print('0/1-loss: {:.3f}, F1-loss: {}'.format(avg_01, avg_f1))
+  avg_f1 = sum(f1_arr)/len(f1_arr)
+  print('0/1-loss: {:.3f}, F1-loss: {:.3f}'.format(avg_01, avg_f1))
+  print()
 
 
 def train(data, classes):
