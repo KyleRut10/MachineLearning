@@ -44,8 +44,6 @@ def calc_f1_loss(confusion):
 
     precision = TP/(TP + FP)
     recall = TP/(TP + FN)
-    print(type(precision))
-    print('{} {} {} {}'.format(TP, TN, FP, FN))
 
     f1 = 2* (precision*recall)/(precision+recall)
     return f1
