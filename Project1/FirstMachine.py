@@ -98,7 +98,7 @@ def FirstAlgorithm(rawdata, clean = 0):
   
   results = {}
   # Loops 5 times for performing 5 x 2 Cross Validation
-  for i in range(0,4):
+  for i in range(0,5):
     shuffle = data.sample(frac = 1)
     left = shuffle[:split]
     right = shuffle[split:]
