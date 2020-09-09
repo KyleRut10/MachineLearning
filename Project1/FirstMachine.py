@@ -34,8 +34,8 @@ def calc_f1_loss(confusion):
   # Output - 
   #   f1: The f1 score for the confusion matrix
 
-  # empty array to hold error for classes
-  error = []
+  # empty array to hold scores for classes
+  scores = []
   # for each class
   num_classes = len(confusion)
   for c in range(num_classes):
@@ -62,8 +62,12 @@ def calc_f1_loss(confusion):
     recall = TP/(TP + FN)
 
     f1 = 2* (precision*recall)/(precision+recall)
-    # TODO: Return f1 for each class
-    return f1
+    if np.isnan(f1):
+      f1 = 0
+    scores.append(f1)
+  
+  avg_f1 = sum(scores)/len(scores)
+  return avg_f1
 
 
 def FirstAlgorithm(rawdata, clean = 0):
