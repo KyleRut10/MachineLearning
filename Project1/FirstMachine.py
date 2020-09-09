@@ -5,6 +5,8 @@ import math
 import random
 
 
+latex = True
+
 def calc_loss01(confusion):
   # Calculate the 0/1-loss function on a confusion matrix
   #
@@ -122,11 +124,24 @@ def FirstAlgorithm(rawdata, clean = 0):
   # print out confusion matricies
   for i in range(len(results)):
     print('Confusion Matrix:')
+    if latex:
+      print('\\begin{center}')
+      print('  \\begin{{tabular}}{}{}{}'.format('{', 
+        ' '.join(['c' for x in range(len(results[i]))]), '}'))
     for r,row in enumerate(results[i]):
-      print(', '.join([str(x) for x in row.tolist()]))
+      if latex:
+        # latex copy-paste output
+        print('    {} \\\\'.format(' & '.join([str(x) for x in row])))
+      else: 
+        # Output to print to terminal
+        print(', '.join([str(x) for x in row]))
+        
       # add row to summary confusion matrix
       for v,val in enumerate(row):
         cum_confusion[r][v] += val
+    if latex:
+      print('  \\end{tabular}')
+      print('\\end{center}')
     
     # calculate 0/1-loss
     loss01 = calc_loss01(results[i])
@@ -144,8 +159,20 @@ def FirstAlgorithm(rawdata, clean = 0):
     print()
     
   print('Confusion matrix summed:')
+  if latex:
+    print('\\begin{center}')
+    print('  \\begin{{tabular}}{}{}{}'.format('{', 
+       ' '.join(['c' for x in range(len(results[i]))]), '}'))
   for row in cum_confusion:
-     print(', '.join([str(x) for x in row]))
+      if latex:
+        # latex copy-paste output
+        print('    {} \\\\'.format(' & '.join([str(x) for x in row])))
+      else: 
+        # Output to print to terminal
+        print(', '.join([str(x) for x in row]))
+  if latex:
+    print('  \\end{tabular}')
+    print('\\end{center}')
   print()
 
   print('Average Losses')
