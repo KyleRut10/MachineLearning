@@ -135,7 +135,7 @@ def FirstAlgorithm(rawdata, clean = 0):
     if np.isnan(f1):
       f1 = 0
     f1_arr.append(f1)
-    print('0/1-loss: {:.3f}, F1-loss: {:.3f}'.format(loss01, f1))
+    print('0/1-loss: {:.3f}, F1-score: {:.3f}'.format(loss01, f1))
     # check if value is nan and set to 0????
     print()
     
