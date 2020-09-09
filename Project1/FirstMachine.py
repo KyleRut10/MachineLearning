@@ -109,13 +109,19 @@ def FirstAlgorithm(rawdata, clean = 0):
     # Training on the Right and Testing on the Left
     results[2*i + 1] = test(left, train(right, classes), classes)
   
+  # Hold all the loss functions from each hold-out experiment
   loss01_arr = []
   f1_arr = []
+  # Hold a summary of all the confusions
+  cum_confusion = [[x for x in range(len(results[i]))] for i in range(len(results[i]))]
   # print out confusion matricies
   for i in range(len(results)):
     print('Confusion Matrix:')
-    for row in results[i]:
+    for r,row in enumerate(results[i]):
       print(', '.join([str(x) for x in row.tolist()]))
+      # add row to summary confusion matrix
+      for v,val in enumerate(row):
+        cum_confusion[r][v] += val
     
     # calculate 0/1-loss
     loss01 = calc_loss01(results[i])
@@ -132,6 +138,10 @@ def FirstAlgorithm(rawdata, clean = 0):
     # check if value is nan and set to 0????
     print()
     
+  print('Confusion matrix summed:')
+  for row in cum_confusion:
+     print(', '.join([str(x) for x in row]))
+  print()
 
   print('Average Losses')
   avg_01 = sum(loss01_arr)/len(loss01_arr)
@@ -157,7 +167,8 @@ def train(data, classes):
   
   storage[0] = class_sz
   
-  for k in range(1, data.shape[1] - 1):
+  #for k in range(1, data.shape[1] - 1):
+  for k in range(1, data.shape[1]):
     levels = data[k].unique().tolist()
     matrix = np.zeros((len(classes),len(levels)))
     for i in range(0, len(classes)):
