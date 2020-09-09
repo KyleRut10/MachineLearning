@@ -6,18 +6,34 @@ import random
 
 
 def calc_loss01(confusion):
+  # Calculate the 0/1-loss function on a confusion matrix
+  #
+  # Input - 
+  #   confusion: The confusion matrix
+  # Output - 
+  #   incorrect/total: result of the loss function
   total = 0
   incorrect = 0
+  # Go through every cell in confusion matrix
   for ind,row in enumerate(confusion):
     for col,val in enumerate(row):
+      # add to the total number of instances
       total += val
       if ind != col:
+        # if the cell is not on the diagnal, increment incomplete
         incorrect += val
+  # return computed 0/1-loss function value
   return incorrect/total
   
 
-
 def calc_f1_loss(confusion):
+  # Calculate the F1 loss of a confusion matrix
+  # 
+  # Input - 
+  #   confusion: The confusion matrix
+  # Output - 
+  #   f1: The f1 score for the confusion matrix
+
   # empty array to hold error for classes
   error = []
   # for each class
@@ -263,7 +279,7 @@ def scramble_features(df):
 random.seed(112358)
 
 ## Breast Cancer
-print('*** Brest Cancer Dataset ***')
+print('*** Breast Cancer Dataset ***')
 breastdatastr = os.path.join('Data', 'breast-cancer-wisconsin.csv')
 df = pd.read_csv(breastdatastr)
 # drop index column
