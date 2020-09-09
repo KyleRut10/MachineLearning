@@ -146,7 +146,7 @@ def FirstAlgorithm(rawdata, clean = 0):
   print('Average Losses')
   avg_01 = sum(loss01_arr)/len(loss01_arr)
   avg_f1 = sum(f1_arr)/len(f1_arr)
-  print('0/1-loss: {:.3f}, F1-loss: {:.3f}'.format(avg_01, avg_f1))
+  print('0/1-loss: {:.3f}, F1-score: {:.3f}'.format(avg_01, avg_f1))
   print()
 
 
