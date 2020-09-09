@@ -151,7 +151,7 @@ def FirstAlgorithm(rawdata, clean = 0):
   print('Average Losses')
   avg_01 = sum(loss01_arr)/len(loss01_arr)
   avg_f1 = sum(f1_arr)/len(f1_arr)
-  print('0/1-loss: {:.3f}, F1-loss: {:.3f}'.format(avg_01, avg_f1))
+  print('0/1-loss: {:.3f}, F1-score: {:.3f}'.format(avg_01, avg_f1))
   print()
 
 
@@ -161,29 +161,49 @@ def train(data, classes):
   # Inputs - 
   #   data: The training data for this algorithm
   #   classes: The classes found in the original dataset
-  # Output - storage: An Array holding the Q_C array
-  #          and the F values for each attribute
+  # Output - storage: A dictionary holding all the values
+  #          necessary for the testing function
   
+  # Initializes our storage to pass to the test function later
   storage = {}
   
+  # Calculates the number of entries for each class
   class_sz = {}
   for i in range(0, len(classes)):
     class_sz[i] = sum(data[0] == classes[i])
   
+  # Stores the number of entries for each class
   storage[0] = class_sz
   
-  #for k in range(1, data.shape[1] - 1):
+  # Loops through each of the attributes
   for k in range(1, data.shape[1]):
+    
+    # Initializing the list of levels for the attribure
     levels = data[k].unique().tolist()
+    
+    # Initializes the matrix of weights
     matrix = np.zeros((len(classes),len(levels)))
+    
+    # Loops through the classes
     for i in range(0, len(classes)):
+      
+      # Counts the total entries for the class
       nc = sum(data[0] == classes[i])
+      
+      # Loops through the levels of the attribute
       for j in range(0, len(levels)):
+        
+        # Counts the number of rows with a certain level
+        # in a given class
         count = 0
         for r in range(0, len(data)):
           if (data.iloc[r, 0] == classes[i] and data.iloc[r, k] == levels[j]):
             count += 1
+            
+        # Stores the multiplier as described as Q(C = ci)
         matrix[i][j] = (count + 1)/(nc + data.shape[1] - 1)
+        
+    # Stores the calculations we made to export to the test function
     storage[2*k - 1] = levels
     storage[2*k] = matrix
   
