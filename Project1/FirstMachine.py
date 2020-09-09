@@ -157,8 +157,8 @@ def train(data, classes):
   # Inputs - 
   #   data: The training data for this algorithm
   #   classes: The classes found in the original dataset
-  # Output - storage: An Array holding the Q_C array
-  #          and the F values for each attribute
+  # Output - storage: A dictionary holding all the values
+  #          necessary for the testing function
   
   # Initializes our storage to pass to the test function later
   storage = {}
