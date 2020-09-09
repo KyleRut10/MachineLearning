@@ -62,6 +62,7 @@ def calc_f1_loss(confusion):
     recall = TP/(TP + FN)
 
     f1 = 2* (precision*recall)/(precision+recall)
+    # TODO: Return f1 for each class
     return f1
 
 
