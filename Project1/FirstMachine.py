@@ -228,7 +228,7 @@ def train(data, classes):
           if (data.iloc[r, 0] == classes[i] and data.iloc[r, k] == levels[j]):
             count += 1
             
-        # Stores the multiplier as described as Q(C = ci)
+        # Stores the multiplier as described as F(Aj = ak, C = ci)
         matrix[i][j] = (count + 1)/(nc + data.shape[1] - 1)
         
     # Stores the calculations we made to export to the test function
@@ -382,7 +382,7 @@ df = df.reindex(columns=['class', '1', '2', '3', '4', '5', '6',
 print('binning all attributes')
 df = bin_column(df, '1', [1.515, 1.52, 1.525])
 df = bin_column(df, '2', [12.75])
-df = bin_column(df, '3', [1.5, 3])
+df = bin_column(df, '3', [1.5, 3])   # Note: Would adding 0.5 improve it?
 df = bin_column(df, '4', [1, 1.7, 2.3])
 df = bin_column(df, '5', [71, 72.5, 73.4])
 df = bin_column(df, '6', [0.4, 1, 4])
