@@ -6,6 +6,7 @@ import random
 
 
 latex = False
+print_params = True
 
 def calc_loss01(confusion):
   # Calculate the 0/1-loss function on a confusion matrix
@@ -238,6 +239,7 @@ def train(data, classes):
   return(storage)
 
 def test(data, params, classes):
+  global print_params
   # The testing function for this algorithm
   #
   # Inputs - 
@@ -274,7 +276,14 @@ def test(data, params, classes):
     # Increment the correct element of the confusion matrix
     confusion[pred][true] = confusion[pred][true] + 1
   
-  import ipdb; ipdb.set_trace() 
+  #import ipdb; ipdb.set_trace() 
+  
+  if print_params:
+    print('Attribute 1 Parameters')
+    for i in range(len(params[1])):
+      print('{}| {:.3f} {:.3f}'.format(params[1][i], params[2][0][i], params[2][1][i]))
+    print()
+    print_params = False
 
   return confusion
 
@@ -360,7 +369,7 @@ df = scramble_features(df)
 FirstAlgorithm(df, 1)
 
 
-
+print_params = False
 ## Glass
 print('\n*** Glass Dataset ***')
 glass_path = os.path.join('Data', 'glass.csv')
