@@ -206,7 +206,7 @@ def train(data, classes):
   # Loops through each of the attributes
   for k in range(1, data.shape[1]):
     
-    # Initializing the list of levels for the attribure
+    # Initializing the list of unique values for the attribure
     levels = data[k].unique().tolist()
     
     # Initializes the matrix of weights
@@ -218,24 +218,27 @@ def train(data, classes):
       # Counts the total entries for the class
       nc = sum(data[0] == classes[i])
       
-      # Loops through the levels of the attribute
+      # Loops through the levels/individual values of the attribute
       for j in range(0, len(levels)):
         
-        # Counts the number of rows with a certain level
+        # Counts the number of rows with a certain value
         # in a given class
         count = 0
+        # for each row in the data
         for r in range(0, len(data)):
+          # if it's over the given class and matching attribute value
           if (data.iloc[r, 0] == classes[i] and data.iloc[r, k] == levels[j]):
+            # add it to the count
             count += 1
             
         # Stores the multiplier as described as F(Aj = ak, C = ci)
         matrix[i][j] = (count + 1)/(nc + data.shape[1] - 1)
         
     # Stores the calculations we made to export to the test function
-    storage[2*k - 1] = levels
-    storage[2*k] = matrix
+    storage[2*k - 1] = levels   # Odd values hold attribute values
+    storage[2*k] = matrix   # Even values hold corresponding F scores
   
-  storage[len(storage)] = len(data)
+  storage[len(storage)] = len(data)   # Last entry is N, number examples
   return(storage)
 
 def test(data, params, classes):
@@ -259,13 +262,18 @@ def test(data, params, classes):
     
     # Populate with Classification Step
     for i in range(0, len(classes)):
+      # Multiply by Q(C = ci)
       Cx[i] = Cx[i] * (params[0][i])/(params[len(params) - 1])
-      # Loop through Attributes
+      # Loop through Attributes and multiply by F(C, A) function
       for k in range(1, data.shape[1]):
         try:
+          # Check if it is a known attribute value
           lvl = params[2*k - 1].index(data.iloc[r,k])
+          # If so index into that value
           Cx[i] = Cx[i] * params[2*k][i][lvl]
         except ValueError:
+          # The attribute value did not appear in the training set, therefore
+          # there is no precomputed value for it to look up
           Cx[i] = Cx[i] * 1/(params[0][i] + data.shape[1] - 1)
           
       
