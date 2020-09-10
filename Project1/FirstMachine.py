@@ -5,7 +5,7 @@ import math
 import random
 
 
-latex = True
+latex = False
 
 def calc_loss01(confusion):
   # Calculate the 0/1-loss function on a confusion matrix
@@ -249,7 +249,6 @@ def test(data, params, classes):
   # Initialize our confusion Matrix
   confusion = np.zeros((len(classes), len(classes)))
   
-  
   # Loop through the rows of our testing data
   for r in range(0, len(data)):
     
@@ -260,7 +259,7 @@ def test(data, params, classes):
     for i in range(0, len(classes)):
       Cx[i] = Cx[i] * (params[0][i])/(params[len(params) - 1])
       # Loop through Attributes
-      for k in range(1, data.shape[1] - 1):
+      for k in range(1, data.shape[1]):
         try:
           lvl = params[2*k - 1].index(data.iloc[r,k])
           Cx[i] = Cx[i] * params[2*k][i][lvl]
@@ -274,6 +273,8 @@ def test(data, params, classes):
     
     # Increment the correct element of the confusion matrix
     confusion[pred][true] = confusion[pred][true] + 1
+  
+  import ipdb; ipdb.set_trace() 
 
   return confusion
 
