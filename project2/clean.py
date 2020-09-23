@@ -1,8 +1,14 @@
 import pandas as pd
 
 def clean(data, option):
-    if clean == 1:
-        hello
+    if option == 1:
+        return na.to.a(data)
+    else:
+        return na.remove(data)
     
-  
-  data = rawdata.replace(["?"],'a')
+def na.to.a(data)
+    return data = rawdata.replace(["?"],'a')
+
+def na.remove(data)
+    data = data.replace(["?"],np.nan)
+    return raw.dropna(axis=0,how='any')
