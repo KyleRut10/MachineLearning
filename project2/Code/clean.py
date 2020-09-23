@@ -1,6 +1,6 @@
 import pandas as pd
 
-def clean(data, option):
+def run(data, option):
     if option == 1:
         return na.to.a(data)
     else:
