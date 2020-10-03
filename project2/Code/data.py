@@ -8,6 +8,8 @@ def data_glass():
     df = pd.read_csv(os.path.join('..', '..', 'data', 'glass.csv'))
     # Clean data, by removing rows with missing atrributes
     run(df, 0)
+    # Drop the class and index
+    df = df.drop(columns=['index', 'class'])
     # Return the data
     return df
 
