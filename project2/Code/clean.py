@@ -6,9 +6,9 @@ def run(data, option):
     else:
         return na_remove(data)
     
-def na_to_a(data)
+def na_to_a(data):
     return data = rawdata.replace(["?"],'a')
 
-def na_remove(data)
+def na_remove(data):
     data = data.replace(["?"],np.nan)
     return raw.dropna(axis=0,how='any')
