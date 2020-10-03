@@ -57,7 +57,7 @@ def knn_condenced(df):
 
 ''' Implement k-means clustering and use the cluster centroids as a reduced 
 data set for k-NN.'''
-def kmeans(df):
+def kmeans(df, k):
     # (Num 6)
     # 
     # Input -
@@ -70,7 +70,7 @@ def kmeans(df):
 ''' Implement Partitioning Around Medoids for k-medoids clustering and use the 
 medoids as a reduced data set for k-NN. Note that the k for k-medoids is 
 different than the k for k-NN.'''
-def kmediods(df):
+def kmediods(df, k):
     # (Num 7)
     # 
     # Input -
