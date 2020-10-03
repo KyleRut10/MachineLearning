@@ -6,6 +6,8 @@ from clean import *
 def data_glass():
     # Read in the file
     df = pd.read_csv(os.path.join('..', 'data', 'glass.csv'))
+    # Clean data, by removing rows with missing atrributes
+    run(df, 0)
     # Return the data
     return df
 
