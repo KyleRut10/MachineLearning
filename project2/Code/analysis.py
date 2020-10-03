@@ -1,7 +1,7 @@
 import data
 import pandas as pd
 from math import sqrt
-
+import random
 
 '''  Implement k-nearest neighbor and be prepared to find the best k value for 
 your experiments. You must tune k and explain in your report how you did the 
@@ -64,7 +64,28 @@ def kmeans(df, k):
     # 
     # Output - 
     # 
-    pass
+    
+    # Get min and max values for each feature to get data space
+    feature_min_max = []
+    for f in df.columns.values:
+        vals = df[f]
+        feature_min_max.append([min(vals), max(vals)])
+    
+    # Pick k initial starting centroids from data space
+
+    centroids = []
+    for kk in range(k):
+        centroid = []
+        # populate the centroid with a value for each feature
+        for f in feature_min_max:
+            # TODO: DO THIS DIFFERENTLY WITH MORE MATH THINGS......
+            centroid.append(random.randint(int(f[0]), int(f[1])))
+            # Don't limit to only integers
+            centroid[-1] *= random.random()
+            print(f, ' ', centroid[-1])
+        centroids.append(centroid)
+
+
 
 
 ''' Implement Partitioning Around Medoids for k-medoids clustering and use the 
