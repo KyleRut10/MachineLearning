@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 def run(data, option):
     if option == 1:
@@ -7,8 +8,9 @@ def run(data, option):
         return na_remove(data)
     
 def na_to_a(data):
-    return data = rawdata.replace(["?"],'a')
+    data = data.replace(["?"],'a')
+    return data
 
 def na_remove(data):
     data = data.replace(["?"],np.nan)
-    return raw.dropna(axis=0,how='any')
+    return data.dropna(axis=0,how='any', inplace=True)
