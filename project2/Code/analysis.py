@@ -2,6 +2,7 @@ import data
 import pandas as pd
 from math import sqrt
 import random
+import distance as distan
 
 '''  Implement k-nearest neighbor and be prepared to find the best k value for 
 your experiments. You must tune k and explain in your report how you did the 
@@ -57,7 +58,7 @@ def knn_condenced(df):
 
 ''' Implement k-means clustering and use the cluster centroids as a reduced 
 data set for k-NN.'''
-def kmeans(df, k):
+def kmeans(df, k, dist_metric):
     # (Num 6)
     # 
     # Input -
@@ -72,7 +73,6 @@ def kmeans(df, k):
         feature_min_max.append([min(vals), max(vals)])
     
     # Pick k initial starting centroids from data space
-
     centroids = []
     for kk in range(k):
         centroid = []
@@ -82,10 +82,20 @@ def kmeans(df, k):
             centroid.append(random.randint(int(f[0]), int(f[1])))
             # Don't limit to only integers
             centroid[-1] *= random.random()
-            print(f, ' ', centroid[-1])
         centroids.append(centroid)
 
-
+    
+    while True:
+        # make empty set for all clusters
+        clusters = [[] for i in range(k)]
+        for i,x in df.iterrows():
+            x_vec = list(x)
+            centroid_dists = []
+            # calculate euclidean distance to all centroids
+            for cent in centroids:
+                centroid_dists.append(dist_metric(cent, x_vec))
+                print(centroid_dists[-1])
+        break
 
 
 ''' Implement Partitioning Around Medoids for k-medoids clustering and use the 
