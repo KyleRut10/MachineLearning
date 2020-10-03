@@ -2,13 +2,13 @@ import pandas as pd
 
 def run(data, option):
     if option == 1:
-        return na.to.a(data)
+        return na_to_a(data)
     else:
-        return na.remove(data)
+        return na_remove(data)
     
-def na.to.a(data)
+def na_to_a(data)
     return data = rawdata.replace(["?"],'a')
 
-def na.remove(data)
+def na_remove(data)
     data = data.replace(["?"],np.nan)
     return raw.dropna(axis=0,how='any')
