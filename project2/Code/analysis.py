@@ -143,58 +143,73 @@ def kmedoids(df, k, dist_metric):
     # 
 
     # randomly select centroids
-    randoms = df.sample(n=k)
-    centroids = []
-    centroids = random.choices(range(len(df)), k=k)
+    medoids = random.choices(range(len(df)), k=k)
 
     # TODO: repeat until convergance
     clusters = [[] for i in range(k)]
     looping = True
     times_looped = 0
     while looping:
-        times_looped += 1
-        if times_looped % 10:
+        if times_looped % 1 == 0:
             print('looped: {}'.format(times_looped))
+        times_looped += 1
         
         # Keep track of old centroid values
-        old_centroids = centroids
+        old_medoids = medoids.copy()
         
         # loop through every data point
         for point_loc in range(len(df)):
             point = df.iloc[point_loc]
             # assign values to clusters
             dists = []
-            for cent_loc in centroids:
-                cent = df.iloc[cent_loc, :]
+            for med_loc in medoids:
+                med = df.iloc[med_loc, :]
                 # calculate distance to each centroid
-                dists.append(dist_metric(cent, point))
+                dists.append(dist_metric(med, point))
                 #dists.append(euclidean_distance(cent, point))
             # pick minimum distance and put point in correct cluster
             clusters[dists.index(min(dists))].append(point_loc)
         
         # calculate distortion
-        for i in range(k):
-            # calculate distance of each point in cluster to medoid
-            pass
+        distort = distortion(df, clusters, medoids, dist_metric)
         
-        break
+        # swaping
+        for i,med_loc in enumerate(medoids):
+            for xi in range(len(df)):
+                # don't compare if medoid, break from loop
+                if xi == med_loc:
+                    break
+                swap_medoids = medoids.copy()
+                swap_medoids[i] = xi
+                swap_distort = distortion(df, clusters, swap_medoids, 
+                                          dist_metric)
+                if swap_distort <= distort:
+                    pass # this is where they'd be swaped back
+                else: 
+                    medoids = swap_medoids
 
         # Check if the centroids are the same
-        exit_loop = False
-        # for each centroid
-        for c,cent in enumerate(centroids):
-            # for each value in the centroid
-            for v,val in enumerate(cent):
-                if val != old_centroids.iloc[c,v]:
-                    print('centroid {} not a match'.format(c))
-                    exit_loop = True
-                    break
+        looping = False
+        for i,m in enumerate(medoids):
+            if old_medoids[i] != m:
+                looping = True
+
 
     print('Number in each cluster')
     for c in clusters:
         print(len(c))
-
     
+    # return medoids
+    #return medoids
+
+# distortion method for k-medoids
+def distortion(df, clusters, medoids,dist_metric):
+    distort = 0
+    k = len(medoids)
+    for j in range(k):
+        for v in clusters[j]:
+            distort += dist_metric(df.iloc[j,:], df.iloc[v,:])
+    return distort
 
 
 # Repetetive use functions for many of these?
