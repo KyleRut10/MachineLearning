@@ -141,7 +141,25 @@ def kmediods(df, k):
     # 
     # Output - 
     # 
-    pass
+
+    # randomly select centroids
+    centroids = df.sample(n=k)
+    print(centroids)
+
+    # TODO: repeat until convergance
+    custers = [[] for i in range(k)]
+    while True:
+        old_centroids = centroids
+        for i,point in df.itterrows():
+            # assign values to clusters
+            dists = []
+            for cent in centroids:
+                # calculate distance to each centroid
+                dists.append(euclidean_distance(cent, point))
+            # pick minimum distance and put point in correct cluster
+            clusters[dists.index(min(dists))] = point
+        break
+
 
 # Repetetive use functions for many of these?
 def euclidean_distance(row1, row2):
