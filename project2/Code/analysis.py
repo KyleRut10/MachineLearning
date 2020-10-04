@@ -134,7 +134,7 @@ def kmeans(df, k, dist_metric):
 ''' Implement Partitioning Around Medoids for k-medoids clustering and use the 
 medoids as a reduced data set for k-NN. Note that the k for k-medoids is 
 different than the k for k-NN.'''
-def kmedoids(df, k):
+def kmedoids(df, k, dist_metric):
     # (Num 7)
     # 
     # Input -
@@ -143,22 +143,58 @@ def kmedoids(df, k):
     # 
 
     # randomly select centroids
-    centroids = df.sample(n=k)
-    print(centroids)
+    randoms = df.sample(n=k)
+    centroids = []
+    centroids = random.choices(range(len(df)), k=k)
 
     # TODO: repeat until convergance
-    custers = [[] for i in range(k)]
-    while True:
+    clusters = [[] for i in range(k)]
+    looping = True
+    times_looped = 0
+    while looping:
+        times_looped += 1
+        if times_looped % 10:
+            print('looped: {}'.format(times_looped))
+        
+        # Keep track of old centroid values
         old_centroids = centroids
-        for i,point in df.itterrows():
+        
+        # loop through every data point
+        for point_loc in range(len(df)):
+            point = df.iloc[point_loc]
             # assign values to clusters
             dists = []
-            for cent in centroids:
+            for cent_loc in centroids:
+                cent = df.iloc[cent_loc, :]
                 # calculate distance to each centroid
-                dists.append(euclidean_distance(cent, point))
+                dists.append(dist_metric(cent, point))
+                #dists.append(euclidean_distance(cent, point))
             # pick minimum distance and put point in correct cluster
-            clusters[dists.index(min(dists))] = point
+            clusters[dists.index(min(dists))].append(point_loc)
+        
+        # calculate distortion
+        for i in range(k):
+            # calculate distance of each point in cluster to medoid
+            pass
+        
         break
+
+        # Check if the centroids are the same
+        exit_loop = False
+        # for each centroid
+        for c,cent in enumerate(centroids):
+            # for each value in the centroid
+            for v,val in enumerate(cent):
+                if val != old_centroids.iloc[c,v]:
+                    print('centroid {} not a match'.format(c))
+                    exit_loop = True
+                    break
+
+    print('Number in each cluster')
+    for c in clusters:
+        print(len(c))
+
+    
 
 
 # Repetetive use functions for many of these?
