@@ -3,6 +3,7 @@ import pandas as pd
 from math import sqrt
 import random
 import distance as distan
+import numpy as np
 
 '''  Implement k-nearest neighbor and be prepared to find the best k value for 
 your experiments. You must tune k and explain in your report how you did the 
@@ -82,17 +83,14 @@ def kmeans(df, k, dist_metric):
             centroid.append(random.randint(int(f[0]), int(f[1])))
             # Don't limit to only integers
             centroid[-1] += random.random()
-        centroids.append(centroid)
-
-
-   
+        centroids.append(centroid) 
 
     
     while True:
+        old_centroids = centroids
         # make empty set for all clusters
         clusters = [[] for i in range(k)]
-        #for i,x in df.iterrows():
-        for x in centroids:
+        for i,x in df.iterrows():
             x_vec = list(x)
             centroid_dists = []
             # calculate euclidean distance to all centroids
@@ -102,7 +100,29 @@ def kmeans(df, k, dist_metric):
             #print(min(centroid_dists),  ' ', max(centroid_dists))
             c_index = centroid_dists.index(c_val)
             clusters[c_index].append(x)
-            print(c_index)
+            print('cluster index: ', c_index)
+        # make new centroids for each cluster
+        centroids = []
+        for i,cluster in enumerate(clusters):
+            ####import ipdb; ipdb.set_trace()
+            #v = np.sum(c, axis=0)/len(c)
+            #v = np.sum([np.array(c#clusters[ii], dtype=float) for ii in c],
+            #           axis=0)/len(c)
+            ##centroids.append(v)
+            means = [0 for x in range(len(df.columns.values))]
+            for data in cluster:
+                for d,point in enumerate(data):
+                    means[d] += point
+            for i,m in enumerate(means):
+                if len(cluster) != 0:
+                    means[i] = means[i]/len(cluster)
+                else:
+                    means[i] = 0
+            print('means\n', means)
+
+        #for i,c in enumerate(centroids):
+        #    for ii,cc in enumerate(c):
+        #        print(cc, old_centroids[i][ii])
         break
 
     # number in each cluster...
