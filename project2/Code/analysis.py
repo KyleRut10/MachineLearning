@@ -81,21 +81,34 @@ def kmeans(df, k, dist_metric):
             # TODO: DO THIS DIFFERENTLY WITH MORE MATH THINGS......
             centroid.append(random.randint(int(f[0]), int(f[1])))
             # Don't limit to only integers
-            centroid[-1] *= random.random()
+            centroid[-1] += random.random()
         centroids.append(centroid)
+
+
+   
 
     
     while True:
         # make empty set for all clusters
         clusters = [[] for i in range(k)]
-        for i,x in df.iterrows():
+        #for i,x in df.iterrows():
+        for x in centroids:
             x_vec = list(x)
             centroid_dists = []
             # calculate euclidean distance to all centroids
             for cent in centroids:
                 centroid_dists.append(dist_metric(cent, x_vec))
-                print(centroid_dists[-1])
+            c_val = min(centroid_dists)
+            #print(min(centroid_dists),  ' ', max(centroid_dists))
+            c_index = centroid_dists.index(c_val)
+            clusters[c_index].append(x)
+            print(c_index)
         break
+
+    # number in each cluster...
+    for l in clusters:
+        print(len(l))
+
 
 
 ''' Implement Partitioning Around Medoids for k-medoids clustering and use the 
