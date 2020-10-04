@@ -10,6 +10,9 @@ def data_glass():
     run(df, 0)
     # Drop the class and index
     df = df.drop(columns=['index', 'class'])
+    # standardize the data
+    for col in df.columns.values:
+        df[col] = z_stand(df[col])
     # Return the data
     return df
 
@@ -17,6 +20,7 @@ def data_glass():
 def data_abalone():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'abalone.csv'))
+    # 
     # Return the data
     return df
 
