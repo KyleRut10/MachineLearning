@@ -134,7 +134,7 @@ def kmeans(df, k, dist_metric):
 ''' Implement Partitioning Around Medoids for k-medoids clustering and use the 
 medoids as a reduced data set for k-NN. Note that the k for k-medoids is 
 different than the k for k-NN.'''
-def kmediods(df, k):
+def kmedoids(df, k):
     # (Num 7)
     # 
     # Input -
