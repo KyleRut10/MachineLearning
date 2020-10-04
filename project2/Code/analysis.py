@@ -119,7 +119,7 @@ def kmeans(df, k, dist_metric):
                 else:
                     means[i] = 0
             print('means\n', means)
-
+            centroids = means
         #for i,c in enumerate(centroids):
         #    for ii,cc in enumerate(c):
         #        print(cc, old_centroids[i][ii])
