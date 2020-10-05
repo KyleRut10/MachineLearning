@@ -183,7 +183,6 @@ def kmedoids(df, k, dist_metric):
     # randomly select centroids
     medoids = random.choices(range(len(df)), k=k)
 
-    # TODO: repeat until convergance
     clusters = [[] for i in range(k)]
     looping = True
     times_looped = 0
@@ -280,10 +279,3 @@ def get_neighbors(train, test_row, n):
         neighbors.append(distances[i][0])
     
     return neighbors
-    
-
-# TODO: Other steps
-
-if __name__ == '__main__':
-    # put main logic here
-    pass
