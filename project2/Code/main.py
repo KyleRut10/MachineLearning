@@ -2,11 +2,16 @@ import analysis as a
 
 
 def tune_kmeans(k_vals_list):
-    
+        
     pass
 
 
-def stratified_sample(data) {
+if __name__ == '__main__':
+    # TODO: Put main logic here
+    pass
+
+
+def stratified_sample(data):
     #Produced Random Samples by Proportion
     sort = data.sort_values(by = 'class')
   
@@ -17,7 +22,7 @@ def stratified_sample(data) {
     itr = 0
     for i in sorted(data['class'].unique()):
         totals = totals.append(sum(df['class'] == i))
-        random_row = random.sample(range(totals[itr], totals[itr + 1]),\\
+        random_row = random.sample(range(totals[itr], totals[itr + 1]),#\\ #What is this?
         max(floor(totals(itr + 1) * 0.1), 1))
       
         for j in random_row:
@@ -48,10 +53,9 @@ def stratified_sample(data) {
         itr += 1
     
     # Could store tuning_data as TenGroups[10] to output
-    pass
-}
 
-def nonrandom_sample(data) {
+
+def nonrandom_sample(data):
     tuning = pd.DataFrame()
     sort = data.sort_values('response')
     removable1 = sort
@@ -70,11 +74,3 @@ def nonrandom_sample(data) {
             TenGroups[j] = TenGroups[j].append(removable1[floor(removable1.shape[0]/10)*i + j])
             removable2 = removable2.drop(floor(removable1.shape[0]/10)*i + j]))
     TenGroups[9] = removable2
-}
-
-
-if __name__ == '__main__':
-    # TODO: Put main logic here
-    pass
-
-
