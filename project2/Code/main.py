@@ -49,3 +49,9 @@ def stratified_sample(data) {
     # Could store tuning_data as TenGroups[10] to output
     pass
 }
+
+def nonrandom_sample(data) {
+    sort = data.sort_values('response')
+    for i in floor(sort.shape[0]/10):
+      
+}
