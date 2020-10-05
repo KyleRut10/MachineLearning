@@ -19,7 +19,7 @@ def z_stand(col):
     # Takes a Raw data Column and standardizes it by its z-score
     # Input: col - Raw Data Column
     # Output: Z-score of the Column
-    return (col - col.mean())/col.std
+    return (col - col.mean())/col.std()
     
 def on_hot(col):
     # Takes a column of categorical data and converts it into
