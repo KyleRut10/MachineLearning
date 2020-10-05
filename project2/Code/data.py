@@ -81,7 +81,7 @@ def type_segmentation():
 
 def data_forestfire():
     # Read in the file
-    df = pd.read_csv(os.path.join('..', '..', 'data', 'forestfire.csv'))
+    df = pd.read_csv(os.path.join('..', '..', 'data', 'forestfires.csv'))
     # Return the data
     return df
 
