@@ -20,7 +20,8 @@ def data_glass():
 def data_abalone():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'abalone.csv'))
-    # 
+    # Clean data, by removing rows with missing atrributes
+    run(df, 0)
     # Return the data
     return df
 
@@ -53,3 +54,13 @@ def data_hardware():
     df = pd.read_csv(os.path.join('..', '..', 'data', 'machine.csv'))
     # Return the data
     return df
+
+
+def data_test():
+    data = {'x': [1.0,1.5,1.0,1.2,1.9,5.0,5.5,5.5], 
+            'y': [1.0,1.2,1.5,1.4,1.7,5.0,6.0,5.4]}
+    df = pd.DataFrame.from_dict(data)
+    for col in df.columns.values:
+        df[col] = z_stand(df[col])
+    return df
+
