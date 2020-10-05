@@ -9,6 +9,7 @@ def data_glass():
     # Clean data, by removing rows with missing atrributes
     run(df, 0)
     # Drop the class and index
+    # TODO: Drop class in kmeans and kmedoids not here!!!!!
     df = df.drop(columns=['index', 'class'])
     # standardize the data
     for col in df.columns.values:
@@ -52,6 +53,7 @@ def data_forestfire():
 def data_hardware():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'machine.csv'))
+    df = df.drop(columns=['erp'])
     # Return the data
     return df
 
