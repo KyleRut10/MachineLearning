@@ -56,7 +56,22 @@ def stratified_sample(data) {
 }
 
 def nonrandom_sample(data) {
+    tuning = pd.DataFrame()
     sort = data.sort_values('response')
-    for i in floor(sort.shape[0]/10):
-      
+    removable1 = sort
+    for i in range(floor(sort.shape[0]/10)):
+        tuning = tuning.append(sort[floor(sort.shape[0]/10)*i])
+        removable = removable.drop(floor(sort.shape[0]/10)*i)
+    
+    TenGroups = {}
+    
+    for i in range(10):
+        TenGroups[i] = pd.DataFrame
+    
+    removable2 = removable1
+    for i in range(floor(removable.shape[0]/10)):
+        for j in range(9):
+            TenGroups[j] = TenGroups[j].append(removable1[floor(removable1.shape[0]/10)*i + j])
+            removable2 = removable2.drop(floor(removable1.shape[0]/10)*i + j]))
+    TenGroups[9] = removable2
 }
