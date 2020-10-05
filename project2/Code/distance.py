@@ -45,6 +45,15 @@ def VDM(vect, classes):
                     sum_mat[val1_i][val2_i] += abs(prob1-prob2) # add the diff to each mat value
     return (unique_cats, sum_mat)
 
+def Hamming(c1, c2):
+    #Calculates the Hamming Distance
+    sum = 0
+    
+    for i in range(len(c1)):
+        if (c1[i] != c2[i]):
+            sum += 1
+            
+    return sum
 
 def vdm_df(unique_cats, sum_mat):
     # initilize a dictionary to store the lists in
