@@ -5,6 +5,12 @@ import pandas as pd
 
 def euclidean(x1, x2):
     dist = 0
+    # che3ck if only single values
+    if not isinstance(x1, list):
+        x1 = [x1]
+    if not isinstance(x2, list):
+        x2 = [x2]
+
     for i in range(len(x1)):
         dist += abs(x1[i] + x2[i])**2
     dist = dist**(1/2)
@@ -52,5 +58,4 @@ def vdm_df(unique_cats, sum_mat):
 
     df = pd.DataFrame.from_dict(df_dict)
     df = df.set_index('index')
-    #print(df)
     return df
