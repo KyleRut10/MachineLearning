@@ -6,10 +6,6 @@ def tune_kmeans(k_vals_list):
     pass
 
 
-if __name__ == '__main__':
-    # TODO: Put main logic here
-    pass
-
 def stratified_sample(data) {
     #Produced Random Samples by Proportion
     sort = data.sort_values(by = 'class')
@@ -75,3 +71,10 @@ def nonrandom_sample(data) {
             removable2 = removable2.drop(floor(removable1.shape[0]/10)*i + j]))
     TenGroups[9] = removable2
 }
+
+
+if __name__ == '__main__':
+    # TODO: Put main logic here
+    pass
+
+
