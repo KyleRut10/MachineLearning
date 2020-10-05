@@ -86,8 +86,20 @@ def kmeans(df, k, dist_metric):
         centroids.append(centroid) 
 
     
-    while True:
-        old_centroids = centroids
+    looping = True
+    times_looped = 0
+    while looping:
+        #'''
+        print()
+        print('init centroids')
+        for centroid in centroids:
+            print(', '.join([str(round(x,3)) for x in centroid]))
+        #'''
+        if times_looped % 10 == 0:
+            print('times looped: {}'.format(times_looped))
+        times_looped += 1
+
+        old_centroids = centroids.copy()
         # make empty set for all clusters
         clusters = [[] for i in range(k)]
         for i,x in df.iterrows():
@@ -99,31 +111,57 @@ def kmeans(df, k, dist_metric):
             c_val = min(centroid_dists)
             #print(min(centroid_dists),  ' ', max(centroid_dists))
             c_index = centroid_dists.index(c_val)
-            clusters[c_index].append(x)
-            print('cluster index: ', c_index)
+            clusters[c_index].append(x_vec)
+            #print('cluster index: ', c_index)
         # make new centroids for each cluster
         centroids = []
         for i,cluster in enumerate(clusters):
-            ####import ipdb; ipdb.set_trace()
-            #v = np.sum(c, axis=0)/len(c)
-            #v = np.sum([np.array(c#clusters[ii], dtype=float) for ii in c],
-            #           axis=0)/len(c)
-            ##centroids.append(v)
             means = [0 for x in range(len(df.columns.values))]
             for data in cluster:
                 for d,point in enumerate(data):
                     means[d] += point
-            for i,m in enumerate(means):
+            for j,m in enumerate(means):
                 if len(cluster) != 0:
-                    means[i] = means[i]/len(cluster)
+                    means[j] = means[j]/len(cluster)
                 else:
-                    means[i] = 0
-            print('means\n', means)
-            centroids = means
+                    means[j] = 0
+            #print('means\n', means)
+            centroids.append(means)
         #for i,c in enumerate(centroids):
         #    for ii,cc in enumerate(c):
         #        print(cc, old_centroids[i][ii])
-        break
+        #'''
+        print('final centroids')
+        for centroid in centroids:
+            print(', '.join([str(round(x,3)) for x in centroid]))
+        #'''
+        #looping = False
+        print('Checking convergance')
+        conv_sum = 0
+        for i,c in enumerate(centroids):
+            cent_diffs = []
+            # for each of the values in a centroid
+            '''
+            diff_dist = dist_metric(c, old_centroids[i])
+            if diff_dist >= 0.05:
+                looping = True
+            print(diff_dist)
+            '''
+            # subtract vectors
+            vec_diff = 0
+            for ii,cc in enumerate(c):
+                vec_diff += (cc-old_centroids[i][ii])**2
+
+            conv_sum += sqrt(vec_diff)
+                cent_diffs.append(abs(cc-old_centroids[i][ii])**2)
+                if abs(cc - old_centroids[i][ii])**2 >= 0.05:
+                    looping = True
+            print(', '.join([str(round(x, 3)) for x in cent_diffs]))
+        if conv_sum <= 0.05*k:
+            looping = False
+        if times_looped > 10:
+            print('Looped over 200 times, ending iterations')
+            looping = False
 
     # number in each cluster...
     for l in clusters:
