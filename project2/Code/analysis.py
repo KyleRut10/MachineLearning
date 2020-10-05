@@ -59,7 +59,7 @@ def knn_condenced(df):
 
 ''' Implement k-means clustering and use the cluster centroids as a reduced 
 data set for k-NN.'''
-def kmeans(df, k, dist_metric):
+def kmeans(df, k, catigorical, dist_metric):
     # (Num 6)
     # 
     # Input -
@@ -68,7 +68,14 @@ def kmeans(df, k, dist_metric):
     # 
    
     # get atribute distance matrices
-
+    cat_dists = {}
+    for cat in catigorical:
+        cats,mat = distan.VDM(df[cat], df['class']) 
+        cat_dists[cat] = distan.vdm_df(cats,mat)
+    
+    #print(cat_dists)
+    #print(type(cat_dists[catigorical[0]))
+    #print(cat_dists[catigorical].columns.values)
 
     # drop the class label for clustering
     if 'class' in df.columns.values:
@@ -78,6 +85,7 @@ def kmeans(df, k, dist_metric):
     feature_min_max = []
     for f in df.columns.values:
         vals = df[f]
+        # this will work even for string data, it'll just get ignored later
         feature_min_max.append([min(vals), max(vals)])
     
     # Pick k initial starting centroids from data space
@@ -85,11 +93,16 @@ def kmeans(df, k, dist_metric):
     for kk in range(k):
         centroid = []
         # populate the centroid with a value for each feature
-        for f in feature_min_max:
-            # TODO: DO THIS DIFFERENTLY WITH MORE MATH THINGS......
-            centroid.append(random.randint(int(f[0]), int(f[1])))
-            # Don't limit to only integers
-            centroid[-1] += random.random()
+        for i,col in enumerate(df.columns.values):
+            f = feature_min_max[i]
+            if col in catigorical:
+                # Add random attribute value from catigorical values
+               centroid.append(random.choice(df[col].unique())) 
+            else:
+                print(col)
+                centroid.append(random.randint(int(f[0]), int(f[1])))
+                # Don't limit to only integers
+                centroid[-1] += random.random()
         centroids.append(centroid) 
 
     
@@ -100,7 +113,8 @@ def kmeans(df, k, dist_metric):
         print()
         print('init centroids')
         for centroid in centroids:
-            print(', '.join([str(round(x,3)) for x in centroid]))
+            #print(', '.join([str(round(x,3)) for x in centroid]))
+            print(', '.join([str(x) for x in centroid]))
         #'''
         if times_looped % 10 == 0:
             print('times looped: {}'.format(times_looped))
@@ -114,7 +128,16 @@ def kmeans(df, k, dist_metric):
             centroid_dists = []
             # calculate euclidean distance to all centroids
             for cent in centroids:
-                centroid_dists.append(dist_metric(cent, x_vec))
+                cent_dist = 0
+                for p,point in enumerate(cent):
+                    col = df.columns.values[p]
+                    # check if the column is catigorical
+                    if col in catigorical:
+                        cent_dist += cat_dists[col].loc[point,x[p]]
+                    else:
+                        cent_dist += dist_metric(point, x[p])
+                centroid_dists.append(cent_dist)
+                #centroid_dists.append(dist_metric(cent, x_vec))
             c_val = min(centroid_dists)
             #print(min(centroid_dists),  ' ', max(centroid_dists))
             c_index = centroid_dists.index(c_val)
@@ -140,7 +163,8 @@ def kmeans(df, k, dist_metric):
         #'''
         print('final centroids')
         for centroid in centroids:
-            print(', '.join([str(round(x,3)) for x in centroid]))
+            #print(', '.join([str(round(x,3)) for x in centroid]))
+            print(', '.join([str(x) for x in centroid]))
         #'''
         #looping = False
         print('Checking convergance')
