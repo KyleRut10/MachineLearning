@@ -43,7 +43,7 @@ def data_vote():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'house-votes-84.csv'))
     # Clean the data
-    data = clean.run(df, 1)
+    data = run(df, 1)
     # Return the data
     return data
 
