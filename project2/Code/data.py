@@ -32,10 +32,10 @@ def data_abalone():
     return df
 
 
-def types_abalone():
+def type_abalone():
     catigorical = ['sex']
     continuious = ['length', 'diameter', 'height', 'whole weight',
-                   'shucked weight', 'biscera weight', 'shell weight', 'rings']
+                   'shucked weight', 'biscera weight', 'shell weight']
     return catigorical, continuious
 
 
