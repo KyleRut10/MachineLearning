@@ -46,7 +46,14 @@ def kmeans(df, k, dist_metric):
     # 
     # Output - 
     # 
-    
+   
+    # get atribute distance matrices
+
+
+    # drop the class label for clustering
+    if 'class' in df.columns.values:
+        df = df.drop(columns=['class'])
+
     # Get min and max values for each feature to get data space
     feature_min_max = []
     for f in df.columns.values:
@@ -132,7 +139,7 @@ def kmeans(df, k, dist_metric):
             for ii,cc in enumerate(c):
                 vec_diff += (cc-old_centroids[i][ii])**2
 
-            conv_sum += sqrt(vec_diff)
+                conv_sum += sqrt(vec_diff)
                 cent_diffs.append(abs(cc-old_centroids[i][ii])**2)
                 if abs(cc - old_centroids[i][ii])**2 >= 0.05:
                     looping = True
@@ -146,7 +153,21 @@ def kmeans(df, k, dist_metric):
     # number in each cluster...
     for l in clusters:
         print(len(l))
+    
+    # calculate distortion
+    distort = 0
+    # outer j=0 to k sum
+    for kk,cluster in enumerate(clusters):
+        cluster_dist = 0
+        for point in cluster:
+            # TODO: Cry
+            pass
+        
+            
 
+
+    # return distortion and centroids
+    return distortion, centroids
 
 
 ''' Implement Partitioning Around Medoids for k-medoids clustering and use the 

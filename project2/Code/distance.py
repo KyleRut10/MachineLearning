@@ -1,5 +1,6 @@
 # Make distance metrics in terms of vector x1 and vector x2 so we can use them
 # interchangabely
+import pandas as pd
 
 
 def euclidean(x1, x2):
@@ -38,12 +39,27 @@ def VDM(vect, classes):
                     sum_mat[val1_i][val2_i] += abs(prob1-prob2) # add the diff to each mat value
     return (unique_cats, sum_mat)
 
+def Hamming(c1, c2):
+    #Calculates the Hamming Distance
+    sum = 0
+    
+    for i in range(len(c1)):
+        if (c1[i] != c2[i]):
+            sum += 1
+            
+    return sum
 
+def vdm_df(unique_cats, sum_mat):
+    # initilize a dictionary to store the lists in
+    df_dict = {'index': unique_cats}
+    for uc in unique_cats:
+        df_dict[uc] = []
 
+    for row in sum_mat:
+        for i,uc in enumerate(unique_cats):
+            df_dict[uc].append(row[i])
 
-
-
-
-
-
-
+    df = pd.DataFrame.from_dict(df_dict)
+    df = df.set_index('index')
+    #print(df)
+    return df
