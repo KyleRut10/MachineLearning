@@ -41,7 +41,7 @@ def stratified_sample(data):
             TenGroups[n] = pd.Dataframe()
             rows = totals[itr + 1] - totals[itr]
             base = floor((rows)*0.1)
-            timesadd = mod((rows)*0.1))
+            timesadd = mod(rows*0.1)
             lister = list()
             for x in range(10)
                 if (x < timesadd):
