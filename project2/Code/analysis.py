@@ -59,7 +59,7 @@ def knn_condenced(df):
 
 ''' Implement k-means clustering and use the cluster centroids as a reduced 
 data set for k-NN.'''
-def kmeans(df, k, catigorical, dist_metric):
+def kmeans(df, k, catigorical):
     # (Num 6)
     # 
     # Input -
@@ -72,10 +72,6 @@ def kmeans(df, k, catigorical, dist_metric):
     for cat in catigorical:
         cats,mat = distan.VDM(df[cat], df['class']) 
         cat_dists[cat] = distan.vdm_df(cats,mat)
-    
-    #print(cat_dists)
-    #print(type(cat_dists[catigorical[0]))
-    #print(cat_dists[catigorical].columns.values)
 
     # drop the class label for clustering
     if 'class' in df.columns.values:
@@ -99,7 +95,6 @@ def kmeans(df, k, catigorical, dist_metric):
                 # Add random attribute value from catigorical values
                centroid.append(random.choice(df[col].unique())) 
             else:
-                print(col)
                 centroid.append(random.randint(int(f[0]), int(f[1])))
                 # Don't limit to only integers
                 centroid[-1] += random.random()
@@ -109,106 +104,138 @@ def kmeans(df, k, catigorical, dist_metric):
     looping = True
     times_looped = 0
     while looping:
-        #'''
+        '''
         print()
         print('init centroids')
         for centroid in centroids:
             #print(', '.join([str(round(x,3)) for x in centroid]))
             print(', '.join([str(x) for x in centroid]))
-        #'''
-        if times_looped % 10 == 0:
+        '''
+        if times_looped % 20 == 0:
             print('times looped: {}'.format(times_looped))
         times_looped += 1
 
         old_centroids = centroids.copy()
         # make empty set for all clusters
         clusters = [[] for i in range(k)]
+        # go through each datapoint and assign it to a cluster
         for i,x in df.iterrows():
             x_vec = list(x)
             centroid_dists = []
-            # calculate euclidean distance to all centroids
+            # calculate distance to all centroids
             for cent in centroids:
                 cent_dist = 0
+                # Calculate the distance of each point in the centroid
                 for p,point in enumerate(cent):
                     col = df.columns.values[p]
                     # check if the column is catigorical
                     if col in catigorical:
                         cent_dist += cat_dists[col].loc[point,x[p]]
                     else:
-                        cent_dist += dist_metric(point, x[p])
+                        cent_dist += distan.euclidean(point, x[p])
                 centroid_dists.append(cent_dist)
-                #centroid_dists.append(dist_metric(cent, x_vec))
+            # Pick the minimum distance
             c_val = min(centroid_dists)
             #print(min(centroid_dists),  ' ', max(centroid_dists))
+            # find the index and assign it to the cluaster
             c_index = centroid_dists.index(c_val)
             clusters[c_index].append(x_vec)
             #print('cluster index: ', c_index)
         # make new centroids for each cluster
         centroids = []
-        for i,cluster in enumerate(clusters):
-            means = [0 for x in range(len(df.columns.values))]
-            for data in cluster:
-                for d,point in enumerate(data):
-                    means[d] += point
-            for j,m in enumerate(means):
-                if len(cluster) != 0:
-                    means[j] = means[j]/len(cluster)
+        for c,cluster in enumerate(clusters):
+            # make empty mean holder
+            means = {}
+            for col in df.columns.values:
+                if col in catigorical:
+                    means[col] = {}
+                    for uni in df[col].unique():
+                        means[col][uni] = 0
                 else:
-                    means[j] = 0
-            #print('means\n', means)
-            centroids.append(means)
-        #for i,c in enumerate(centroids):
-        #    for ii,cc in enumerate(c):
-        #        print(cc, old_centroids[i][ii])
-        #'''
+                    means[col] = 0
+            # for each data point
+            for data in cluster:
+                # Go through each attribute in the row
+                for p,col in enumerate(df.columns.values):
+                    # if the column is catigor, use the catigorical dist matrix
+                    if col in catigorical:
+                        # add one to the count
+                       means[col][data[p]] += 1
+                    else:
+                        means[col] += data[p]
+            #print(means)
+            # assign mean to centroid
+            centroid = []
+            for m,mean_key in enumerate(list(means.keys())):
+                mean = means[mean_key]
+                # real featured value, just add and divide by length clust c
+                if not isinstance(mean, dict):
+                    if len(clusters[c]) != 0:
+                        centroid.append(mean/len(clusters[c]))
+                    else:
+                        centroid.append(0)
+                else:
+                    # initilize maximum vlaue
+                    max_val = 0
+                    max_key = ''
+                    for key in mean.keys():
+                        if mean[key] > max_val:
+                            max_val = mean[key]
+                            max_key = key
+                    centroid.append(max_key)
+            centroids.append(centroid) 
+        '''
         print('final centroids')
         for centroid in centroids:
             #print(', '.join([str(round(x,3)) for x in centroid]))
             print(', '.join([str(x) for x in centroid]))
-        #'''
-        #looping = False
-        print('Checking convergance')
-        conv_sum = 0
-        for i,c in enumerate(centroids):
-            cent_diffs = []
-            # for each of the values in a centroid
-            '''
-            diff_dist = dist_metric(c, old_centroids[i])
-            if diff_dist >= 0.05:
-                looping = True
-            print(diff_dist)
-            '''
-            # subtract vectors
-            vec_diff = 0
-            for ii,cc in enumerate(c):
-                vec_diff += (cc-old_centroids[i][ii])**2
-
-                conv_sum += sqrt(vec_diff)
-                cent_diffs.append(abs(cc-old_centroids[i][ii])**2)
-                if abs(cc - old_centroids[i][ii])**2 >= 0.05:
-                    looping = True
-            print(', '.join([str(round(x, 3)) for x in cent_diffs]))
-        if conv_sum <= 0.05*k:
+        '''
+        #print('Checking convergance')
+        # sum over all the clusters
+        centroid_score = 0
+        for c,centroid in enumerate(centroids):
+            #for x in centroid:
+            for p,point in enumerate(centroid):
+                col = df.columns.values[p]
+                # check if the column is catigorical
+                if col in catigorical:
+                    centroid_score += cat_dists[col].loc[point,
+                                                         old_centroids[c][p]]
+                else:
+                    centroid_score += distan.euclidean(point, x[p])
+           
+        #print(centroid_score)
+        if centroid_score <= 0.05*k:
             looping = False
+        # exit if looped too many times
         if times_looped > 10:
-            print('Looped over 200 times, ending iterations')
             looping = False
+
 
     # number in each cluster...
-    for l in clusters:
-        print(len(l))
+    for i,l in enumerate(clusters):
+        if len(l) != 0:
+            print('lenght cluster {}: {}'.format(i, len(l)))
     
     # calculate distortion
     distort = 0
     # outer j=0 to k sum
     for kk,cluster in enumerate(clusters):
-        cluster_dist = 0
-        for point in cluster:
-            # TODO: Cry
-            pass
-        
-            
+        inner_sum = 0
+        # for each data point in the cluster
+        for val in cluster:
+            # for each attribute in that data point
+            val_distort = 0
+            for i,col in enumerate(df.columns.values):
+                # check if catigorical
+                if col in catigorical:
+                    val_distort = cat_dists[col].loc[val[i], centroids[kk][i]]
+                else:
+                    val_distort = distan.euclidean(val[i], centroids[kk][i])
+            inner_sum += val_distort**2
+        distort += inner_sum
 
+    print('distortion: ', distort)
 
     # return distortion and centroids
     return distortion, centroids
@@ -217,7 +244,7 @@ def kmeans(df, k, catigorical, dist_metric):
 ''' Implement Partitioning Around Medoids for k-medoids clustering and use the 
 medoids as a reduced data set for k-NN. Note that the k for k-medoids is 
 different than the k for k-NN.'''
-def kmedoids(df, k, dist_metric):
+def kmedoids(df, k):
     # (Num 7)
     # 
     # Input -
@@ -247,13 +274,13 @@ def kmedoids(df, k, dist_metric):
             for med_loc in medoids:
                 med = df.iloc[med_loc, :]
                 # calculate distance to each centroid
-                dists.append(dist_metric(med, point))
+                dists.append(distan.euclidean(med, point))
                 #dists.append(euclidean_distance(cent, point))
             # pick minimum distance and put point in correct cluster
             clusters[dists.index(min(dists))].append(point_loc)
         
         # calculate distortion
-        distort = distortion(df, clusters, medoids, dist_metric)
+        distort = distortion(df, clusters, medoids)
         
         # swaping
         for i,med_loc in enumerate(medoids):
@@ -264,7 +291,7 @@ def kmedoids(df, k, dist_metric):
                 swap_medoids = medoids.copy()
                 swap_medoids[i] = xi
                 swap_distort = distortion(df, clusters, swap_medoids, 
-                                          dist_metric)
+                                          distan.euclidean)
                 if swap_distort <= distort:
                     pass # this is where they'd be swaped back
                 else: 
@@ -285,12 +312,12 @@ def kmedoids(df, k, dist_metric):
     #return medoids
 
 # distortion method for k-medoids
-def distortion(df, clusters, medoids,dist_metric):
+def distortion(df, clusters, medoids):
     distort = 0
     k = len(medoids)
     for j in range(k):
         for v in clusters[j]:
-            distort += dist_metric(df.iloc[j,:], df.iloc[v,:])
+            distort += distan.euclidean(df.iloc[j,:], df.iloc[v,:])
     return distort
 
 
