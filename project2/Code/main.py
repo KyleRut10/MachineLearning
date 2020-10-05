@@ -1,3 +1,4 @@
+import random
 import analysis as a
 
 
@@ -19,7 +20,7 @@ def stratified_sample(data):
     itr = 0
     for i in sorted(data['class'].unique()):
         totals = totals.append(sum(df['class'] == i))
-        random_row = random.sample(range(totals[itr], totals[itr + 1]),#\\ #What is this?
+        random_row = random.sample(range(totals[itr], totals[itr + 1]),
         max(floor(totals(itr + 1) * 0.1), 1))
       
         for j in random_row:
@@ -40,7 +41,7 @@ def stratified_sample(data):
             base = floor((rows)*0.1)
             timesadd = mod(rows*0.1)
             lister = list()
-            for x in range(10)
+            for x in range(10):
                 if (x < timesadd):
                     lister = lister.append(base + 1)
                 else:
@@ -69,7 +70,7 @@ def nonrandom_sample(data):
     for i in range(floor(removable.shape[0]/10)):
         for j in range(9):
             TenGroups[j] = TenGroups[j].append(removable1[floor(removable1.shape[0]/10)*i + j])
-            removable2 = removable2.drop(floor(removable1.shape[0]/10)*i + j]))
+            removable2 = removable2.drop(floor(removable1.shape[0]/10)*i + j)
     TenGroups[9] = removable2
 
 
