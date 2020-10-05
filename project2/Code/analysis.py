@@ -8,27 +8,7 @@ import numpy as np
 '''  Implement k-nearest neighbor and be prepared to find the best k value for 
 your experiments. You must tune k and explain in your report how you did the 
 tuning.'''
-def knn(df):
-    # (Num 3)
-    # 
-    # Input -
-    # 
-    # Output - 
-    # 
-    
-    #TODO split df into test and train
-    #Determing how to find best num_neighbors
-    
-    predictions = list()
-    for row in test:
-        #Grabbing the Nearest Neighbors by Euclidean Disstance
-        neighbors = get_neighbors(train, row, num_neighbors)
-        output_values = [row[-1] for row in neighbors]
-        
-        #Calculating the Prediction based upon the Nearest Neighbors
-        prediction = max(set(output_values), key=output_values.count)
-        predictions.append(prediction)
-        
+def knn(df, cat_flag_array, classify=True, cat_func='ham', num_func='euclidean'):
     pass
 
 
@@ -248,34 +228,58 @@ def distortion(df, clusters, medoids,dist_metric):
             distort += dist_metric(df.iloc[j,:], df.iloc[v,:])
     return distort
 
+def mixed_distance(vect1, vect2, cat_flag_array, num_func='euclidean', cat_func='ham',
+                                                                            cat_dict=None):
+    if (cat_func = 'VDM' and 1 in cat_flag_array and cat_dict==None):
+        raise TypeError('Must pass in VDM dictionary if categorical columns exist')
+    vect1_cats = []
+    vect2_cats = []
+    vect1_nums = []
+    vect2_nums = []
+    for i, cat_flag in enumerate(cat_flag_array):
+        if cat_flag:
+            vect1_cats.append(vect1[i])
+            vect2_cats.append(vect2[i])
+        else:
+            vect1_nums.append(vect1[i])
+            vect2_nums.append(vect2[i])
+    if (cat_func == 'ham'):
+        cat_dist = Hamming(vect1_cats, vect2_cats)
+    elif (cat_func == 'VDM'):
+        cat_dist = VDM_dist(vect1_cats, vect2_cats, cat_dict)
+    else:
+        raise TypeError('cat_func not supported')
+    if (num_func == 'euclidean'):
+        num_dist = euclidean_distance(vect1_nums, vect2_nums)
+    else:
+        raise TypeError('num_func not supported')
 
-# Repetetive use functions for many of these?
+    return len(vect1_cats)*cat_dist + len(vect1_nums)*num_dist
+
+
+
+
+# A function for calculating the Euclidean Distance
+# Inputs: Two Rows to calculate the distance between
+# Output: The Euclidean Distance Between the Vectors
 def euclidean_distance(row1, row2):
-    # A function for calculating the Euclidean Distance
-    # Inputs: Two Rows to calculate the distance between
-    # Output: The Euclidean Distance Between the Vectors
-    
     distance = 0
-    for i in range(1, len(row1)):
-        distance += (row1.iloc[i] - row2.iloc[i])**2
+    for i in range(len(row1)):
+        distance += (row1[i] - row2[i])**2
     return sqrt(distance)
 
-def get_neighbors(train, test_row, n):
-    # A function for finding n nearest neighbors
-    # Inputs: train is the training dataframe
-    #     test_row is the row we are finding neighbors for
-    #     n is the number of nearest neighbors
-    # Outputs: The n nearest neighbors of the test_row
-    
+# A function for finding k nearest neighbors
+# Inputs: train is the training dataframe
+#     test_row is the row we are finding neighbors for
+#     k is the number of nearest neighbors
+# Outputs: The k nearest neighbors of the test_row
+def get_neighbors(train, test_row, k):
     distances = list()
-    
     for train_row in train:
         dist = euclidean_distance(test_row, train_row)
         distances.append((train_row, dist))
     distances.sort(key = lambda tup: tup[1])
-        
     neighbors = list()
     for i in range(n):
         neighbors.append(distances[i][0])
-    
     return neighbors
