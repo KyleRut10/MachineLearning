@@ -12,7 +12,7 @@ def euclidean(x1, x2):
         x2 = [x2]
 
     for i in range(len(x1)):
-        dist += abs(x1[i] + x2[i])**2
+        dist += abs(x1[i] - x2[i])**2
     dist = dist**(1/2)
     return dist
 
