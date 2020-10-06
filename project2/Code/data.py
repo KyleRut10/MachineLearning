@@ -108,8 +108,7 @@ def data_forestfire():
 
 def type_forestfire():
     catigorical = ['x', 'y', 'month', 'day']
-    continuious = ['ffmc', 'dmc', 'dc', 'isi', 'temp', 'rh', 'wind', 'rain',
-                   'area']
+    continuious = ['ffmc', 'dmc', 'dc', 'isi', 'temp', 'rh', 'wind', 'rain']
     return catigorical, continuious
 
 
