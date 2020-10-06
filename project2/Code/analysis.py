@@ -4,13 +4,29 @@ from math import sqrt
 import random
 import distance as distan
 import numpy as np
+import statistics
 
 '''  Implement k-nearest neighbor and be prepared to find the best k value for 
 your experiments. You must tune k and explain in your report how you did the 
 tuning.'''
-def knn(df, cat_flag_array, classify=True, cat_func='ham', num_func='euclidean'):
-    pass
-
+def knn(df, cat_flag_array, k, classify=True, cat_func='ham', num_func='euclidean'):
+    col_names = df.iloc[:, :-1].columns.values # dont want class column label
+    data = df.values
+    train_data = df.iloc[:, :-1].values # remove class column and get raw array
+    classes = df.iloc[:, -1]
+    cat_dict = None
+    if (cat_func == 'VDM'):
+        cat_dict = {}
+        for i, flag in enumerate(cat_flag_array):
+            if flag:
+                cat_dict[col_names[i]] = distan.VDM(train_data.T[i], classes)
+    neighbors = get_neighbors(data, col_names, data[0], k, cat_flag_array,
+                        cat_func, c_dict=cat_dict)
+    print(neighbors)
+    if classify:
+        return find_max_mode(neighbors[:,-1])
+    else:
+        return sum(neighbors[:,-1])/len(neighbors)
 
 ''' Implement edited k-nearest neighbor. See above with respect to tuning k. 
 On the regression problems, you should define an error threshold to determine 
@@ -249,58 +265,30 @@ def distortion(df, clusters, medoids,dist_metric):
             distort += dist_metric(df.iloc[j,:], df.iloc[v,:])
     return distort
 
-def mixed_distance(vect1, vect2, cat_flag_array, num_func='euclidean', cat_func='ham',
-                                                                            cat_dict=None):
-    if (cat_func = 'VDM' and 1 in cat_flag_array and cat_dict==None):
-        raise TypeError('Must pass in VDM dictionary if categorical columns exist')
-    vect1_cats = []
-    vect2_cats = []
-    vect1_nums = []
-    vect2_nums = []
-    for i, cat_flag in enumerate(cat_flag_array):
-        if cat_flag:
-            vect1_cats.append(vect1[i])
-            vect2_cats.append(vect2[i])
-        else:
-            vect1_nums.append(vect1[i])
-            vect2_nums.append(vect2[i])
-    if (cat_func == 'ham'):
-        cat_dist = Hamming(vect1_cats, vect2_cats)
-    elif (cat_func == 'VDM'):
-        cat_dist = VDM_dist(vect1_cats, vect2_cats, cat_dict)
-    else:
-        raise TypeError('cat_func not supported')
-    if (num_func == 'euclidean'):
-        num_dist = euclidean_distance(vect1_nums, vect2_nums)
-    else:
-        raise TypeError('num_func not supported')
-
-    return len(vect1_cats)*cat_dist + len(vect1_nums)*num_dist
-
-
-
-
-# A function for calculating the Euclidean Distance
-# Inputs: Two Rows to calculate the distance between
-# Output: The Euclidean Distance Between the Vectors
-def euclidean_distance(row1, row2):
-    distance = 0
-    for i in range(len(row1)):
-        distance += (row1[i] - row2[i])**2
-    return sqrt(distance)
-
-# A function for finding k nearest neighbors
-# Inputs: train is the training dataframe
-#     test_row is the row we are finding neighbors for
-#     k is the number of nearest neighbors
-# Outputs: The k nearest neighbors of the test_row
-def get_neighbors(train, test_row, k):
+def get_neighbors(train, col_names, instance, k, cat_flag_array, cat_func, c_dict=None):
     distances = list()
     for train_row in train:
-        dist = euclidean_distance(test_row, train_row)
+        dist = distan.mixed_distance(
+            instance, train_row, col_names, cat_flag_array, cat_func=cat_func, cat_dict=c_dict)
         distances.append((train_row, dist))
     distances.sort(key = lambda tup: tup[1])
     neighbors = list()
-    for i in range(n):
+    for i in range(k):
         neighbors.append(distances[i][0])
-    return neighbors
+    return np.array(neighbors)
+
+
+
+# found this online to handle mode ties
+def find_max_mode(list1):
+    list_table = statistics._counts(list1)
+    len_table = len(list_table)
+
+    if len_table == 1:
+        max_mode = statistics.mode(list1)
+    else:
+        new_list = []
+        for i in range(len_table):
+            new_list.append(list_table[i][0])
+        max_mode = max(new_list) # use the max value here
+    return max_mode
