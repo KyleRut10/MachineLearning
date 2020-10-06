@@ -60,12 +60,12 @@ def knn_condenced(df):
 ''' Implement k-means clustering and use the cluster centroids as a reduced 
 data set for k-NN.'''
 def kmeans(df, k, catigorical):
-    # (Num 6)
+    # (Num 6) k-means clustering
     # 
-    # Input -
-    # 
-    # Output - 
-    # 
+    # Input - df: dataframe with all data points k: number of clusters
+    # catigorical: List of the catigorical attributes
+    # Output - distort: the distortion for the final clustering
+    # centroids: the resulting centroids for the k clusters
    
     # get atribute distance matrices
     cat_dists = {}
@@ -179,6 +179,7 @@ def kmeans(df, k, catigorical):
                     # initilize maximum vlaue
                     max_val = 0
                     max_key = ''
+                    # Git the value with the highest number of hits
                     for key in mean.keys():
                         if mean[key] > max_val:
                             max_val = mean[key]
@@ -248,11 +249,11 @@ def kmeans(df, k, catigorical):
 medoids as a reduced data set for k-NN. Note that the k for k-medoids is 
 different than the k for k-NN.'''
 def kmedoids(df, k):
-    # (Num 7)
+    # (Num 7) k-medoids clustering
     # 
-    # Input -
+    # Input - df: dataframe with all the data points in it k: number mediods
     # 
-    # Output - 
+    # Output - medoids: the resulting medoids
     # 
 
     # randomly select centroids
@@ -312,7 +313,7 @@ def kmedoids(df, k):
         print(len(c))
     
     # return medoids
-    #return medoids
+    return medoids
 
 # distortion method for k-medoids
 def distortion(df, clusters, medoids):
