@@ -9,9 +9,10 @@ def data_glass():
     # Clean data, by removing rows with missing atrributes
     run(df, 0)
     # Drop the class and index
+    #df = df.drop(columns=['index'])
     df = df.drop(['index'], axis=1)
     # standardize the data
-    for col in df.columns.values:
+    for col in type_glass()[1]:
         df[col] = z_stand(df[col])
     # Return the data
     return df
@@ -38,7 +39,7 @@ def data_abalone():
 def type_abalone():
     catigorical = ['sex']
     continuious = ['length', 'diameter', 'height', 'whole weight',
-                   'shucked weight', 'biscera weight', 'shell weight']
+                   'shucked weight', 'viscera weight', 'shell weight']
     return catigorical, continuious
 
 
