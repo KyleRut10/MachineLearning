@@ -28,6 +28,9 @@ def data_abalone():
     df = pd.read_csv(os.path.join('..', '..', 'data', 'abalone.csv'))
     # Clean data, by removing rows with missing atrributes
     run(df, 0)
+    # standardize the data
+    for col in type_abalone()[1]:
+        df[col] = z_stand(df[col])
     # Return the data
     return df
 
@@ -74,6 +77,9 @@ def data_segmentation():
     cols.remove('class')
     cols.append('class')
     df = df.reindex(columns=cols)
+    # standardize the data
+    for col in df.columns.values:
+        df[col] = z_stand(df[col])
     # Return the Data
     return df
 
@@ -92,6 +98,9 @@ def type_segmentation():
 def data_forestfire():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'forestfires.csv'))
+    # standardize the data
+    for col in type_forestfire()[1]:
+        df[col] = z_stand(df[col])
     # Return the data
     return df
 
@@ -107,13 +116,16 @@ def data_hardware():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'machine.csv'))
     df = df.drop(columns=['erp'])
+    # standardize the data
+    for col in type_hardware()[1]:
+        df[col] = z_stand(df[col])
     # Return the data
     return df
 
 
 def type_hardware():
-    catigorical = []
-    continuious = []
+    catigorical = ['vendor name', 'model name']
+    continuious = ['myct', 'mmin', 'mmax', 'cach', 'chmin', 'chmax', 'respone']
     return catigorical, continuious
 
 
