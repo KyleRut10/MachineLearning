@@ -105,6 +105,7 @@ def run_kmeans():
     print('********************')
     print('--------------------')
     # glass dataset
+    '''
     print('***GLASS DATASET****')
     tune_run_kmeans(d.type_glass, d.data_glass)
 
@@ -115,7 +116,11 @@ def run_kmeans():
     # Segmentation dataset
     print('\n***SEGMENTATION***')
     tune_run_kmeans(d.type_segmentation, d.data_segmentation)
+    '''
 
+    # abalone dataset
+    print('\n***ABALONE***')
+    tune_run_kmeans(d.type_abalone, d.data_abalone)
 
 def demo():
     print('Get k-means dataset')
