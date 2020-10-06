@@ -97,7 +97,8 @@ def tune_run_kmeans(type_funct, data_funct):
     dist, centroids = a.kmeans(df, k, cat)
     return dist, centroids
 
-if __name__ == '__main__':
+
+def run_kmeans():
     print('********************')
     print('*******K-MEANS******')
     print('********************')
@@ -113,3 +114,18 @@ if __name__ == '__main__':
     # Segmentation dataset
     print('\n***SEGMENTATION***')
     tune_run_kmeans(d.type_segmentation, d.data_segmentation)
+
+
+def demo():
+    print('Get k-means dataset')
+    print('Through tuning using destortion functions, k = 30 for glass')
+    dist, centroids = a.kmeans(d.data_glass(), 30, d.type_glass()[0])
+    print('distortion: ', dist)
+    print()
+
+
+
+if __name__ == '__main__':
+    demo()
+    #run_kmeans()
+    #run_knn()
