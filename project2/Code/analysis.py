@@ -9,7 +9,7 @@ import statistics
 '''  Implement k-nearest neighbor and be prepared to find the best k value for 
 your experiments. You must tune k and explain in your report how you did the 
 tuning.'''
-def knn(df, cat_flag_array, k, classify=True, cat_func='ham', num_func='euclidean'):
+def knn(df, vect, cat_flag_array, k, classify=True, cat_func='ham', num_func='euclidean'):
     col_names = df.iloc[:, :-1].columns.values # dont want class column label
     data = df.values
     train_data = df.iloc[:, :-1].values # remove class column and get raw array
@@ -20,9 +20,8 @@ def knn(df, cat_flag_array, k, classify=True, cat_func='ham', num_func='euclidea
         for i, flag in enumerate(cat_flag_array):
             if flag:
                 cat_dict[col_names[i]] = distan.VDM(train_data.T[i], classes)
-    neighbors = get_neighbors(data, col_names, data[0], k, cat_flag_array,
+    neighbors = get_neighbors(data, col_names, vect, k, cat_flag_array,
                         cat_func, c_dict=cat_dict)
-    print(neighbors)
     if classify:
         return find_max_mode(neighbors[:,-1])
     else:
