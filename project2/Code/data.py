@@ -43,9 +43,14 @@ def data_vote():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'house-votes-84.csv'))
     # Clean the data
-    data = run(df, 1)
+    df = run(df, 1)
+    # move class to last column
+    cols = list(df.columns.values)
+    cols.remove('class')
+    cols.append('class')
+    df = df.reindex(columns=cols)
     # Return the data
-    return data
+    return df
 
 
 def type_vote():
@@ -64,6 +69,11 @@ def type_vote():
 def data_segmentation():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'segmentation.csv'))
+    # move class to last column
+    cols = list(df.columns.values)
+    cols.remove('class')
+    cols.append('class')
+    df = df.reindex(columns=cols)
     # Return the Data
     return df
 
