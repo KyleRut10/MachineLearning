@@ -1,16 +1,29 @@
+import random
 import analysis as a
+import data as d
+import math
 
 
-def tune_kmeans(k_vals_list):
-    
-    pass
+def tune_kmeans(df, k_vals_list, cat):
+    # remove potential negative values
+    k_vals_list = [k for k in k_vals_list if k > 0 and k < len(df)]
+    print(k_vals_list)
+    # make empty distortion
+    distortions = [math.inf for x in range(len(k_vals_list))]
+    # Run k-means for all options
+    for i,k in enumerate(k_vals_list):
+        dist,centroids = a.kmeans(df, k, cat)
+        print('Ran k-means for k = {}, dist = {}'.format(k, round(dist,5)))
+        distortions[i] = dist
+
+    # find the minimum distortion
+    min_dist = min(distortions)
+    k_loc = distortions.index(min_dist)
+    # return the k value with the lowest distortion
+    return k_vals_list[k_loc]
 
 
-if __name__ == '__main__':
-    # TODO: Put main logic here
-    pass
-
-def stratified_sample(data) {
+def stratified_sample(data):
     #Produced Random Samples by Proportion
     sort = data.sort_values(by = 'class')
   
@@ -21,7 +34,7 @@ def stratified_sample(data) {
     itr = 0
     for i in sorted(data['class'].unique()):
         totals = totals.append(sum(df['class'] == i))
-        random_row = random.sample(range(totals[itr], totals[itr + 1]),\\
+        random_row = random.sample(range(totals[itr], totals[itr + 1]),
         max(floor(totals(itr + 1) * 0.1), 1))
       
         for j in random_row:
@@ -40,9 +53,9 @@ def stratified_sample(data) {
             TenGroups[n] = pd.Dataframe()
             rows = totals[itr + 1] - totals[itr]
             base = floor((rows)*0.1)
-            timesadd = mod((rows)*0.1))
+            timesadd = mod(rows*0.1)
             lister = list()
-            for x in range(10)
+            for x in range(10):
                 if (x < timesadd):
                     lister = lister.append(base + 1)
                 else:
@@ -52,10 +65,9 @@ def stratified_sample(data) {
         itr += 1
     
     # Could store tuning_data as TenGroups[10] to output
-    pass
-}
 
-def nonrandom_sample(data) {
+
+def nonrandom_sample(data):
     tuning = pd.DataFrame()
     sort = data.sort_values('response')
     removable1 = sort
@@ -72,6 +84,32 @@ def nonrandom_sample(data) {
     for i in range(floor(removable.shape[0]/10)):
         for j in range(9):
             TenGroups[j] = TenGroups[j].append(removable1[floor(removable1.shape[0]/10)*i + j])
-            removable2 = removable2.drop(floor(removable1.shape[0]/10)*i + j]))
+            removable2 = removable2.drop(floor(removable1.shape[0]/10)*i + j)
     TenGroups[9] = removable2
-}
+
+
+def tune_run_kmeans(type_funct, data_funct):
+    cat = type_funct()[0]
+    df = data_funct()
+    ss = int(math.sqrt(len(df)))
+    k = tune_kmeans(df, [ss+i for i in range(-20, 20, 4)], cat)
+    print('Best k is {}'.format(k))
+    dist, centroids = a.kmeans(df, k, cat)
+    return dist, centroids
+
+if __name__ == '__main__':
+    print('********************')
+    print('*******K-MEANS******')
+    print('********************')
+    print('--------------------')
+    # glass dataset
+    print('***GLASS DATASET****')
+    tune_run_kmeans(d.type_glass, d.data_glass)
+
+    # House-votes dataset
+    print('\n**HOUSE VOTES**')
+    tune_run_kmeans(d.type_glass, d.data_glass)
+
+    # Segmentation dataset
+    print('\n***SEGMENTATION***')
+    tune_run_kmeans(d.type_segmentation, d.data_segmentation)

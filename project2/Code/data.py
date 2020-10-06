@@ -43,27 +43,37 @@ def data_vote():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'house-votes-84.csv'))
     # Clean the data
-    data = clean.run(df, 1)
+    df = run(df, 1)
+    # move class to last column
+    cols = list(df.columns.values)
+    cols.remove('class')
+    cols.append('class')
+    df = df.reindex(columns=cols)
     # Return the data
-    return data
+    return df
 
 
 def type_vote():
-    catigorical = []
-    continuious = ['handicapped-infants', 'water-project-cost-sharing',
+    catigorical = ['handicapped-infants', 'water-project-cost-sharing',
                    'adoption-of-the-budget-resolution-physician-fee-freeze',
-                   'el-salvador-aid,religious-groups-in-schools',
+                   'el-salvador-aid', 'religious-groups-in-schools',
                    'anti-satellite-test-ban', 'aid-to-nicaraguan-contras', 
-                   'mx-missile', 'immigration,synfuels-corperation-cutback',
+                   'mx-missile', 'immigration', 'synfuels-corperation-cutback',
                    'education-spending', 'superfund-right-to-sue', 'crime',
                    'duty-free-exports', 
                    'export-administration-act-south-africa']
+    continuious = []
     return catigorical, continuious
 
 
 def data_segmentation():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'segmentation.csv'))
+    # move class to last column
+    cols = list(df.columns.values)
+    cols.remove('class')
+    cols.append('class')
+    df = df.reindex(columns=cols)
     # Return the Data
     return df
 
@@ -81,7 +91,7 @@ def type_segmentation():
 
 def data_forestfire():
     # Read in the file
-    df = pd.read_csv(os.path.join('..', '..', 'data', 'forestfire.csv'))
+    df = pd.read_csv(os.path.join('..', '..', 'data', 'forestfires.csv'))
     # Return the data
     return df
 
