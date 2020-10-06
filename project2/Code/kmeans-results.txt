@@ -1,0 +1,39 @@
+********************
+*******K-MEANS******
+********************
+--------------------
+***GLASS DATASET****
+[2, 6, 10, 14, 18, 22, 26, 30]
+Ran k-means for k = 2, dist = 212.58361
+Ran k-means for k = 6, dist = 77.74735
+Ran k-means for k = 10, dist = 182.62495
+Ran k-means for k = 14, dist = 86.56352
+Ran k-means for k = 18, dist = 66.3294
+Ran k-means for k = 22, dist = 72.08076
+Ran k-means for k = 26, dist = 67.20499
+Ran k-means for k = 30, dist = 61.32509
+Best k is 30
+
+**HOUSE VOTES**
+[2, 6, 10, 14, 18, 22, 26, 30]
+Ran k-means for k = 2, dist = 212.92755
+Ran k-means for k = 6, dist = 187.25504
+Ran k-means for k = 10, dist = 74.30671
+Ran k-means for k = 14, dist = 86.48354
+Ran k-means for k = 18, dist = 65.4538
+Ran k-means for k = 22, dist = 61.79203
+Ran k-means for k = 26, dist = 57.06163
+Ran k-means for k = 30, dist = 58.14588
+Best k is 26
+
+***SEGMENTATION***
+[2, 6, 10, 14, 18, 22, 26, 30]
+Ran k-means for k = 2, dist = 469.48492
+Ran k-means for k = 6, dist = 351.08958
+Ran k-means for k = 10, dist = 189.83299
+Ran k-means for k = 14, dist = 359.88924
+Ran k-means for k = 18, dist = 359.76822
+Ran k-means for k = 22, dist = 360.22034
+Ran k-means for k = 26, dist = 365.30692
+Ran k-means for k = 30, dist = 65.15664
+Best k is 30
