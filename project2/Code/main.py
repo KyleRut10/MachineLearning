@@ -2,6 +2,7 @@ import random
 import analysis as a
 import data as d
 import math
+import pandas as pd
 
 
 def tune_kmeans(df, k_vals_list, cat):
@@ -29,11 +30,11 @@ def stratified_sample(data):
   
     # Getting out the Tuning Data
     # NOTE: This is an estimate of the 10% but it is not very precise
-    totals = list(0)
+    totals = list()
     tuning_data = pd.DataFrame()
     itr = 0
     for i in sorted(data['class'].unique()):
-        totals = totals.append(sum(df['class'] == i))
+        totals = totals.append(sum(data['class'] == i))
         random_row = random.sample(range(totals[itr], totals[itr + 1]),
         max(floor(totals(itr + 1) * 0.1), 1))
       
