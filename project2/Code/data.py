@@ -12,7 +12,7 @@ def data_glass():
     #df = df.drop(columns=['index'])
     df = df.drop(['index'], axis=1)
     # standardize the data
-    for col in df.columns.values:
+    for col in type_glass()[1]:
         df[col] = z_stand(df[col])
     # Return the data
     return df
