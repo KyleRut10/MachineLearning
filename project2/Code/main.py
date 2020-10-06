@@ -63,8 +63,8 @@ def stratified_sample(data):
             for m in lister:
                 TenGroups[n] = TenGroups[n].append(sort.iloc[totals[itr] + m])
         itr += 1
-    
-    # Could store tuning_data as TenGroups[10] to output
+
+    return (tuning_data, TenGroups)
 
 
 def nonrandom_sample(data):
