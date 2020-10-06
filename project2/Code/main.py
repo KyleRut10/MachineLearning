@@ -112,4 +112,4 @@ if __name__ == '__main__':
 
     # Segmentation dataset
     print('\n***SEGMENTATION***')
-    tune_run_kemenas(d.type_segmentation, d.data_segmentation)
+    tune_run_kmeans(d.type_segmentation, d.data_segmentation)
