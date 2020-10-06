@@ -112,7 +112,8 @@ def kmeans(df, k, catigorical):
             print(', '.join([str(x) for x in centroid]))
         '''
         if times_looped % 20 == 0:
-            print('times looped: {}'.format(times_looped))
+            #print('times looped: {}'.format(times_looped))
+            pass
         times_looped += 1
 
         old_centroids = centroids.copy()
@@ -206,17 +207,19 @@ def kmeans(df, k, catigorical):
            
         #print(centroid_score)
         if centroid_score <= 0.05*k:
+            print('IT CONVERGED!!!')
             looping = False
         # exit if looped too many times
-        if times_looped > 10:
+        if times_looped > 100:
             looping = False
 
-
+    '''
     # number in each cluster...
     for i,l in enumerate(clusters):
         if len(l) != 0:
             print('lenght cluster {}: {}'.format(i, len(l)))
-    
+    '''
+
     # calculate distortion
     distort = 0
     # outer j=0 to k sum
@@ -235,10 +238,10 @@ def kmeans(df, k, catigorical):
             inner_sum += val_distort**2
         distort += inner_sum
 
-    print('distortion: ', distort)
+    #print('distortion: ', distort)
 
     # return distortion and centroids
-    return distortion, centroids
+    return distort, centroids
 
 
 ''' Implement Partitioning Around Medoids for k-medoids clustering and use the 
