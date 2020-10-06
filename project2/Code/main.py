@@ -63,8 +63,8 @@ def stratified_sample(data):
             for m in lister:
                 TenGroups[n] = TenGroups[n].append(sort.iloc[totals[itr] + m])
         itr += 1
-    
-    # Could store tuning_data as TenGroups[10] to output
+
+    return (tuning_data, TenGroups)
 
 
 def nonrandom_sample(data):
@@ -104,6 +104,7 @@ def run_kmeans():
     print('********************')
     print('--------------------')
     # glass dataset
+    '''
     print('***GLASS DATASET****')
     tune_run_kmeans(d.type_glass, d.data_glass)
 
@@ -114,7 +115,11 @@ def run_kmeans():
     # Segmentation dataset
     print('\n***SEGMENTATION***')
     tune_run_kmeans(d.type_segmentation, d.data_segmentation)
+    '''
 
+    # abalone dataset
+    print('\n***ABALONE***')
+    tune_run_kmeans(d.type_abalone, d.data_abalone)
 
 def demo():
     print('Get k-means dataset')

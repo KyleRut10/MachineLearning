@@ -22,6 +22,7 @@ def knn(df, vect, cat_flag_array, k, classify=True, cat_func='ham', num_func='eu
                 cat_dict[col_names[i]] = distan.VDM(train_data.T[i], classes)
     neighbors = get_neighbors(data, col_names, vect, k, cat_flag_array,
                         cat_func, c_dict=cat_dict)
+    print(neighbors)
     if classify:
         return find_max_mode(neighbors[:,-1])
     else:
