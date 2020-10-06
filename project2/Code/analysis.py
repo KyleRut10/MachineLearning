@@ -133,11 +133,11 @@ def kmeans(df, k, catigorical):
                 centroid_dists.append(cent_dist)
             # Pick the minimum distance
             c_val = min(centroid_dists)
-            #print(min(centroid_dists),  ' ', max(centroid_dists))
             # find the index and assign it to the cluaster
             c_index = centroid_dists.index(c_val)
             clusters[c_index].append(x_vec)
             #print('cluster index: ', c_index)
+        
         # make new centroids for each cluster
         centroids = []
         for c,cluster in enumerate(clusters):
