@@ -32,13 +32,13 @@ def knn(df, cat_flag_array, k, classify=True, cat_func='ham', num_func='euclidea
 On the regression problems, you should define an error threshold to determine 
 if a prediction is correct or not. This will need to be tuned'''
 def knn_edited(df):
-    # (Num 4)
-    # 
-    # Input -
-    # 
-    # Output - 
-    # 
-    pass
+    old = knn(df);
+    
+    new = knn()
+    if (old < new):
+        return(old)
+    else:
+        knn_edited(new)
 
 
 ''' Implement condensed k-nearest neighbor. See above with respect to tuning 
