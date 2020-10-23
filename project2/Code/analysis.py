@@ -115,10 +115,14 @@ def kmeans(df, k, catigorical):
         old_centroids = centroids.copy()
         # make empty set for all clusters
         clusters = [[] for i in range(k)]
+        
+        ##########
         # go through each datapoint and assign it to a cluster
         for i,x in df.iterrows():
             x_vec = list(x)
             centroid_dists = []
+            
+            ############
             # calculate distance to all centroids
             for cent in centroids:
                 cent_dist = 0
@@ -131,13 +135,16 @@ def kmeans(df, k, catigorical):
                     else:
                         cent_dist += distan.euclidean(point, x[p])
                 centroid_dists.append(cent_dist)
+            
+            ##########
             # Pick the minimum distance
             c_val = min(centroid_dists)
-            #print(min(centroid_dists),  ' ', max(centroid_dists))
             # find the index and assign it to the cluaster
             c_index = centroid_dists.index(c_val)
             clusters[c_index].append(x_vec)
             #print('cluster index: ', c_index)
+        
+        #########
         # make new centroids for each cluster
         centroids = []
         for c,cluster in enumerate(clusters):
@@ -188,6 +195,8 @@ def kmeans(df, k, catigorical):
             #print(', '.join([str(round(x,3)) for x in centroid]))
             print(', '.join([str(x) for x in centroid]))
         '''
+        
+        ########### Standard Squared Error
         #print('Checking convergance')
         # sum over all the clusters
         centroid_score = 0
