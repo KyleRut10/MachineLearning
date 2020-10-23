@@ -5,7 +5,7 @@ def tune(inputs, num_layers, num_out, mode, momentum):
     # A function which outputs the number of nodes per hidden
     #     layer for the Backpropagation neural network
     # Inputs -
-    #     inputs: Arbitrary number of inputs to the algorithm
+    #     inputs: Arbitrary number of inputs to the algorithm (col - 1)
     #     num_layers: Number of Hidden Layers
     #     num_out: Arbitrary number of outputs from the algorithm
     #     mode: Whether the function is using performing regression
@@ -18,5 +18,6 @@ def tune(inputs, num_layers, num_out, mode, momentum):
     
     # Calculate num_inputs from inputs
     
-    for i in range(0:num_inputs):
-        
+    # Here I am thinking we could create a list/dictionary for each
+    #     of the layers then iterate the number of nodes for each
+    #     layer one at a time in order to minimize F1-Score.
