@@ -53,6 +53,7 @@ class MLP:
         converge = False
         while not converge:
             for i,pt in self.training.iterrows():
+                print('pt: {} - {}'.format(i, list(pt)))
                 activations = []
                 # feedforward computation
                 # initial inputs into first hidden layer
@@ -67,10 +68,13 @@ class MLP:
                     activations.append(self.sig(z))
                     # update inputs into next layer
                     inputs = activations[-1]
-                    #print(inputs)
+                    print(inputs)
             
-
                 # backward propagation
+                # initiate weight update matrix and delta storage
+                weight_updates = ['' for x in range(len(self.weights))]
+                deltas = ['' for x in range(len(self.weights))]
+
                 # calculate initial delta at output
                 o_out = activations[-1]
                 dj = pt[-1] # TODO: What is this
@@ -79,12 +83,29 @@ class MLP:
                 # convert dnet to ndarray if it isn't
                 if not isinstance(do, np.ndarray):
                     do = np.array([do])
-                print('derr: ', derr)
-                print('do: ', do)
+                #print('derr: ', derr)
+                #print('do: ', do)
                 delta = np.matmul(derr, do)
                 print('delta: ', delta)
-            
+                if not isinstance(delta, np.ndarray):
+                    delta = np.array([delta])
+                deltas[-1] = delta
 
+                dw = np.matmul(delta, activations[-1])
+                if not isinstance(dw, np.ndarray):
+                    dw = np.array([dw])
+                weight_updates[-1] = dw
+                print('output dw: ', weight_updates[-1])
+                #print(weight_updates[-1])
+
+                
+                # go back through hidden layers and update their weights
+                # subtract 2, because already did the last position
+                for i in range(len(self.weights)-2, -1, -1):
+                    print('backprop layer: ', i)
+                    oj = activations[i]
+                    print('previous delta: ', deltas[i+1])
+                    
 
 
             # NOTE: Keep weight updates in local variable, then put it in
