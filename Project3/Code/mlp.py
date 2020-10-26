@@ -11,9 +11,11 @@ class MLP:
     # train: df of training data
     # test: df of testing data
         
-    linespace = np.linspace(-100, 100, 200) 
-    sig = 1/(1 + np.exp(-linespace)) 
-    
+    # np vectorized version to compute sigmoid function on whole array of
+    # values
+    sigFunc = lambda t: 1/(1+np.exp(t))
+    sig = np.vectorize(sigFunc)
+     
     def __init__(self, hidden_nodes, num_outputs, training, test, mode):
         self.num_hidden = len(hidden_nodes)
         self.hidden_nodes = hidden_nodes
@@ -53,14 +55,21 @@ class MLP:
             for i,pt in self.training.iterrows():
                 activations = []
                 # feedforward computation
-                # a: activation function values
-                
-                
-                
+                # initial inputs into first hidden layer
+                inputs = np.array(pt)
+                for l,num_nodes in enumerate(range(len(self.layers))):
+                    print('layer: ', l)
+                    # The weights going into layer l
+                    W = self.weights[l]
+                    z = np.matmul(W, inputs)
+                    # compute activation function for whole layer
+                    activations.append(self.sig(z))
+                    # update inputs into next layer
+                    inputs = activations[-1]
+                    print(inputs)
 
 
-                #print(pt)
-                pass
+
 
             # NOTE: Keep weight updates in local variable, then put it in
             # self variable when do final updates
@@ -73,11 +82,8 @@ class MLP:
         pass
     
     def activation(self, z):
-        a = []
-        for zz in z:
-            a.append(1/(1+np.exp(z)))
-        return np.array(a)
-    
+        pass
+
     def backward():
         pass
 
