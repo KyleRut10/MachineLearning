@@ -19,7 +19,10 @@ class MLP:
         self.test = test
         self.mode = mode
         # Make a cummulative list of how many nodes in each layer
-        self.layers = [len(training.columns)]
+        self.all_layers = [len(training.columns)]
+        self.all_layers.extend(hidden_nodes)
+        self.all_layers.append(num_outputs)
+        self.layers = []
         self.layers.extend(hidden_nodes)
         self.layers.append(num_outputs)
         
@@ -29,24 +32,27 @@ class MLP:
         self.weights = []
         
         # W[l]: (n[l], n[l-1]) (h, w)
-        for i in range(1, len(self.layers)):
-            h = self.layers[i]
-            w = self.layers[i-1]
+        for i in range(1, len(self.all_layers)):
+            h = self.all_layers[i]
+            w = self.all_layers[i-1]
             hw = []
             for val in range(h*w):
                 hw.append(rand.uniform(-0.01,0.01))
             # Reshape into 2D Numpy array
             self.weights.append(np.array(hw).reshape(h, w))
 
-            #print(self.weights[-1])
+            print(self.weights[-1])
 
 
         # TODO: Figure out how this is going to work
         converge = False
         while not converge:
             for i,pt in self.training.iterrows():
-                print(pt)
-                
+                #print(pt)
+                pass
+
+            # NOTE: Keep weight updates in local variable, then put it in
+            # self variable when do final updates
 
             break
     def forward(self):
