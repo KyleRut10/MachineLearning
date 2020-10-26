@@ -96,7 +96,7 @@ class MLP:
                 dw = activations[-1] * delta
                 if not isinstance(dw, np.ndarray):
                     dw = np.array([dw])
-                weight_updates[-1] = dw * eda
+                weight_updates[-1] = -dw * self.eda
                 #print('output dw: ', weight_updates[-1])
                 #print(weight_updates[-1])
 
@@ -105,7 +105,8 @@ class MLP:
                 # subtract 2, because already did the last position
                 for i in range(len(self.weights)-2, -1, -1):
                     print('backprop layer: ', i)
-                    oj = activations[i]
+                    oj = activations[i+1]  # outputs of layer
+                    inputs = activations[i]
                     #print('previous delta: ', deltas[i+1])
                     # multiply delta by weight matrix
                     # TODO: Are the index on deltas and weights the same?
@@ -124,7 +125,7 @@ class MLP:
                     deltas[i] = delta
 
                     # calculate change in weights
-                    dw = 
+                    #dw = 
 
             # NOTE: Keep weight updates in local variable, then put it in
             # self variable when do final updates
