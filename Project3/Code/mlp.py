@@ -1,8 +1,9 @@
 import pandas as pd
+import random as rand
+import numpy as np
 
 
-
-class mlp:
+class MLP:
    # Class Variables
    # num_hidden: Number hidden layers
    # hidden_nodes: List of how many hidden nodes there are per layer
@@ -10,19 +11,45 @@ class mlp:
    # train: df of training data
    # test: df of testing data
 
-    def __init__(self, num_hidden, hidden_nodes, num_outputs, train, test):
-        self.num_hidden = num_hidden
+    def __init__(self, hidden_nodes, num_outputs, training, test, mode):
+        self.num_hidden = len(hidden_nodes)
         self.hidden_nodes = hidden_nodes
         self.num_outputs = num_outputs
-        self.train = train
+        self.training = training
         self.test = test
+        self.mode = mode
+        # Make a cummulative list of how many nodes in each layer
+        self.layers = [len(training.columns)]
+        self.layers.extend(hidden_nodes)
+        self.layers.append(num_outputs)
+        
+
+    def train(self):
+        # Build weight matrices...
+        self.weights = []
+        
+        # W[l]: (n[l], n[l-1]) (h, w)
+        for i in range(1, len(self.layers)):
+            h = self.layers[i]
+            w = self.layers[i-1]
+            hw = []
+            for val in range(h*w):
+                hw.append(rand.uniform(-0.01,0.01))
+            # Reshape into 2D Numpy array
+            self.weights.append(np.array(hw).reshape(h, w))
+
+            #print(self.weights[-1])
 
 
+        # TODO: Figure out how this is going to work
+        converge = False
+        while not converge:
+            for i,pt in self.training.iterrows():
+                print(pt)
+                
 
-    def train():
-        pass
-
-    def forward():
+            break
+    def forward(self):
         pass
 
     def backward():
