@@ -24,7 +24,7 @@ class MLP:
         self.test = test
         self.mode = mode
         # Make a cummulative list of how many nodes in each layer
-        self.all_layers = [len(training.columns)]
+        self.all_layers = [len(training.columns)-1]
         self.all_layers.extend(hidden_nodes)
         self.all_layers.append(num_outputs)
         self.layers = []
@@ -56,7 +56,8 @@ class MLP:
                 activations = []
                 # feedforward computation
                 # initial inputs into first hidden layer
-                inputs = np.array(pt)
+                # assuming class is in last position, so factor it out
+                inputs = np.array(pt[:-1])
                 for l,num_nodes in enumerate(range(len(self.layers))):
                     print('layer: ', l)
                     # The weights going into layer l
@@ -66,8 +67,23 @@ class MLP:
                     activations.append(self.sig(z))
                     # update inputs into next layer
                     inputs = activations[-1]
-                    print(inputs)
+                    #print(inputs)
+            
 
+                # backward propagation
+                # calculate initial delta at output
+                o_out = activations[-1]
+                dj = pt[-1] # TODO: What is this
+                derr = -np.subtract(dj, o_out)
+                do = np.matmul(o_out, np.subtract(1, o_out))
+                # convert dnet to ndarray if it isn't
+                if not isinstance(do, np.ndarray):
+                    do = np.array([do])
+                print('derr: ', derr)
+                print('do: ', do)
+                delta = np.matmul(derr, do)
+                print('delta: ', delta)
+            
 
 
 
