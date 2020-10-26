@@ -15,7 +15,7 @@ class MLP:
     # values
     sigFunc = lambda t: 1/(1+np.exp(t))
     sig = np.vectorize(sigFunc)
-     
+    
     def __init__(self, hidden_nodes, num_outputs, training, test, mode):
         self.num_hidden = len(hidden_nodes)
         self.hidden_nodes = hidden_nodes
@@ -86,7 +86,7 @@ class MLP:
                 #print('derr: ', derr)
                 #print('do: ', do)
                 delta = np.matmul(derr, do)
-                print('delta: ', delta)
+                #print('delta: ', delta)
                 if not isinstance(delta, np.ndarray):
                     delta = np.array([delta])
                 deltas[-1] = delta
@@ -95,7 +95,7 @@ class MLP:
                 if not isinstance(dw, np.ndarray):
                     dw = np.array([dw])
                 weight_updates[-1] = dw
-                print('output dw: ', weight_updates[-1])
+                #print('output dw: ', weight_updates[-1])
                 #print(weight_updates[-1])
 
                 
@@ -104,14 +104,31 @@ class MLP:
                 for i in range(len(self.weights)-2, -1, -1):
                     print('backprop layer: ', i)
                     oj = activations[i]
-                    print('previous delta: ', deltas[i+1])
+                    #print('previous delta: ', deltas[i+1])
+                    # multiply delta by weight matrix
+                    # TODO: Are the index on deltas and weights the same?
                     
-
+                    print('deltas[i]:', deltas[i+1])
+                    print('weights[i]:', self.weights[i])
+                    print(self.weights[i] * deltas[i+1][0])
+                    #delta2 = np.matmul(deltas[i], self.weights[i])
+                    #print('sum part: ', delta2)
+                    #do = np.matmul(oj, np.subtract(1, oj))
+                    #print('do: ', do)
+                    #delta = np.matmul(do, delta2)
+                    #print('new delta: ', delta)
 
             # NOTE: Keep weight updates in local variable, then put it in
             # self variable when do final updates
 
             break
+    
+    def print_weights():
+        print('Weights')
+        for i,w in enumerate(self.weights):
+            print('layer ', i)
+            print(w)
+    
     def forward(self, W, a0):
         #z = np.matmult(W,a)
         #print(z)
