@@ -30,7 +30,7 @@ class MLP:
         self.layers = []
         self.layers.extend(hidden_nodes)
         self.layers.append(num_outputs)
-        
+        self.eda = 0.01
 
     def train(self):
         # Build weight matrices...
@@ -96,7 +96,7 @@ class MLP:
                 dw = activations[-1] * delta
                 if not isinstance(dw, np.ndarray):
                     dw = np.array([dw])
-                weight_updates[-1] = dw
+                weight_updates[-1] = dw * eda
                 #print('output dw: ', weight_updates[-1])
                 #print(weight_updates[-1])
 
@@ -124,7 +124,7 @@ class MLP:
                     deltas[i] = delta
 
                     # calculate change in weights
-                    # TODO
+                    dw = 
 
             # NOTE: Keep weight updates in local variable, then put it in
             # self variable when do final updates
