@@ -87,11 +87,13 @@ class MLP:
                 #print('do: ', do)
                 delta = np.matmul(derr, do)
                 #print('delta: ', delta)
-                if not isinstance(delta, np.ndarray):
-                    delta = np.array([delta])
+                # I think delta should be a scalar?
+                #if not isinstance(delta, np.ndarray):
+                #    delta = np.array([delta])
                 deltas[-1] = delta
-
-                dw = np.matmul(delta, activations[-1])
+                
+                # TODO: Add in learning rate
+                dw = activations[-1] * delta
                 if not isinstance(dw, np.ndarray):
                     dw = np.array([dw])
                 weight_updates[-1] = dw
@@ -108,15 +110,21 @@ class MLP:
                     # multiply delta by weight matrix
                     # TODO: Are the index on deltas and weights the same?
                     
-                    print('deltas[i]:', deltas[i+1])
-                    print('weights[i]:', self.weights[i])
-                    print(self.weights[i] * deltas[i+1][0])
+                    #print('deltas[i]:', deltas[i+1])
+                    #print('weights[i]:', self.weights[i])
+                    #print(self.weights[i] * deltas[i+1])
+                    delta2 = np.sum(self.weights[i] * deltas[i+1])
                     #delta2 = np.matmul(deltas[i], self.weights[i])
-                    #print('sum part: ', delta2)
-                    #do = np.matmul(oj, np.subtract(1, oj))
-                    #print('do: ', do)
-                    #delta = np.matmul(do, delta2)
-                    #print('new delta: ', delta)
+                    print('sum part: ', delta2)
+                    print('oj: ', oj)
+                    do = np.matmul(oj, np.subtract(1, oj))
+                    print('do: ', do)
+                    delta = do * delta2
+                    print('new delta: ', delta)
+                    deltas[i] = delta
+
+                    # calculate change in weights
+                    # TODO
 
             # NOTE: Keep weight updates in local variable, then put it in
             # self variable when do final updates
