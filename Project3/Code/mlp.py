@@ -93,13 +93,13 @@ class MLP:
                 deltas[-1] = delta
                 
                 # TODO: Add in learning rate
-                dw = activations[-1] * delta
+                dw = -activations[-1] * delta * self.eda
                 if not isinstance(dw, np.ndarray):
                     dw = np.array([dw])
-                weight_updates[-1] = -dw * self.eda
                 #print('output dw: ', weight_updates[-1])
+                weight_updates[-1] = dw
                 #print(weight_updates[-1])
-
+                
                 
                 # go back through hidden layers and update their weights
                 # subtract 2, because already did the last position
@@ -109,32 +109,37 @@ class MLP:
                     inputs = activations[i]
                     #print('previous delta: ', deltas[i+1])
                     # multiply delta by weight matrix
-                    # TODO: Are the index on deltas and weights the same?
                     
                     #print('deltas[i]:', deltas[i+1])
                     #print('weights[i]:', self.weights[i])
                     #print(self.weights[i] * deltas[i+1])
                     delta2 = np.sum(self.weights[i] * deltas[i+1])
                     #delta2 = np.matmul(deltas[i], self.weights[i])
-                    print('sum part: ', delta2)
-                    print('oj: ', oj)
+                    #print('sum part: ', delta2)
+                    #print('oj: ', oj)
                     do = np.matmul(oj, np.subtract(1, oj))
-                    print('do: ', do)
+                    #print('do: ', do)
                     delta = do * delta2
-                    print('new delta: ', delta)
+                    #print('new delta: ', delta)
                     deltas[i] = delta
 
                     # calculate change in weights
-                    dw = -inputs * delta * self.eda
+                    dw = inputs * delta
+                    print('dw', dw)
+                    dw = -dw * self.eda
                     weight_updates[i] = dw
                     print('dw: ', dw)
 
-            # NOTE: Keep weight updates in local variable, then put it in
-            # self variable when do final updates
-
+                
+                #print(weight_updates)
+                # preform weight updates
+                for i,w in enumerate(self.weights):
+                    print('w', w.shape, 'wu', weight_updates[i].shape)
+                    #self.weights[i] = np.add(w,weight_updates[i])
+                #self.print_weights()
             break
     
-    def print_weights():
+    def print_weights(self):
         print('Weights')
         for i,w in enumerate(self.weights):
             print('layer ', i)
