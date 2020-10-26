@@ -125,7 +125,9 @@ class MLP:
                     deltas[i] = delta
 
                     # calculate change in weights
-                    #dw = 
+                    dw = -inputs * delta * self.eda
+                    weight_updates[i] = dw
+                    print('dw: ', dw)
 
             # NOTE: Keep weight updates in local variable, then put it in
             # self variable when do final updates
