@@ -58,7 +58,7 @@ class MLP:
             #print('*******Training iteration {}***********'.format(iteration))
             # save old weights
             old_weights = self.weights.copy()
-            for i,pt in self.training.iterrows():
+            for row_inex,pt in self.training.iterrows():
                 ###print('pt: {} - {}'.format(i, list(pt)))
                 activations = []
                 # feedforward computation
@@ -169,6 +169,7 @@ class MLP:
                     #print('weights', wkj.shape)
                     #print('delta', delta.shape)
                     # IT'S GOING BY ROW!!!!
+                    '''
                     delta_sum = np.matmul(delta, wkj)
                     if len(delta_sum.shape) == 1:
                         delta_sum = delta_sum[None, :]
@@ -178,13 +179,19 @@ class MLP:
                     derr = self.calc_derr(oj)
                     print('derr', derr)
                     delta = np.matmul(derr, delta_sum)
+                    '''
+                    delta = self.calc_delta(oj, deltas[-1], wkj)
+                    print('delta', delta)
+
                     deltas[i] = delta
                     #print('delta', delta)
                     
                     # calculate weight updates
                     #print('xj', xj.shape, xj)
                     #print('delta', delta.shape)
-                    dw = -np.dot(np.transpose(delta), xj)
+                    print('delta', delta.shape, 'xj', xj.shape)
+                    #dw = -np.matmul(np.transpose(delta), xj) * self.eda
+                    dw = -np.matmul(delta, np.transpose(xj)) * self.eda
                     #print('dw', dw.shape, dw)
                     weight_updates[i] = dw
                     #break
@@ -228,14 +235,38 @@ class MLP:
         results = np.array(results)
         return results
 
-    def calc_derr(self, outputs):
+    def calc_delta(self, outputs, delta_old, W):
+        #print('CALCULATING DELTA')
         results = []
         for j in range(len(outputs)):
+            #print('for node: ', j)
             oj = outputs[j][0]
+            
+            summ = 0
+            for k in range(len(delta_old)):
+                summ += delta_old[k] * W[k][j]
 
-            results.append(oj*(1-oj))
-        results = np.array(results)
+            #deltak = delta_old[j]
+            #wj = W[:][j]
+            
+            #print('outputs')
+            #print(outputs)
+            #print('oj', oj)
+
+            #print('delta')
+            #print(delta_old)
+            #print('deltak: ', deltak)
+
+            #print('W')
+            #print(W)
+            #print('wj', wj)
+            #summ = np.sum(wj * deltak)
+            
+
+            results.append(oj*(1-oj)*summ)
+        results = np.array(results).reshape(len(results), 1)
         return results
+    
     def get_class_target(self, class_val):
         dj = []
         for i in range(self.num_outputs):
