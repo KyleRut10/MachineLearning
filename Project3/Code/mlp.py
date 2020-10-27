@@ -96,6 +96,7 @@ class MLP:
                 print('delta out', delta)
                 deltas[-1] = delta
                 
+                # TODO: I think this should be activations -2?
                 dw = -np.matmul(activations[-1], delta) * self.eda
                 if not isinstance(dw, np.ndarray):
                     dw = np.array([dw])
@@ -110,28 +111,30 @@ class MLP:
                 #self.print_weights()
                 # go back through hidden layers and update their weights
                 # subtract 2, because already did the last position
-                for i in range(len(self.weights)-1, -1, -1):
+                for i in range(len(self.weights)-2, -1, -1):
                     print('backprop layer: ', i)
                     oj = activations[i+1]  # outputs of layer
                     xj = activations[i]  # inputs to layer
-                    wkj = self.weights[i]
+                    wkj = self.weights[i+1]
                     derr = np.matmul(oj, np.subtract(1, oj))
                     if not isinstance(derr, np.ndarray):
-                        derr = np.array([derr])
+                        derr = np.array([derr])[:, None]
 
                     # delta sum
                     print('weights', wkj.shape)
                     print('delta', delta.shape)
                     # IT'S GOING BY ROW!!!!
                     delta_sum = np.matmul(delta, wkj)
+                    if len(delta_sum.shape) == 1:
+                        delta_sum = delta_sum[None, :]
                     print('delta sum', delta_sum)
                     print('derr', derr.shape, 'sum', delta_sum.shape)
                     print('derr', derr)
-                    delta = np.dot(derr, delta_sum)
+                    delta = np.matmul(derr, delta_sum)
                     deltas[i] = delta
                     print(delta)
                     
-                    break
+                    #break
 
                 ''' 
                 # go back through hidden layers and update their weights
