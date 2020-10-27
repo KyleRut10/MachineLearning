@@ -49,11 +49,17 @@ class MLP:
             #print(self.weights[-1])
 
 
-        # TODO: Figure out how this is going to work
         converge = False
+        max_iterations = 15
+        max_dw_sum = 0.0001
+        iteration = 0
         while not converge:
+            iteration += 1
+            print('********Training iteration {}************'.format(iteration))
+            # save old weights
+            old_weights = self.weights.copy()
             for i,pt in self.training.iterrows():
-                print('pt: {} - {}'.format(i, list(pt)))
+                ###print('pt: {} - {}'.format(i, list(pt)))
                 activations = []
                 # feedforward computation
                 # initial inputs into first hidden layer
@@ -73,7 +79,7 @@ class MLP:
                     #print(inputs)
             
                 # backward propagation
-                print('Backward propagation')
+                ###print('Backward propagation')
                 # initiate weight update matrix and delta storage
                 weight_updates = ['' for x in range(len(self.weights))]
                 deltas = ['' for x in range(len(self.weights))]
@@ -105,6 +111,9 @@ class MLP:
                 if len(dw.shape) == 1:
                     dw = dw[None, :]
                 weight_updates[-1] = dw
+
+
+
                 #print('output dw: ', weight_updates[-1])
                 #break
                 #print(weight_updates[-1])
@@ -116,7 +125,7 @@ class MLP:
                 # go back through hidden layers and update their weights
                 # subtract 2, because already did the last position
                 for i in range(len(self.weights)-2, -1, -1):
-                    print('backprop layer: ', i)
+                    ###print('backprop layer: ', i)
                     oj = activations[i+1]  # outputs of layer
                     xj = activations[i][None, :]  # inputs to layer
                     wkj = self.weights[i+1]
@@ -154,8 +163,27 @@ class MLP:
                     #print('w', w.shape, 'wu', weight_updates[i].shape)
                     self.weights[i] = np.add(w,weight_updates[i])
                 #self.print_weights()
-            break
-    
+                
+
+            # Test for convergence by summing all the weights and seeing
+            # if they are close to zero
+            dw_sum_old = 0
+            dw_sum_new = 0
+            for i,old in enumerate(old_weights):
+                dw_sum_old += np.sum(old)
+                dw_sum_new += np.sum(self.weights[i])
+            #print('cum dw, old:', dw_sum_old, ' new: ', dw_sum_new)
+            dw_diff = abs(dw_sum_new - dw_sum_old)
+            #print('diff: ', dw_diff, 'compare to: ', max_dw_sum*len(self.weights))
+            if dw_diff < max_dw_sum*len(self.weights):
+                converge = True
+                print('Converged in {} iterations'.format(iteration))
+            if iteration >= max_iterations:
+                converge = True
+                print('Max iterations ({}) reached, stopping'.format(iteration))
+                print('old - new weights = {}'.format(dw_diff))
+
+
     def print_weights(self):
         print('Weights')
         for i,w in enumerate(self.weights):
