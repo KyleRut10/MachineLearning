@@ -89,10 +89,10 @@ class MLP:
                 #print(self.print_weights())
                 #print(len(self.weights))
                 
-                #print('activations')
-                #for a in activations:
-                #    print(a)
-                #return
+                print('activations')
+                for a in activations:
+                    print(np.transpose(a))
+                return
                 
                 #############################################################
                 # backward propagation
@@ -120,9 +120,8 @@ class MLP:
                     do = np.array([do])
                 print('derr: ', derr)
                 print('do: ', do)
-                return
-                delta = np.matmul(derr, do)
-                #print('delta: ', delta)
+                delta = np.matmul(derr, np.transpose(do))
+                print('delta: ', delta)
                 # I think delta should be a scalar?
                 if not isinstance(delta, np.ndarray):
                     delta = np.array([delta])
