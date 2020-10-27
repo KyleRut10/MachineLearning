@@ -94,19 +94,18 @@ class MLP:
                 # I think delta should be a scalar?
                 if not isinstance(delta, np.ndarray):
                     delta = np.array([delta])
-                print('delta out', delta)
+                #print('delta out', delta)
                 deltas[-1] = delta
                 
-                # TODO: I think this should be activations -2?
-                print('act[-2]', xj.shape)
-                print('delta out shape: ', delta.shape)
+                #print('act[-2]', xj.shape)
+                #print('delta out shape: ', delta.shape)
                 dw = -np.matmul(np.transpose(delta), xj) * self.eda
                 if not isinstance(dw, np.ndarray):
                     dw = np.array([dw])
                 if len(dw.shape) == 1:
                     dw = dw[None, :]
                 weight_updates[-1] = dw
-                print('output dw: ', weight_updates[-1])
+                #print('output dw: ', weight_updates[-1])
                 #break
                 #print(weight_updates[-1])
                 #print('activations')
@@ -126,35 +125,35 @@ class MLP:
                         derr = np.array([derr])[:, None]
 
                     # delta sum
-                    print('weights', wkj.shape)
-                    print('delta', delta.shape)
+                    #print('weights', wkj.shape)
+                    #print('delta', delta.shape)
                     # IT'S GOING BY ROW!!!!
                     delta_sum = np.matmul(delta, wkj)
                     if len(delta_sum.shape) == 1:
                         delta_sum = delta_sum[None, :]
-                    print('delta sum', delta_sum)
-                    print('derr', derr.shape, 'sum', delta_sum.shape)
-                    print('derr', derr)
+                    #print('delta sum', delta_sum)
+                    #print('derr', derr.shape, 'sum', delta_sum.shape)
+                    #print('derr', derr)
                     delta = np.matmul(derr, delta_sum)
                     deltas[i] = delta
-                    print('delta', delta)
+                    #print('delta', delta)
                     
                     # calculate weight updates
-                    print('xj', xj.shape, xj)
-                    print('delta', delta.shape)
+                    #print('xj', xj.shape, xj)
+                    #print('delta', delta.shape)
                     dw = -np.dot(np.transpose(delta), xj)
-                    print('dw', dw.shape, dw)
+                    #print('dw', dw.shape, dw)
                     weight_updates[i] = dw
                     #break
                 
-                self.print_weights()
+                #self.print_weights()
                 #print(weight_updates)
                 # preform weight updates
                 for i,w in enumerate(self.weights):
                     pass
                     #print('w', w.shape, 'wu', weight_updates[i].shape)
                     self.weights[i] = np.add(w,weight_updates[i])
-                self.print_weights()
+                #self.print_weights()
             break
     
     def print_weights(self):
