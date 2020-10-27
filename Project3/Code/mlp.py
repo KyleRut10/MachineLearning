@@ -75,6 +75,7 @@ class MLP:
                     # The weights going into layer l
                     W = self.weights[l] #np.transpose(self.weights[l])
                     print('W', W.shape, W)
+                    print('inputs', inputs.shape, inputs)
                     #print('W', W.shape, np.transpose(W))
                     z = np.matmul(W, inputs)
                     # compute activation function for whole layer
@@ -82,17 +83,17 @@ class MLP:
                     acts = acts.reshape(len(acts), 1)
                     activations.append(acts)
                     # update inputs into next layer
-                    inputs = activations[-1]
+                    inputs = self.build_inputs(W, activations[-2])
                     #print(inputs)
                 
                 #print()
                 #print(self.print_weights())
                 #print(len(self.weights))
                 
-                print('activations')
-                for a in activations:
-                    print(np.transpose(a))
-                return
+                #print('activations')
+                #for a in activations:
+                #    print(np.transpose(a))
+                #return
                 
                 #############################################################
                 # backward propagation
@@ -218,6 +219,17 @@ class MLP:
                 dj.append(0)
 
         return np.array(dj).reshape(self.num_outputs, 1)
+    
+    def build_inputs(self, W, activation):
+        activation = np.transpose(activation)[0]
+        inputs = []
+        for node in range(len(W)):
+            ins = []
+            for i,w in enumerate(W[node]):
+                ins.append(w*activation[i])
+            inputs.append(sum(ins))
+        inputs = np.array(inputs).reshape(len(inputs), 1)
+        return inputs
 
     def print_weights(self):
         print('Weights')
