@@ -31,7 +31,7 @@ class MLP:
         self.layers = []
         self.layers.extend(hidden_nodes)
         self.layers.append(num_outputs)
-        self.eda = 0.01
+        self.eda = 0.0001
 
     def train(self):
         training_error = []
@@ -56,6 +56,7 @@ class MLP:
         max_dw_sum = 0.0001
         iteration = 0
         while not converge:
+            iteration_error = []
             iteration += 1
             #print('*******Training iteration {}***********'.format(iteration))
             # save old weights
@@ -121,7 +122,7 @@ class MLP:
                 
                 # TODO: Make this bariable later
                 # Caclulate error
-                training_error.append(0.5*np.sum(np.subtract(dj, o_out)))
+                iteration_error.append(0.5*np.sum(np.subtract(dj, o_out)**2))
 
                 '''
                 derr = -np.subtract(dj, o_out)
@@ -206,6 +207,7 @@ class MLP:
                     weight_updates[i] = dw
                     #break
                 
+
                 #self.print_weights()
                 #print(weight_updates)
                 # preform weight updates
@@ -213,6 +215,9 @@ class MLP:
                     #print('w', w.shape, 'wu', weight_updates[i].shape)
                     self.weights[i] = np.add(w,weight_updates[i])
                 #self.print_weights()
+                
+            # average the error for the dataset round
+            training_error.append(sum(iteration_error)/len(self.training))
                 
 
             # Test for convergence by summing all the weights and seeing
@@ -233,10 +238,9 @@ class MLP:
                 print('Max iterations ({}) reached, stopping'.format(iteration))
                 print('old - new weights = {}'.format(dw_diff))
 
-        plt.plot(training_error)
+        plt.plot(training_error, 'o')
         plt.ylabel('error')
         plt.show()
-        print('hatred')
 
 
     def calc_delta_out(self, outputs, targets):
