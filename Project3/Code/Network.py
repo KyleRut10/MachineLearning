@@ -25,7 +25,7 @@ def network(inputs, num_layers, num_node, num_out, momentum, mode):
     # These differ in their error calculations predominantly, so the training
     #     should be the same
     if(mode == "r"):
-        # 
+        # The last col of inputs should be the result
     else if(mode == "c"):
-        # The first row of inputs should be the class
+        # The last col of inputs should be the class
         return classification(inputs, num_layers, num_node, num_out, momentum)
