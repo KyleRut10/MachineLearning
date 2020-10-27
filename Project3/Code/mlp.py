@@ -59,25 +59,28 @@ class MLP:
                 # initial inputs into first hidden layer
                 # assuming class is in last position, so factor it out
                 inputs = np.array(pt[:-1])
+                activations.append(inputs)
+                #print('Forward Propagation')
                 for l,num_nodes in enumerate(range(len(self.layers))):
-                    print('layer: ', l)
+                    #print('layer: ', l)
                     # The weights going into layer l
                     W = self.weights[l]
                     z = np.matmul(W, inputs)
                     # compute activation function for whole layer
-                    activations.append(self.sig(z))
+                    activations.append(self.sig(np.transpose(z)))
                     # update inputs into next layer
                     inputs = activations[-1]
-                    print(inputs)
+                    #print(inputs)
             
                 # backward propagation
+                print('Backward propagation')
                 # initiate weight update matrix and delta storage
                 weight_updates = ['' for x in range(len(self.weights))]
                 deltas = ['' for x in range(len(self.weights))]
 
                 # calculate initial delta at output
                 o_out = activations[-1]
-                dj = pt[-1] # TODO: What is this
+                dj = pt[-1]  # target output of network for regression
                 derr = -np.subtract(dj, o_out)
                 do = np.matmul(o_out, np.subtract(1, o_out))
                 # convert dnet to ndarray if it isn't
@@ -88,19 +91,49 @@ class MLP:
                 delta = np.matmul(derr, do)
                 #print('delta: ', delta)
                 # I think delta should be a scalar?
-                #if not isinstance(delta, np.ndarray):
-                #    delta = np.array([delta])
+                if not isinstance(delta, np.ndarray):
+                    delta = np.array([delta])
+                print('delta out', delta)
                 deltas[-1] = delta
                 
-                # TODO: Add in learning rate
-                dw = -activations[-1] * delta * self.eda
+                dw = -np.matmul(activations[-1], delta) * self.eda
                 if not isinstance(dw, np.ndarray):
                     dw = np.array([dw])
-                #print('output dw: ', weight_updates[-1])
                 weight_updates[-1] = dw
+                print('output dw: ', weight_updates[-1])
                 #print(weight_updates[-1])
-                
-                
+                #print('activations')
+                #for a in activations:
+                #    print()
+                #    print(a)
+
+                #self.print_weights()
+                # go back through hidden layers and update their weights
+                # subtract 2, because already did the last position
+                for i in range(len(self.weights)-1, -1, -1):
+                    print('backprop layer: ', i)
+                    oj = activations[i+1]  # outputs of layer
+                    xj = activations[i]  # inputs to layer
+                    wkj = self.weights[i]
+                    derr = np.matmul(oj, np.subtract(1, oj))
+                    if not isinstance(derr, np.ndarray):
+                        derr = np.array([derr])
+
+                    # delta sum
+                    print('weights', wkj.shape)
+                    print('delta', delta.shape)
+                    # IT'S GOING BY ROW!!!!
+                    delta_sum = np.matmul(delta, wkj)
+                    print('delta sum', delta_sum)
+                    print('derr', derr.shape, 'sum', delta_sum.shape)
+                    print('derr', derr)
+                    delta = np.dot(derr, delta_sum)
+                    deltas[i] = delta
+                    print(delta)
+                    
+                    break
+
+                ''' 
                 # go back through hidden layers and update their weights
                 # subtract 2, because already did the last position
                 for i in range(len(self.weights)-2, -1, -1):
@@ -110,10 +143,10 @@ class MLP:
                     #print('previous delta: ', deltas[i+1])
                     # multiply delta by weight matrix
                     
-                    #print('deltas[i]:', deltas[i+1])
-                    #print('weights[i]:', self.weights[i])
+                    print('deltas[i]:', deltas[i+1])
+                    print('weights[i]:', self.weights[i])
                     #print(self.weights[i] * deltas[i+1])
-                    delta2 = np.sum(self.weights[i] * deltas[i+1])
+                    #delta2 = np.matmul(self.weights[i], deltas[i+1])
                     #delta2 = np.matmul(deltas[i], self.weights[i])
                     #print('sum part: ', delta2)
                     #print('oj: ', oj)
@@ -124,9 +157,15 @@ class MLP:
                     deltas[i] = delta
 
                     # calculate change in weights
-                    dw = inputs * delta
+                    #print('delta:', delta)
+                    #print('newaxis:', delta[:, np.newaxis])
+                    #dw = np.matmul(inputs, delta[:,np.newaxis()) #inputs * delta
+                    print(delta)
+                    dw = ''
+                    #dw = delta * inputs
+
                     print('dw', dw)
-                    dw = -dw * self.eda
+                    #dw = -dw * self.eda
                     weight_updates[i] = dw
                     print('dw: ', dw)
 
@@ -134,9 +173,11 @@ class MLP:
                 #print(weight_updates)
                 # preform weight updates
                 for i,w in enumerate(self.weights):
-                    print('w', w.shape, 'wu', weight_updates[i].shape)
+                    pass
+                    #print('w', w.shape, 'wu', weight_updates[i].shape)
                     #self.weights[i] = np.add(w,weight_updates[i])
                 #self.print_weights()
+                '''
             break
     
     def print_weights(self):
