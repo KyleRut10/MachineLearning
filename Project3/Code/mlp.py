@@ -114,7 +114,7 @@ class MLP:
                 for i in range(len(self.weights)-2, -1, -1):
                     print('backprop layer: ', i)
                     oj = activations[i+1]  # outputs of layer
-                    xj = activations[i]  # inputs to layer
+                    xj = activations[i][None, :]  # inputs to layer
                     wkj = self.weights[i+1]
                     derr = np.matmul(oj, np.subtract(1, oj))
                     if not isinstance(derr, np.ndarray):
@@ -132,8 +132,14 @@ class MLP:
                     print('derr', derr)
                     delta = np.matmul(derr, delta_sum)
                     deltas[i] = delta
-                    print(delta)
+                    print('delta', delta)
                     
+                    # calculate weight updates
+                    print('xj', xj.shape, xj)
+                    print('delta', delta.shape)
+                    dw = -np.dot(np.transpose(delta), xj)
+                    print('dw', dw.shape, dw)
+                    weight_updates[i] = dw
                     #break
 
                 ''' 
