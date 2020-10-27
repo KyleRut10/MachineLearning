@@ -35,7 +35,7 @@ class MLP:
     def train(self):
         # Build weight matrices...
         self.weights = []
-        
+
         # W[l]: (n[l], n[l-1]) (h, w)
         for i in range(1, len(self.all_layers)):
             h = self.all_layers[i]
@@ -45,17 +45,17 @@ class MLP:
                 hw.append(rand.uniform(-0.01,0.01))
             # Reshape into 2D Numpy array
             self.weights.append(np.array(hw).reshape(h, w))
-
             #print(self.weights[-1])
-
-
+        
+        
+        # Things to track iteration and convergance things
         converge = False
         max_iterations = 15
         max_dw_sum = 0.0001
         iteration = 0
         while not converge:
             iteration += 1
-            print('********Training iteration {}************'.format(iteration))
+            #print('*******Training iteration {}***********'.format(iteration))
             # save old weights
             old_weights = self.weights.copy()
             for i,pt in self.training.iterrows():
@@ -65,36 +65,62 @@ class MLP:
                 # initial inputs into first hidden layer
                 # assuming class is in last position, so factor it out
                 inputs = np.array(pt[:-1])
+                inputs = inputs.reshape(len(inputs), 1)
+                print('inputs', inputs.shape, inputs)
+                #inputs = np.array(pt[:-1]))
                 activations.append(inputs)
                 #print('Forward Propagation')
                 for l,num_nodes in enumerate(range(len(self.layers))):
                     #print('layer: ', l)
                     # The weights going into layer l
-                    W = self.weights[l]
+                    W = self.weights[l] #np.transpose(self.weights[l])
+                    print('W', W.shape, W)
+                    #print('W', W.shape, np.transpose(W))
                     z = np.matmul(W, inputs)
                     # compute activation function for whole layer
-                    activations.append(self.sig(np.transpose(z)))
+                    acts = self.sig(z)
+                    acts = acts.reshape(len(acts), 1)
+                    activations.append(acts)
                     # update inputs into next layer
                     inputs = activations[-1]
                     #print(inputs)
-            
+                
+                #print()
+                #print(self.print_weights())
+                #print(len(self.weights))
+                
+                #print('activations')
+                #for a in activations:
+                #    print(a)
+                #return
+                
+                #############################################################
                 # backward propagation
+                #############################################################
                 ###print('Backward propagation')
                 # initiate weight update matrix and delta storage
                 weight_updates = ['' for x in range(len(self.weights))]
                 deltas = ['' for x in range(len(self.weights))]
 
                 # calculate initial delta at output
-                o_out = activations[-1]
-                dj = pt[-1]  # target output of network for regression
-                xj = activations[-2][None, :]
+                o_out = activations[-1]#[None, :]
+                # difference for output measure
+                if self.mode.lower() == 'r':
+                    dj = pt[-1]  # target output of network for regression
+                else:
+                    dj = self.get_class_target(pt[-1])
+                print('dj', dj)
+                xj = activations[-2]#[None, :]
                 derr = -np.subtract(dj, o_out)
-                do = np.matmul(o_out, np.subtract(1, o_out))
+                print('o_out', o_out)
+                print('sub', np.subtract(1, o_out))
+                do = np.matmul(o_out, np.transpose(np.subtract(1, o_out)))
                 # convert dnet to ndarray if it isn't
                 if not isinstance(do, np.ndarray):
                     do = np.array([do])
-                #print('derr: ', derr)
-                #print('do: ', do)
+                print('derr: ', derr)
+                print('do: ', do)
+                return
                 delta = np.matmul(derr, do)
                 #print('delta: ', delta)
                 # I think delta should be a scalar?
@@ -127,11 +153,11 @@ class MLP:
                 for i in range(len(self.weights)-2, -1, -1):
                     ###print('backprop layer: ', i)
                     oj = activations[i+1]  # outputs of layer
-                    xj = activations[i][None, :]  # inputs to layer
+                    xj = activations[i]#[None, :]  # inputs to layer
                     wkj = self.weights[i+1]
                     derr = np.matmul(oj, np.subtract(1, oj))
                     if not isinstance(derr, np.ndarray):
-                        derr = np.array([derr])[:, None]
+                        derr = np.array([derr])#[:, None]
 
                     # delta sum
                     #print('weights', wkj.shape)
@@ -159,6 +185,7 @@ class MLP:
                 #print(weight_updates)
                 # preform weight updates
                 for i,w in enumerate(self.weights):
+                    # NOTE: WHY IS THIS HERE?????????
                     pass
                     #print('w', w.shape, 'wu', weight_updates[i].shape)
                     self.weights[i] = np.add(w,weight_updates[i])
@@ -183,6 +210,15 @@ class MLP:
                 print('Max iterations ({}) reached, stopping'.format(iteration))
                 print('old - new weights = {}'.format(dw_diff))
 
+    def get_class_target(self, class_val):
+        dj = []
+        for i in range(self.num_outputs):
+            if i == class_val:
+               dj.append(1)
+            else:
+                dj.append(0)
+
+        return np.array(dj).reshape(self.num_outputs, 1)
 
     def print_weights(self):
         print('Weights')
@@ -191,6 +227,7 @@ class MLP:
             print(w)
     
     def forward(self, W, a0):
+        # this could return the output values and the activations for all layers
         #z = np.matmult(W,a)
         #print(z)
         #print(1/(1+np.exp(z))
