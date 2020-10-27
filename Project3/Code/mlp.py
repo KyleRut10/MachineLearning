@@ -1,6 +1,7 @@
 import pandas as pd
 import random as rand
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 class MLP:
@@ -33,6 +34,7 @@ class MLP:
         self.eda = 0.01
 
     def train(self):
+        training_error = []
         # Build weight matrices...
         self.weights = []
 
@@ -86,6 +88,9 @@ class MLP:
                     inputs = self.build_inputs(W, activations[-2])
                     #print(inputs)
                 
+                
+
+
                 #print()
                 #print(self.print_weights())
                 #print(len(self.weights))
@@ -113,6 +118,11 @@ class MLP:
                     dj = self.get_class_target(pt[-1])
                 print('dj', dj)
                 xj = self.build_inputs(self.weights[-1], activations[-2])
+                
+                # TODO: Make this bariable later
+                # Caclulate error
+                training_error.append(0.5*np.sum(np.subtract(dj, o_out)))
+
                 '''
                 derr = -np.subtract(dj, o_out)
                 print('o_out', o_out)
@@ -200,8 +210,6 @@ class MLP:
                 #print(weight_updates)
                 # preform weight updates
                 for i,w in enumerate(self.weights):
-                    # NOTE: WHY IS THIS HERE?????????
-                    pass
                     #print('w', w.shape, 'wu', weight_updates[i].shape)
                     self.weights[i] = np.add(w,weight_updates[i])
                 #self.print_weights()
@@ -224,6 +232,12 @@ class MLP:
                 converge = True
                 print('Max iterations ({}) reached, stopping'.format(iteration))
                 print('old - new weights = {}'.format(dw_diff))
+
+        plt.plot(training_error)
+        plt.ylabel('error')
+        plt.show()
+        print('hatred')
+
 
     def calc_delta_out(self, outputs, targets):
         results = []
