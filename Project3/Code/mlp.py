@@ -108,20 +108,25 @@ class MLP:
                 # difference for output measure
                 if self.mode.lower() == 'r':
                     dj = pt[-1]  # target output of network for regression
+                    dj = np.array(dj).reshape(1,1)
                 else:
                     dj = self.get_class_target(pt[-1])
                 print('dj', dj)
-                xj = activations[-2]#[None, :]
+                xj = self.build_inputs(self.weights[-1], activations[-2])
+                '''
                 derr = -np.subtract(dj, o_out)
                 print('o_out', o_out)
                 print('sub', np.subtract(1, o_out))
-                do = np.matmul(o_out, np.transpose(np.subtract(1, o_out)))
+                do = np.matmul(np.transpose(o_out), np.subtract(1, o_out))
+                #do = np.matmul(o_out, np.transpose(np.subtract(1, o_out)))
                 # convert dnet to ndarray if it isn't
                 if not isinstance(do, np.ndarray):
                     do = np.array([do])
                 print('derr: ', derr)
                 print('do: ', do)
-                delta = np.matmul(derr, np.transpose(do))
+                #delta = np.matmul(derr, np.transpose(do))
+                '''
+                delta = self.calc_delta_out(o_out, dj)
                 print('delta: ', delta)
                 # I think delta should be a scalar?
                 if not isinstance(delta, np.ndarray):
@@ -151,13 +156,14 @@ class MLP:
                 # go back through hidden layers and update their weights
                 # subtract 2, because already did the last position
                 for i in range(len(self.weights)-2, -1, -1):
-                    ###print('backprop layer: ', i)
+                    print('backprop layer: ', i)
                     oj = activations[i+1]  # outputs of layer
                     xj = activations[i]#[None, :]  # inputs to layer
                     wkj = self.weights[i+1]
-                    derr = np.matmul(oj, np.subtract(1, oj))
-                    if not isinstance(derr, np.ndarray):
-                        derr = np.array([derr])#[:, None]
+                    print('oj', oj)
+                    #derr = np.matmul(oj, np.subtract(1, oj))
+                    #if not isinstance(derr, np.ndarray):
+                    #    derr = np.array([derr])#[:, None]
 
                     # delta sum
                     #print('weights', wkj.shape)
@@ -166,9 +172,11 @@ class MLP:
                     delta_sum = np.matmul(delta, wkj)
                     if len(delta_sum.shape) == 1:
                         delta_sum = delta_sum[None, :]
-                    #print('delta sum', delta_sum)
+                    print('delta sum', delta_sum)
                     #print('derr', derr.shape, 'sum', delta_sum.shape)
                     #print('derr', derr)
+                    derr = self.calc_derr(oj)
+                    print('derr', derr)
                     delta = np.matmul(derr, delta_sum)
                     deltas[i] = delta
                     #print('delta', delta)
@@ -210,6 +218,24 @@ class MLP:
                 print('Max iterations ({}) reached, stopping'.format(iteration))
                 print('old - new weights = {}'.format(dw_diff))
 
+    def calc_delta_out(self, outputs, targets):
+        results = []
+        for j in range(len(outputs)):
+            oj = outputs[j][0]
+            dj = targets[j][0]
+
+            results.append(-(dj-oj)*oj*(1-oj))
+        results = np.array(results)
+        return results
+
+    def calc_derr(self, outputs):
+        results = []
+        for j in range(len(outputs)):
+            oj = outputs[j][0]
+
+            results.append(oj*(1-oj))
+        results = np.array(results)
+        return results
     def get_class_target(self, class_val):
         dj = []
         for i in range(self.num_outputs):
