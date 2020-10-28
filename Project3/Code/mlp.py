@@ -37,9 +37,9 @@ class MLP:
         self.layers = []
         self.layers.extend(hidden_nodes)
         self.layers.append(self.num_outputs)
-        self.eda = .5#0.01
+        self.eda = 0.01
 
-    def train(self):
+    def train(self, plot=False):
         training_error = []
         # Build weight matrices...
         self.weights = []
@@ -58,7 +58,7 @@ class MLP:
         
         # Things to track iteration and convergance things
         converge = False
-        max_iterations = 15
+        max_iterations = 100
         max_dw_sum = 0.0001
         iteration = 0
         while not converge:
@@ -94,7 +94,8 @@ class MLP:
                 
                 # Caclulate error
                 if self.mode == 'r':
-                    error = 0.5*np.sum(np.subtract(dj, o_out)**2)
+                    # calculate the MSE for regression
+                    error = 0.5*np.sum(np.subtract(o_out, dj)**2)/len(o_out)
                 else:
                     # TODO: Cross-entropy error
                     error = 0
@@ -153,9 +154,14 @@ class MLP:
                 print('Max iterations ({}) reached, stopping'.format(iteration))
                 print('old - new weights = {}'.format(dw_diff))
 
-        plt.plot(training_error, 'o')
-        plt.ylabel('error')
-        plt.show()
+        # print out the final average error
+        print('Average error: {}'.format(training_error[-1]))
+
+        # make a plot of the error
+        if plot:
+            plt.plot(training_error, 'o')
+            plt.ylabel('error')
+            plt.show()
 
     def feedforward(self, pt):
         # will hold the calculated activations, the input to a layer
