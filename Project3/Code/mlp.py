@@ -62,29 +62,7 @@ class MLP:
             # save old weights
             old_weights = self.weights.copy()
             for row_inex,pt in self.training.iterrows():
-                ###print('pt: {} - {}'.format(i, list(pt)))
-                activations = []
-                # feedforward computation
-                # initial inputs into first hidden layer
-                # assuming class is in last position, so factor it out
-                inputs = np.array(pt[:-1])
-                inputs = inputs.reshape(len(inputs), 1)
-                #print('inputs', inputs.shape, inputs)
-                #inputs = np.array(pt[:-1]))
-                activations.append(inputs)
-                #print('Forward Propagation')
-                for l,num_nodes in enumerate(range(len(self.layers))):
-                    # The weights going into layer l
-                    W = self.weights[l] #np.transpose(self.weights[l])
-                    z = np.matmul(W, inputs)
-                    # compute activation function for whole layer
-                    acts = self.sig(z)
-                    acts = acts.reshape(len(acts), 1)
-                    activations.append(acts)
-                    # update inputs into next layer
-                    inputs = self.build_inputs(W, activations[-2])
-               
-
+                activations = self.feedforward(pt)
                 #############################################################
                 # backward propagation
                 #############################################################
@@ -157,9 +135,35 @@ class MLP:
                 print('Max iterations ({}) reached, stopping'.format(iteration))
                 print('old - new weights = {}'.format(dw_diff))
 
+        '''
         plt.plot(training_error, 'o')
         plt.ylabel('error')
         plt.show()
+        '''
+
+    def feedforward(self, pt):
+        activations = []
+        # feedforward computation
+        # initial inputs into first hidden layer
+        # assuming class is in last position, so factor it out
+        inputs = np.array(pt[:-1])
+        inputs = inputs.reshape(len(inputs), 1)
+        #print('inputs', inputs.shape, inputs)
+        #inputs = np.array(pt[:-1]))
+        activations.append(inputs)
+        #print('Forward Propagation')
+        for l,num_nodes in enumerate(range(len(self.layers))):
+            # The weights going into layer l
+            W = self.weights[l] #np.transpose(self.weights[l])
+            z = np.matmul(W, inputs)
+            # compute activation function for whole layer
+            acts = self.sig(z)
+            acts = acts.reshape(len(acts), 1)
+            activations.append(acts)
+            # update inputs into next layer
+            inputs = self.build_inputs(W, activations[-2])
+       
+        return activations 
 
     def calc_delta_out(self, outputs, targets):
         results = []
