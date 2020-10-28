@@ -2,6 +2,7 @@ import pandas as pd
 import random as rand
 import numpy as np
 import matplotlib.pyplot as plt
+import sys, os
 
 
 class MLP:
@@ -23,7 +24,7 @@ class MLP:
         self.num_outputs = num_outputs
         self.training = training
         self.test = test
-        self.mode = mode
+        self.mode = mode.lower()
         # Make a cummulative list of how many nodes in each layer
         self.all_layers = [len(training.columns)-1]
         self.all_layers.extend(hidden_nodes)
@@ -63,6 +64,7 @@ class MLP:
             old_weights = self.weights.copy()
             for row_inex,pt in self.training.iterrows():
                 activations = self.feedforward(pt)
+                
                 #############################################################
                 # backward propagation
                 #############################################################
@@ -142,27 +144,36 @@ class MLP:
         '''
 
     def feedforward(self, pt):
+        # will hold the calculated activations, the input to a layer
+        # activations[0] is the input to the first hidden layer
         activations = []
         # feedforward computation
         # initial inputs into first hidden layer
         # assuming class is in last position, so factor it out
         inputs = np.array(pt[:-1])
         inputs = inputs.reshape(len(inputs), 1)
-        #print('inputs', inputs.shape, inputs)
-        #inputs = np.array(pt[:-1]))
         activations.append(inputs)
-        #print('Forward Propagation')
+        
         for l,num_nodes in enumerate(range(len(self.layers))):
             # The weights going into layer l
             W = self.weights[l] #np.transpose(self.weights[l])
-            z = np.matmul(W, inputs)
             # compute activation function for whole layer
-            acts = self.sig(z)
+            z = np.matmul(W, inputs)
+            # handle output layer based on regression or classification
+            if l == len(self.layers)-1 and self.mode == 'c':
+                # compute the softmax function at last node if classification
+                # problem
+                acts = np.exp(z)/sum(np.exp(z))
+            else:
+                acts = self.sig(z)
+            # convert to 2D numpy array
             acts = acts.reshape(len(acts), 1)
             activations.append(acts)
             # update inputs into next layer
             inputs = self.build_inputs(W, activations[-2])
        
+            
+        
         return activations 
 
     def calc_delta_out(self, outputs, targets):
@@ -216,3 +227,9 @@ class MLP:
         for i,w in enumerate(self.weights):
             print('layer ', i)
             print(w)
+    '''
+    def softmax(self, W, X):
+        # TODO: Write softmax function that takes
+        
+        return 1
+    '''
