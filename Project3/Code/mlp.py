@@ -18,7 +18,7 @@ class MLP:
     sigFunc = lambda t: 1/(1+np.exp(t))
     sig = np.vectorize(sigFunc)
     
-    def __init__(self, hidden_nodes, training, mode):
+    def __init__(self, hidden_nodes, training, mode, eda=0.01, num_outputs=''):
         self.num_hidden = len(hidden_nodes)
         self.hidden_nodes = hidden_nodes
         self.training = training
@@ -32,6 +32,8 @@ class MLP:
         else:
             print('***** MODE UNKNOWN *****')
             print('Will not work')
+        if not isinstance(num_outputs, str):
+            self.num_outputs = num_outputs
         # Make a cummulative list of how many nodes in each layer
         self.all_layers = [len(training.columns)-1]
         self.all_layers.extend(hidden_nodes)
@@ -39,7 +41,7 @@ class MLP:
         self.layers = []
         self.layers.extend(hidden_nodes)
         self.layers.append(self.num_outputs)
-        self.eda = 0.01
+        self.eda = eda
 
     def train(self, plot=False):
         training_error = []
