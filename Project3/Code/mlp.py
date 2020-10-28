@@ -31,7 +31,7 @@ class MLP:
         self.layers = []
         self.layers.extend(hidden_nodes)
         self.layers.append(num_outputs)
-        self.eda = 0.0001
+        self.eda = .5#0.01
 
     def train(self):
         training_error = []
@@ -74,12 +74,8 @@ class MLP:
                 activations.append(inputs)
                 #print('Forward Propagation')
                 for l,num_nodes in enumerate(range(len(self.layers))):
-                    #print('layer: ', l)
                     # The weights going into layer l
                     W = self.weights[l] #np.transpose(self.weights[l])
-                    print('W', W.shape, W)
-                    print('inputs', inputs.shape, inputs)
-                    #print('W', W.shape, np.transpose(W))
                     z = np.matmul(W, inputs)
                     # compute activation function for whole layer
                     acts = self.sig(z)
@@ -87,20 +83,8 @@ class MLP:
                     activations.append(acts)
                     # update inputs into next layer
                     inputs = self.build_inputs(W, activations[-2])
-                    #print(inputs)
-                
-                
+               
 
-
-                #print()
-                #print(self.print_weights())
-                #print(len(self.weights))
-                
-                #print('activations')
-                #for a in activations:
-                #    print(np.transpose(a))
-                #return
-                
                 #############################################################
                 # backward propagation
                 #############################################################
@@ -117,104 +101,41 @@ class MLP:
                     dj = np.array(dj).reshape(1,1)
                 else:
                     dj = self.get_class_target(pt[-1])
-                print('dj', dj)
                 xj = self.build_inputs(self.weights[-1], activations[-2])
                 
                 # TODO: Make this bariable later
                 # Caclulate error
                 iteration_error.append(0.5*np.sum(np.subtract(dj, o_out)**2))
 
-                '''
-                derr = -np.subtract(dj, o_out)
-                print('o_out', o_out)
-                print('sub', np.subtract(1, o_out))
-                do = np.matmul(np.transpose(o_out), np.subtract(1, o_out))
-                #do = np.matmul(o_out, np.transpose(np.subtract(1, o_out)))
-                # convert dnet to ndarray if it isn't
-                if not isinstance(do, np.ndarray):
-                    do = np.array([do])
-                print('derr: ', derr)
-                print('do: ', do)
-                #delta = np.matmul(derr, np.transpose(do))
-                '''
                 delta = self.calc_delta_out(o_out, dj)
-                print('delta: ', delta)
-                # I think delta should be a scalar?
-                if not isinstance(delta, np.ndarray):
-                    delta = np.array([delta])
-                #print('delta out', delta)
                 deltas[-1] = delta
                 
-                #print('act[-2]', xj.shape)
-                #print('delta out shape: ', delta.shape)
                 dw = -np.matmul(np.transpose(delta), xj) * self.eda
-                if not isinstance(dw, np.ndarray):
-                    dw = np.array([dw])
-                if len(dw.shape) == 1:
-                    dw = dw[None, :]
+                # These can probably be delted
+                #if not isinstance(dw, np.ndarray):
+                #    dw = np.array([dw])
+                #if len(dw.shape) == 1:
+                #    dw = dw[None, :]
                 weight_updates[-1] = dw
-
-
-
-                #print('output dw: ', weight_updates[-1])
-                #break
-                #print(weight_updates[-1])
-                #print('activations')
-                #for a in activations:
-                #    print()
-                #    print(a)
-                #self.print_weights()
+                
                 # go back through hidden layers and update their weights
                 # subtract 2, because already did the last position
                 for i in range(len(self.weights)-2, -1, -1):
-                    print('backprop layer: ', i)
+                    #print('backprop layer: ', i)
                     oj = activations[i+1]  # outputs of layer
                     xj = activations[i]#[None, :]  # inputs to layer
                     wkj = self.weights[i+1]
-                    print('oj', oj)
-                    #derr = np.matmul(oj, np.subtract(1, oj))
-                    #if not isinstance(derr, np.ndarray):
-                    #    derr = np.array([derr])#[:, None]
-
-                    # delta sum
-                    #print('weights', wkj.shape)
-                    #print('delta', delta.shape)
-                    # IT'S GOING BY ROW!!!!
-                    '''
-                    delta_sum = np.matmul(delta, wkj)
-                    if len(delta_sum.shape) == 1:
-                        delta_sum = delta_sum[None, :]
-                    print('delta sum', delta_sum)
-                    #print('derr', derr.shape, 'sum', delta_sum.shape)
-                    #print('derr', derr)
-                    derr = self.calc_derr(oj)
-                    print('derr', derr)
-                    delta = np.matmul(derr, delta_sum)
-                    '''
-                    delta = self.calc_delta(oj, deltas[-1], wkj)
-                    print('delta', delta)
-
-                    deltas[i] = delta
-                    #print('delta', delta)
                     
-                    # calculate weight updates
-                    #print('xj', xj.shape, xj)
-                    #print('delta', delta.shape)
-                    print('delta', delta.shape, 'xj', xj.shape)
-                    #dw = -np.matmul(np.transpose(delta), xj) * self.eda
+                    # calculate a new delta
+                    delta = self.calc_delta(oj, deltas[-1], wkj)
+                    deltas[i] = delta
+                    
                     dw = -np.matmul(delta, np.transpose(xj)) * self.eda
-                    #print('dw', dw.shape, dw)
                     weight_updates[i] = dw
-                    #break
                 
-
-                #self.print_weights()
-                #print(weight_updates)
                 # preform weight updates
                 for i,w in enumerate(self.weights):
-                    #print('w', w.shape, 'wu', weight_updates[i].shape)
                     self.weights[i] = np.add(w,weight_updates[i])
-                #self.print_weights()
                 
             # average the error for the dataset round
             training_error.append(sum(iteration_error)/len(self.training))
@@ -227,9 +148,7 @@ class MLP:
             for i,old in enumerate(old_weights):
                 dw_sum_old += np.sum(old)
                 dw_sum_new += np.sum(self.weights[i])
-            #print('cum dw, old:', dw_sum_old, ' new: ', dw_sum_new)
             dw_diff = abs(dw_sum_new - dw_sum_old)
-            #print('diff: ', dw_diff, 'compare to: ', max_dw_sum*len(self.weights))
             if dw_diff < max_dw_sum*len(self.weights):
                 converge = True
                 print('Converged in {} iterations'.format(iteration))
