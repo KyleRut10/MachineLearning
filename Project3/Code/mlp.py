@@ -23,6 +23,8 @@ class MLP:
         self.hidden_nodes = hidden_nodes
         self.training = training
         self.mode = mode.lower()
+        # Get the number of output nodes based on the type, if it classifying,
+        # pick the number of outputs based on the data's class column
         if self.mode == 'r':
             self.num_outputs = 1
         elif self.mode == 'c':
@@ -43,7 +45,8 @@ class MLP:
         training_error = []
         # Build weight matrices...
         self.weights = []
-
+        
+        # Nodes are rows and columns are inputs to those nodes
         # W[l]: (n[l], n[l-1]) (h, w)
         for i in range(1, len(self.all_layers)):
             h = self.all_layers[i]
@@ -58,15 +61,20 @@ class MLP:
         
         # Things to track iteration and convergance things
         converge = False
-        max_iterations = 100
+        # run no more than max_iterations times
+        max_iterations = 1000
+        # The difference between the sum of all the dw for the previous run
+        # and the current run
         max_dw_sum = 0.0001
         iteration = 0
         while not converge:
+            # Keep track of average errors for each loop through the dataset
             iteration_error = []
             iteration += 1
             #print('*******Training iteration {}***********'.format(iteration))
             # save old weights
             old_weights = self.weights.copy()
+            # train the network on each point in the dataset
             for row_inex,pt in self.training.iterrows():
                 # compute all the activations in the feedforward step
                 # activatioins[-1] is the final output of the network
@@ -246,9 +254,3 @@ class MLP:
         for i,w in enumerate(self.weights):
             print('layer ', i)
             print(w)
-    '''
-    def softmax(self, W, X):
-        # TODO: Write softmax function that takes
-        
-        return 1
-    '''
