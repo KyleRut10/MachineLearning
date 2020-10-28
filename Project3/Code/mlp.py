@@ -18,20 +18,25 @@ class MLP:
     sigFunc = lambda t: 1/(1+np.exp(t))
     sig = np.vectorize(sigFunc)
     
-    def __init__(self, hidden_nodes, num_outputs, training, test, mode):
+    def __init__(self, hidden_nodes, training, mode):
         self.num_hidden = len(hidden_nodes)
         self.hidden_nodes = hidden_nodes
-        self.num_outputs = num_outputs
         self.training = training
-        self.test = test
         self.mode = mode.lower()
+        if self.mode == 'r':
+            self.num_outputs = 1
+        elif self.mode == 'c':
+            self.num_outputs = len(training['class'].unique())
+        else:
+            print('***** MODE UNKNOWN *****')
+            print('Will not work')
         # Make a cummulative list of how many nodes in each layer
         self.all_layers = [len(training.columns)-1]
         self.all_layers.extend(hidden_nodes)
-        self.all_layers.append(num_outputs)
+        self.all_layers.append(self.num_outputs)
         self.layers = []
         self.layers.extend(hidden_nodes)
-        self.layers.append(num_outputs)
+        self.layers.append(self.num_outputs)
         self.eda = .5#0.01
 
     def train(self):
@@ -63,6 +68,8 @@ class MLP:
             # save old weights
             old_weights = self.weights.copy()
             for row_inex,pt in self.training.iterrows():
+                # compute all the activations in the feedforward step
+                # activatioins[-1] is the final output of the network
                 activations = self.feedforward(pt)
                 
                 #############################################################
@@ -74,22 +81,30 @@ class MLP:
                 deltas = ['' for x in range(len(self.weights))]
 
                 # calculate initial delta at output
-                o_out = activations[-1]#[None, :]
+                o_out = activations[-1]
                 # difference for output measure
                 if self.mode.lower() == 'r':
                     dj = pt[-1]  # target output of network for regression
                     dj = np.array(dj).reshape(1,1)
                 else:
+                    # get what the output should be
+                    # Ex: if class = 2 from [1,2,3], this would return [0,1,0]
                     dj = self.get_class_target(pt[-1])
                 xj = self.build_inputs(self.weights[-1], activations[-2])
                 
-                # TODO: Make this bariable later
                 # Caclulate error
-                iteration_error.append(0.5*np.sum(np.subtract(dj, o_out)**2))
+                if self.mode == 'r':
+                    error = 0.5*np.sum(np.subtract(dj, o_out)**2)
+                else:
+                    # TODO: Cross-entropy error
+                    error = 0
+                iteration_error.append(error)
 
+                # calculate the intial delta at the output
                 delta = self.calc_delta_out(o_out, dj)
                 deltas[-1] = delta
                 
+                # calculate the weight changes
                 dw = -np.matmul(np.transpose(delta), xj) * self.eda
                 # These can probably be delted
                 #if not isinstance(dw, np.ndarray):
@@ -103,13 +118,14 @@ class MLP:
                 for i in range(len(self.weights)-2, -1, -1):
                     #print('backprop layer: ', i)
                     oj = activations[i+1]  # outputs of layer
-                    xj = activations[i]#[None, :]  # inputs to layer
-                    wkj = self.weights[i+1]
+                    xj = activations[i]  # inputs to layer
+                    wkj = self.weights[i+1]  # NOTE: why is it i+1????
                     
                     # calculate a new delta
                     delta = self.calc_delta(oj, deltas[-1], wkj)
                     deltas[i] = delta
                     
+                    # calculate weight change for layer i
                     dw = -np.matmul(delta, np.transpose(xj)) * self.eda
                     weight_updates[i] = dw
                 
@@ -137,11 +153,9 @@ class MLP:
                 print('Max iterations ({}) reached, stopping'.format(iteration))
                 print('old - new weights = {}'.format(dw_diff))
 
-        '''
         plt.plot(training_error, 'o')
         plt.ylabel('error')
         plt.show()
-        '''
 
     def feedforward(self, pt):
         # will hold the calculated activations, the input to a layer
@@ -187,10 +201,9 @@ class MLP:
         return results
 
     def calc_delta(self, outputs, delta_old, W):
-        #print('CALCULATING DELTA')
+        # hold each node's value for delta
         results = []
         for j in range(len(outputs)):
-            #print('for node: ', j)
             oj = outputs[j][0]
             
             summ = 0
