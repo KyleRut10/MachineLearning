@@ -69,7 +69,7 @@ class MLP:
                 # assuming class is in last position, so factor it out
                 inputs = np.array(pt[:-1])
                 inputs = inputs.reshape(len(inputs), 1)
-                print('inputs', inputs.shape, inputs)
+                #print('inputs', inputs.shape, inputs)
                 #inputs = np.array(pt[:-1]))
                 activations.append(inputs)
                 #print('Forward Propagation')
@@ -161,7 +161,6 @@ class MLP:
         plt.ylabel('error')
         plt.show()
 
-
     def calc_delta_out(self, outputs, targets):
         results = []
         for j in range(len(outputs)):
@@ -182,23 +181,6 @@ class MLP:
             summ = 0
             for k in range(len(delta_old)):
                 summ += delta_old[k] * W[k][j]
-
-            #deltak = delta_old[j]
-            #wj = W[:][j]
-            
-            #print('outputs')
-            #print(outputs)
-            #print('oj', oj)
-
-            #print('delta')
-            #print(delta_old)
-            #print('deltak: ', deltak)
-
-            #print('W')
-            #print(W)
-            #print('wj', wj)
-            #summ = np.sum(wj * deltak)
-            
 
             results.append(oj*(1-oj)*summ)
         results = np.array(results).reshape(len(results), 1)
@@ -230,20 +212,3 @@ class MLP:
         for i,w in enumerate(self.weights):
             print('layer ', i)
             print(w)
-    
-    def forward(self, W, a0):
-        # this could return the output values and the activations for all layers
-        #z = np.matmult(W,a)
-        #print(z)
-        #print(1/(1+np.exp(z))
-        pass
-    
-    def activation(self, z):
-        pass
-
-    def backward():
-        pass
-
-    def run():
-        # Run one example through trained network
-        pass
