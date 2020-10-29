@@ -18,7 +18,7 @@ class MLP:
     sigFunc = lambda t: 1/(1+np.exp(t))
     sig = np.vectorize(sigFunc)
     
-    def __init__(self, hidden_nodes, training, mode, eda=0.01, num_outputs=''):
+    def __init__(self, hidden_nodes, training, mode, num_outputs=''):
         self.num_hidden = len(hidden_nodes)
         self.hidden_nodes = hidden_nodes
         self.training = training
@@ -35,15 +35,16 @@ class MLP:
         if not isinstance(num_outputs, str):
             self.num_outputs = num_outputs
         # Make a cummulative list of how many nodes in each layer
+        # Including inputs as layer
         self.all_layers = [len(training.columns)-1]
         self.all_layers.extend(hidden_nodes)
         self.all_layers.append(self.num_outputs)
+        # not including inputs as layer
         self.layers = []
         self.layers.extend(hidden_nodes)
         self.layers.append(self.num_outputs)
-        self.eda = eda
 
-    def train(self, plot=False):
+    def train(self, eda=0.01, plot=False):
         training_error = []
         # Build weight matrices...
         self.weights = []
@@ -64,7 +65,7 @@ class MLP:
         # Things to track iteration and convergance things
         converge = False
         # run no more than max_iterations times
-        max_iterations = 1000
+        max_iterations = 100
         # The difference between the sum of all the dw for the previous run
         # and the current run
         max_dw_sum = 0.0001
@@ -91,32 +92,32 @@ class MLP:
                 deltas = ['' for x in range(len(self.weights))]
 
                 # calculate initial delta at output
-                o_out = activations[-1]
-                # difference for output measure
+                o_out = activations[-1]   # output of the network
+                # Get target output, different based on mode
                 if self.mode.lower() == 'r':
-                    dj = pt[-1]  # target output of network for regression
-                    dj = np.array(dj).reshape(1,1)
+                    d = pt[-1]  # target output of network for regression
+                    d = np.array(d).reshape(1,1)
                 else:
                     # get what the output should be
                     # Ex: if class = 2 from [1,2,3], this would return [0,1,0]
-                    dj = self.get_class_target(pt[-1])
-                xj = self.build_inputs(self.weights[-1], activations[-2])
+                    d = self.get_class_target(pt[-1])
+                x = self.build_inputs(self.weights[-1], activations[-2])
                 
                 # Caclulate error
                 if self.mode == 'r':
                     # calculate the MSE for regression
-                    error = 0.5*np.sum(np.subtract(o_out, dj)**2)/len(o_out)
+                    error = 0.5*np.sum(np.subtract(o_out, d)**2)/len(o_out)
                 else:
                     # TODO: Cross-entropy error
                     error = 0
                 iteration_error.append(error)
 
                 # calculate the intial delta at the output
-                delta = self.calc_delta_out(o_out, dj)
+                delta = self.calc_delta_out(o_out, d)
                 deltas[-1] = delta
                 
                 # calculate the weight changes
-                dw = -np.matmul(np.transpose(delta), xj) * self.eda
+                dw = -np.matmul(np.transpose(delta), x) * self.eda
                 # These can probably be delted
                 #if not isinstance(dw, np.ndarray):
                 #    dw = np.array([dw])
@@ -128,16 +129,16 @@ class MLP:
                 # subtract 2, because already did the last position
                 for i in range(len(self.weights)-2, -1, -1):
                     #print('backprop layer: ', i)
-                    oj = activations[i+1]  # outputs of layer
-                    xj = activations[i]  # inputs to layer
-                    wkj = self.weights[i+1]  # NOTE: why is it i+1????
+                    o = activations[i+1]  # outputs of layer
+                    x = activations[i]  # inputs to layer
+                    w = self.weights[i+1]  # NOTE: why is it i+1????
                     
                     # calculate a new delta
-                    delta = self.calc_delta(oj, deltas[-1], wkj)
+                    delta = self.calc_delta(o, deltas[-1], w)
                     deltas[i] = delta
                     
                     # calculate weight change for layer i
-                    dw = -np.matmul(delta, np.transpose(xj)) * self.eda
+                    dw = -np.matmul(delta, np.transpose(x)) * self.eda
                     weight_updates[i] = dw
                 
                 # preform weight updates
