@@ -7,16 +7,11 @@ import numpy as np
 def data_glass():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'glass.csv'))
-    # Clean data, by removing rows with missing atrributes
-    clean(df)
     # Drop the class and index
     #df = df.drop(columns=['index'])
     df = df.drop(['index'], axis=1)
-    # get variables that are catigorical and continuious
-    cat,cont = type_glass()
-    # standardize the data
-    for col in cont:
-        df[col] = standardize(df[col])
+    # clean and standardize the data
+    df = standardize(type_glass, df)
     # Return the data
     return df
 
@@ -28,55 +23,40 @@ def type_glass():
 def data_abalone():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'abalone.csv'))
-    # Clean data, by removing rows with missing atrributes
-    clean(df)
-    # standardize the data
-    #df = df.drop(['sex'], axis=1)
-    cat,cont = type_abalone()
-    for col in cont:
-        df[col] = standardize(df[col])
-    # one hot encoding for catigorical
-    for col_label in cat:
-        df = one_hot(col_label, df) 
-    # standardize the regression column
-    df['response'] = standardize(df['response'])
-    # Return the data
+    # clean and standardize the data
+    df = standardize(type_abalone, df)
     return df
 
 def type_abalone():
     catigorical = ['sex']
     continuious = ['length', 'diameter', 'height', 'whole weight',
-                   'shucked weight', 'viscera weight', 'shell weight']
+                   'shucked weight', 'viscera weight', 'shell weight',
+                   'response']
     return catigorical, continuious
 
 
+# NOTE: Error values are not between [0,1], something is wrong
 def data_forestfire():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'forestfires.csv'))
-    cat,cont = type_forestfire()
-    # standardize the data
-    for col in cont:
-        df[col] = standardize(df[col])
-    # one hot coding on catagorical data
-    for col_label in cat:
-        df = one_hot(col_label, df)
+    # clean and standardize the data
+    df = standardize(type_forestfire, df)
     # Return the data
     return df
 
 def type_forestfire():
     catigorical = ['x', 'y', 'month', 'day']
-    continuious = ['ffmc', 'dmc', 'dc', 'isi', 'temp', 'rh', 'wind', 'rain']
+    continuious = ['ffmc', 'dmc', 'dc', 'isi', 'temp', 'rh', 'wind', 'rain',
+                   'response']
     return catigorical, continuious
 
 
-'''
 def data_hardware():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'machine.csv'))
     df = df.drop(columns=['erp'])
-    # standardize the data
-    for col in type_hardware()[1]:
-        df[col] = standardize(df[col])
+    # clean and standardize the data
+    df = standardize(type_hardware, df)
     # Return the data
     return df
 
@@ -84,9 +64,46 @@ def type_hardware():
     catigorical = ['vendor name', 'model name']
     continuious = ['myct', 'mmin', 'mmax', 'cach', 'chmin', 'chmax', 'respone']
     return catigorical, continuious
-'''
+
+
+def data_breast():
+    # Read in the file
+    df = pd.read_csv(os.path.join('..', '..', 'data',
+                                  'breast-cancer-wisconsin.csv'))
+    # typecast whole dataframe to float, because for some reason it's reading
+    # them in as strings
+    df = clean(df)
+    df = df.astype(float)
+    # drop the index
+    df = df.drop(['index'], axis=1)
+    # clean and standardize the data
+    df = standardize(type_breast, df)
+    # Return the data
+    return df
+
+
+def type_breast():
+    catigorical = []
+    continuious = ['clump thickness', 'uniformity of cell size', 
+                   'uniformity of cell shape', 'marginal adhesion', 
+                   'single epithelial cell size', 'bare nuclei', 
+                   'bland chromatin', 'normal nucleoli', 'mitosis']
+    return catigorical, continuious
+
 
 # Functions to clean and prep the data
+def standardize(type_funct, df):
+    # clean the data
+    df = clean(df)
+    # standardize the data
+    cat,cont = type_funct()
+    for col in cont:
+        df[col] = z_score_normalize(df[col])
+    # one hot encoding for catigorical
+    for col_label in cat:
+        df = one_hot(col_label, df) 
+    return df 
+
 def clean(rawdata):
     # A function to remove rows with question marks from the data
     
@@ -96,10 +113,13 @@ def clean(rawdata):
     return data
 
 
-def standardize(col):
-    # Takes a Raw data Column and standardizes it by its z-score
+def z_score_normalize(col):
+    # Takes a Raw data Column and standardize it by its z-score
     # Input: col - Raw Data Column
     # Output: Z-score of the Column
+    for i,c in enumerate(col):
+        if isinstance(c, str):
+            print(c, i)
     return (col - col.mean())/col.std()
 
 def one_hot(col_label, df):
