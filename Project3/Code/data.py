@@ -94,14 +94,25 @@ def data_soybean_small():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'soybean-small.csv'))
     # clean and standardize the data
-    df = standardize(type_forestfire, df)
+    df = standardize(type_soybean_small, df)
     # Return the data
     return df
    
-    def type_soybean_small():
-        catigorical = ['date', 'hail', 'crop hist', 'area damaged', 'severity', 'seet tmt', 'germination', 'plant growth', 'leaves', 'leafspots halo', 'leafspots marg', 'leafspot size', 'leaf shread', 'leaf malf', 'leaf mild', 'stem', 'lodging', 'stem cankers', 'canker lesion', 'fruiting bodies', 'external decay', 'mycelium', 'int discolor', 'sclerotia', 'fruit pods', 'fruit spots', 'seed', 'mold growth', 'seed discolor', 'seed size', 'shriveling']
-        continuious = ['date', 'plant stand', 'percip', 'temp', 'hail', 'crop hist', 'area damaged', 'severity', 'seet tmt', 'germination', 'plant growth', 'leaves', 'leafspots halo', 'leafspots marg', 'leafspot size', 'leaf shread', 'leaf malf', 'leaf mild', 'stem', 'lodging', 'stem cankers', 'canker lesion', 'fruiting bodies', 'external decay', 'mycelium', 'int discolor', 'sclerotia', 'fruit pods', 'fruit spots', 'seed', 'mold growth', 'seed discolor', 'seed size', 'shriveling']
+def type_soybean_small():
+    catigorical = ['date', 'plant stand', 'percip', 'temp', 'hail', 
+                   'crop hist', 'area damaged', 'severity', 'seet tmt', 
+                   'germination', 'plant growth', 'leaves', 
+                   'leafspots halo', 'leafspots marg', 'leafspot size', 
+                   'leaf shread', 'leaf malf', 'leaf mild', 'stem', 
+                   'lodging', 'stem cankers', 'canker lesion', 
+                   'fruiting bodies', 'external decay', 'mycelium', 
+                   'int discolor', 'sclerotia', 'fruit pods', 'fruit spots',
+                   'seed', 'mold growth', 'seed discolor', 'seed size', 
+                   'shriveling']
+    continuious = []
     return catigorical, continuious
+
+
 # Functions to clean and prep the data
 def standardize(type_funct, df):
     # clean the data
