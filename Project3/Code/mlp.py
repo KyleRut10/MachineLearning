@@ -3,6 +3,7 @@ import random as rand
 import numpy as np
 import matplotlib.pyplot as plt
 import sys, os
+import pickle
 
 
 class MLP:
@@ -43,7 +44,16 @@ class MLP:
         self.layers = []
         self.layers.extend(hidden_nodes)
         self.layers.append(self.num_outputs)
-        self.network_statistics = {'status': 'not trained'}
+        self.status = 'not trained'
+    
+    # read in saved network from file
+    def __init__(self, filename):
+        with open(filename, 'rb') as f:
+            obj = pickle.load(f)
+        # make this object have all save values as one from file
+        for key in obj.__dict__.keys():
+            self.__dict__[key] = obj.__dict__[key]
+
     def train(self, eda=0.01, plot=False, max_iterations=50, max_dw_sum=0.0001):
         # Hold the average training error for one round on dataset
         training_error = []
@@ -62,7 +72,7 @@ class MLP:
             self.weights.append(np.array(hw).reshape(h, w))
             #print(self.weights[-1])
         
-        
+         
         # Things to track iteration and convergance things
         converge = False
         # run no more than max_iterations times
@@ -172,15 +182,14 @@ class MLP:
 
         # print out the final average error
         print('Average last iteration error: {}'.format(training_error[-1]))
+        
+        # save the training error so can go back and anlyze later if needed
+        self.training_error = training_error 
 
         # make a plot of the error
         if plot:
-            plt.plot(training_error, 'o')
-            plt.ylabel('error')
-            plt.show()
-        # track training statistics
-        self.record_statistics(eda, max_iterations, training_error, iteration)
-
+            self.plot_error()
+    
     def feedforward(self, pt):
         # will hold the calculated activations, the input to a layer
         # activations[0] is the input to the first hidden layer
@@ -271,19 +280,11 @@ class MLP:
         inputs = np.array(inputs).reshape(len(inputs), 1)
         return inputs
 
-    def record_statistics(self, eda, max_iterations, training_error, 
-        converged_in):
-        ns = {'status': 'trained'}
-        ns['learning rate'] = eda
-        ns['max iterations'] = max_iterations
-        ns['convergence rate'] = converged_in
-        ns['errors'] = training_error
-        ns['weights'] = self.weights
-        print(ns)
-        self.network_statistics = ns
-
-    def save_network():
-        pass
+    # write the object to a .pkl file so it can be read in later and the
+    # same network can be reconstructed
+    def save_network(self, filename):
+        with open(filename, 'wb') as output:  # Overwrites any existing file.
+            pickle.dump(self, output) # pickle.HIGHEST_PROTOCOL)
 
     def print_weights(self):
         print('Weights')
@@ -299,3 +300,8 @@ class MLP:
             else:
                 print('Input to layer ', i)
             print(np.transpose(act))
+    
+    def plot_error(self):
+        plt.plot(self.training_error, 'o')
+        plt.ylabel('error')
+        plt.show()
