@@ -43,7 +43,7 @@ class MLP:
         self.layers = []
         self.layers.extend(hidden_nodes)
         self.layers.append(self.num_outputs)
-
+        self.network_statistics = {'status': 'not trained'}
     def train(self, eda=0.01, plot=False, max_iterations=50, max_dw_sum=0.0001):
         # Hold the average training error for one round on dataset
         training_error = []
@@ -178,6 +178,8 @@ class MLP:
             plt.plot(training_error, 'o')
             plt.ylabel('error')
             plt.show()
+        # track training statistics
+        self.record_statistics(eda, max_iterations, training_error, iteration)
 
     def feedforward(self, pt):
         # will hold the calculated activations, the input to a layer
@@ -268,6 +270,20 @@ class MLP:
             inputs.append(sum(ins))
         inputs = np.array(inputs).reshape(len(inputs), 1)
         return inputs
+
+    def record_statistics(self, eda, max_iterations, training_error, 
+        converged_in):
+        ns = {'status': 'trained'}
+        ns['learning rate'] = eda
+        ns['max iterations'] = max_iterations
+        ns['convergence rate'] = converged_in
+        ns['errors'] = training_error
+        ns['weights'] = self.weights
+        print(ns)
+        self.network_statistics = ns
+
+    def save_network():
+        pass
 
     def print_weights(self):
         print('Weights')
