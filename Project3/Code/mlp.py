@@ -19,7 +19,16 @@ class MLP:
     sigFunc = lambda t: 1/(1+np.exp(t))
     sig = np.vectorize(sigFunc)
     
-    def __init__(self, hidden_nodes, training, mode, num_outputs=''):
+    def __init__(self, hidden_nodes='', training='', mode='', num_outputs='', 
+        pkl_file=''):
+        # read in saved network from file if file given
+        if pkl_file != '':
+            with open(pkl_file, 'rb') as f:
+                obj = pickle.load(f)
+            # make this object have all save values as one from file
+            for key in obj.__dict__.keys():
+                self.__dict__[key] = obj.__dict__[key]
+            return
         self.num_hidden = len(hidden_nodes)
         self.hidden_nodes = hidden_nodes
         self.training = training
@@ -46,13 +55,6 @@ class MLP:
         self.layers.append(self.num_outputs)
         self.training_statistics = {'status': 'not trained'}
     
-    # read in saved network from file
-    def __init__(self, filename):
-        with open(filename, 'rb') as f:
-            obj = pickle.load(f)
-        # make this object have all save values as one from file
-        for key in obj.__dict__.keys():
-            self.__dict__[key] = obj.__dict__[key]
 
     def train(self, eda=0.01, plot=False, max_iterations=50, max_dw_sum=0.0001):
         # Hold the average training error for one round on dataset
