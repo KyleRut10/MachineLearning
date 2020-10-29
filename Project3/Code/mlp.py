@@ -112,6 +112,7 @@ class MLP:
                     delta = self.calc_delta_out_regres(o_out, d)
                 else:
                     # TODO: Cross-entropy error
+                    # TODO: SPENSER
                     error = 0
                     delta = self.calc_delta_out_class(o_out, d)
                 iteration_error.append(error)
@@ -224,7 +225,7 @@ class MLP:
         return delta
     
     def calc_delta_out_class(self, outputs, targets):
-        # TODO:
+        # TODO: SPENSER
         pass
 
     def calc_delta(self, outputs, delta_old, W):
