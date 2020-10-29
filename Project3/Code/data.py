@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 import numpy as np
+# TODO: Encode all classes to numerical values
 
 
 # glass dataset
