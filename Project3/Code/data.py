@@ -159,12 +159,20 @@ def one_hot(col_label, df):
     # a several columns by on_hot encoding.
     # Input: col - Categorical Data Column
     # Output: out - Pandas Dataframe of new on-hot columns
+    # make sure class stays in last
+    old_cols = df.columns.values
+    identifier = df.columns.values[-1]
+    new_cols = []
     # get values oin column
     col = df[col_label]
     # add new column for each unique value
     for cat in col.unique():
         new_label = '{}-{}'.format(col_label, cat)
+        new_cols.append(new_label)
         df[new_label] = (col == cat)*1
+    # put the column in the last poistion again
+    identifier_df = df.pop(identifier)
+    df[identifier] = identifier_df
     # drop origional column
     df = df.drop(columns=[col_label])
     return df
