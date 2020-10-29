@@ -34,8 +34,10 @@ def data_abalone():
     df = df.drop(['sex'], axis=1)
     for col in type_abalone()[1]:
         df[col] = standardize(df[col])
+    # one hot encoding for catigorical
+
     # standardize the regression column
-    df['class'] = standardize(df['class'])
+    df['response'] = standardize(df['response'])
     # Return the data
     return df
 
@@ -71,6 +73,11 @@ def data_hardware():
         df[col] = standardize(df[col])
     # Return the data
     return df
+
+def type_hardware():
+    catigorical = ['vendor name', 'model name']
+    continuious = ['myct', 'mmin', 'mmax', 'cach', 'chmin', 'chmax', 'respone']
+    return catigorical, continuious
 '''
 
 # Functions to clean and prep the data
@@ -89,7 +96,7 @@ def standardize(col):
     # Output: Z-score of the Column
     return (col - col.mean())/col.std()
 
-def on_hot(col):
+def one_hot(col):
     # Takes a column of categorical data and converts it into
     # a several columns by on_hot encoding.
     # Input: col - Categorical Data Column
