@@ -170,7 +170,7 @@ class MLP:
                 print('old - new weights = {}'.format(dw_diff))
 
         # print out the final average error
-        print('Average error: {}'.format(training_error[-1]))
+        print('Average last iteration error: {}'.format(training_error[-1]))
 
         # make a plot of the error
         if plot:
@@ -212,21 +212,26 @@ class MLP:
         return activations 
 
     def calc_delta_out(self, outputs, targets):
+        # hold the values for each node's value of delta
         delta = []
+        # Calculate deltaj for each output
         for j in range(len(outputs)):
-            oj = outputs[j][0]
-            dj = targets[j][0]
-
+            oj = outputs[j][0]  # singe output value
+            dj = targets[j][0]  # single target value
+            
+            # caclulate derivatives
             delta.append(-(dj-oj)*oj*(1-oj))
-        delta = np.array(delta)#.reshape(len(delta), 1)
+        # convert to numpy array
+        delta = np.array(delta).reshape(len(delta), 1)
         return delta
 
     def calc_delta(self, outputs, delta_old, W):
         # hold each node's value for delta
         delta = []
         for j in range(len(outputs)):
-            oj = outputs[j][0]
+            oj = outputs[j][0]  # Single output value
             
+            # sum over each input into that node
             summ = 0
             for k in range(len(delta_old)):
                 summ += delta_old[k] * W[k][j]
