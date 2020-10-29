@@ -44,7 +44,7 @@ class MLP:
         self.layers = []
         self.layers.extend(hidden_nodes)
         self.layers.append(self.num_outputs)
-        self.status = 'not trained'
+        self.training_statistics = {'status': 'not trained'}
     
     # read in saved network from file
     def __init__(self, filename):
@@ -184,7 +184,7 @@ class MLP:
         print('Average last iteration error: {}'.format(training_error[-1]))
         
         # save the training error so can go back and anlyze later if needed
-        self.training_error = training_error 
+        self.record_statistics(eda, max_iterations, training_error, iteration)
 
         # make a plot of the error
         if plot:
@@ -301,7 +301,19 @@ class MLP:
                 print('Input to layer ', i)
             print(np.transpose(act))
     
+    def record_statistics(self, eda, max_iterations, training_error, 
+        converged_in):
+        ns = {'status': 'trained'}
+        ns['eda'] = eda
+        ns['max_iterations'] = max_iterations
+        ns['training error'] = training_error
+        ns['converged in'] = converged_in
+        self.training_statistics = ns
+
+    def print_statistics(self):
+        pass
+
     def plot_error(self):
-        plt.plot(self.training_error, 'o')
+        plt.plot(self.training_statistics['training error'], 'o')
         plt.ylabel('error')
         plt.show()
