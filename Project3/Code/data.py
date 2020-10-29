@@ -50,13 +50,16 @@ def type_abalone():
     return catigorical, continuious
 
 
-'''
 def data_forestfire():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'forestfires.csv'))
+    cat,cont = type_forestfire()
     # standardize the data
-    for col in type_forestfire()[1]:
+    for col in cont:
         df[col] = standardize(df[col])
+    # one hot coding on catagorical data
+    for col_label in cat:
+        df = one_hot(col_label, df)
     # Return the data
     return df
 
@@ -66,6 +69,7 @@ def type_forestfire():
     return catigorical, continuious
 
 
+'''
 def data_hardware():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'machine.csv'))
