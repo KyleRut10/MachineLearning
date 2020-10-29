@@ -1,4 +1,7 @@
 import pandas as pd
+import data
+import mlp
+import os
 
 
 def get_test_data():
@@ -19,3 +22,14 @@ def get_test_data2():
 
     df = pd.DataFrame.from_dict(data)
     return df
+
+
+if __name__ == '__main__':
+    aba = data.data_abalone()
+    nna1 = mlp.MLP([3], aba, 'r')
+    nna1.train(max_iterations=20)
+    nna1_path = os.path.join('..', 'networks', 'nna1-test.pkl')
+    nna1.save_network(nna1_path)
+
+    nna1d = mlp.MLP(pkl_file=nna1_path)
+    nna1d.train(max_iterations=5)
