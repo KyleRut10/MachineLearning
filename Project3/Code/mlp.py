@@ -44,7 +44,7 @@ class MLP:
         self.layers.extend(hidden_nodes)
         self.layers.append(self.num_outputs)
 
-    def train(self, eda=0.01, plot=False):
+    def train(self, eda=0.01, plot=False, max_iterations=50, max_dw_sum=0.0001):
         # Hold the average training error for one round on dataset
         training_error = []
         # Build weight matrices...
@@ -66,10 +66,10 @@ class MLP:
         # Things to track iteration and convergance things
         converge = False
         # run no more than max_iterations times
-        max_iterations = 50
+        # max_iterations = 50 # input parameter
         # The difference between the sum of all the dw for the previous run
         # and the current run
-        max_dw_sum = 0.0001
+        #max_dw_sum = 0.0001
         iteration = 0
         while not converge:
             # Keep track of average errors for each loop through the dataset
@@ -79,7 +79,7 @@ class MLP:
             # save old weights
             old_weights = self.weights.copy()
             # train the network on each point in the dataset
-            for row_inex,pt in self.training.iterrows():
+            for row_index,pt in self.training.iterrows():
                 # compute all the activations in the feedforward step
                 # activatioins[-1] is the final output of the network
                 activations = self.feedforward(pt)
@@ -115,7 +115,7 @@ class MLP:
 
                 # calculate the intial delta at the output
                 # TODO: Make a calc_delta for soft max derivative
-                delta = self.calc_delta_out(o_out, d)
+                delta = self.calc_delta_out_regres(o_out, d)
                 deltas[-1] = delta
                 
                 # calculate the weight changes
@@ -209,7 +209,7 @@ class MLP:
          
         return activations 
 
-    def calc_delta_out(self, outputs, targets):
+    def calc_delta_out_regres(self, outputs, targets):
         # hold the values for each node's value of delta
         delta = []
         # Calculate deltaj for each output
