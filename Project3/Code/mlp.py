@@ -223,7 +223,7 @@ class MLP:
         delta = np.array(delta).reshape(len(delta), 1)
         return delta
     
-    def calc_delta_out_regres(self, outputs, targets):
+    def calc_delta_out_class(self, outputs, targets):
         # TODO:
         pass
 
