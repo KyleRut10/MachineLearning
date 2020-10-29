@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import numpy as np
 
-# TODO: Brest cancer, soybean small
+
 # glass dataset
 def data_glass():
     # Read in the file
@@ -15,10 +15,12 @@ def data_glass():
     # Return the data
     return df
 
+
 def type_glass():
     catigorical = []
     continuious = ['ri', 'na', 'mg', 'al', 'si', 'k', 'ca', 'ba', 'fe']
     return catigorical, continuious
+
 
 def data_abalone():
     # Read in the file
@@ -26,6 +28,7 @@ def data_abalone():
     # clean and standardize the data
     df = standardize(type_abalone, df)
     return df
+
 
 def type_abalone():
     catigorical = ['sex']
@@ -44,6 +47,7 @@ def data_forestfire():
     # Return the data
     return df
 
+
 def type_forestfire():
     catigorical = ['x', 'y', 'month', 'day']
     continuious = ['ffmc', 'dmc', 'dc', 'isi', 'temp', 'rh', 'wind', 'rain',
@@ -59,6 +63,7 @@ def data_hardware():
     df = standardize(type_hardware, df)
     # Return the data
     return df
+
 
 def type_hardware():
     catigorical = ['vendor name', 'model name']
@@ -81,6 +86,7 @@ def data_breast():
     # Return the data
     return df
 
+
 # NOTE: I'm not 100% sure these are correct
 def type_breast():
     catigorical = ['clump thickness', 'uniformity of cell size', 
@@ -90,6 +96,7 @@ def type_breast():
     continuious = []
     return catigorical, continuious
 
+
 def data_soybean_small():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'soybean-small.csv'))
@@ -97,7 +104,8 @@ def data_soybean_small():
     df = standardize(type_soybean_small, df)
     # Return the data
     return df
-   
+
+
 def type_soybean_small():
     catigorical = ['date', 'plant stand', 'percip', 'temp', 'hail', 
                    'crop hist', 'area damaged', 'severity', 'seet tmt', 
@@ -126,6 +134,7 @@ def standardize(type_funct, df):
         df = one_hot(col_label, df) 
     return df 
 
+
 def clean(rawdata):
     # A function to remove rows with question marks from the data
     
@@ -144,6 +153,7 @@ def z_score_normalize(col):
             print(c, i)
     return (col - col.mean())/col.std()
 
+
 def one_hot(col_label, df):
     # Takes a column of categorical data and converts it into
     # a several columns by on_hot encoding.
@@ -159,8 +169,8 @@ def one_hot(col_label, df):
     df = df.drop(columns=[col_label])
     return df
 
-import subprocess
 
+import subprocess
 def write_to_clipboard(output):
     process = subprocess.Popen(
             'pbcopy', env={'LANG': 'en_US.UTF-8'}, stdin=subprocess.PIPE)
