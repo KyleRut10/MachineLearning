@@ -81,16 +81,27 @@ def data_breast():
     # Return the data
     return df
 
-
+# NOTE: I'm not 100% sure these are correct
 def type_breast():
-    catigorical = []
-    continuious = ['clump thickness', 'uniformity of cell size', 
+    catigorical = ['clump thickness', 'uniformity of cell size', 
                    'uniformity of cell shape', 'marginal adhesion', 
                    'single epithelial cell size', 'bare nuclei', 
                    'bland chromatin', 'normal nucleoli', 'mitosis']
+    continuious = []
     return catigorical, continuious
 
-
+def data_soybean_small():
+    # Read in the file
+    df = pd.read_csv(os.path.join('..', '..', 'data', 'soybean-small.csv'))
+    # clean and standardize the data
+    df = standardize(type_forestfire, df)
+    # Return the data
+    return df
+   
+    def type_soybean_small():
+        catigorical = ['date', 'hail', 'crop hist', 'area damaged', 'severity', 'seet tmt', 'germination', 'plant growth', 'leaves', 'leafspots halo', 'leafspots marg', 'leafspot size', 'leaf shread', 'leaf malf', 'leaf mild', 'stem', 'lodging', 'stem cankers', 'canker lesion', 'fruiting bodies', 'external decay', 'mycelium', 'int discolor', 'sclerotia', 'fruit pods', 'fruit spots', 'seed', 'mold growth', 'seed discolor', 'seed size', 'shriveling']
+        continuious = ['date', 'plant stand', 'percip', 'temp', 'hail', 'crop hist', 'area damaged', 'severity', 'seet tmt', 'germination', 'plant growth', 'leaves', 'leafspots halo', 'leafspots marg', 'leafspot size', 'leaf shread', 'leaf malf', 'leaf mild', 'stem', 'lodging', 'stem cankers', 'canker lesion', 'fruiting bodies', 'external decay', 'mycelium', 'int discolor', 'sclerotia', 'fruit pods', 'fruit spots', 'seed', 'mold growth', 'seed discolor', 'seed size', 'shriveling']
+    return catigorical, continuious
 # Functions to clean and prep the data
 def standardize(type_funct, df):
     # clean the data
@@ -136,4 +147,11 @@ def one_hot(col_label, df):
     # drop origional column
     df = df.drop(columns=[col_label])
     return df
+
+import subprocess
+
+def write_to_clipboard(output):
+    process = subprocess.Popen(
+            'pbcopy', env={'LANG': 'en_US.UTF-8'}, stdin=subprocess.PIPE)
+    process.communicate(output.encode('utf-8'))
 
