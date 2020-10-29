@@ -241,14 +241,17 @@ class MLP:
         return delta
     
     def get_class_target(self, class_val):
-        dj = []
+        # This will take in what numerical class this is and turn it into
+        # an array, for example if the class is 1 out of 1,2,3, this will
+        # return [1,0,0]
+        d = []
         for i in range(self.num_outputs):
             if i == class_val:
-               dj.append(1)
+               d.append(1)
             else:
-                dj.append(0)
+                d.append(0)
 
-        return np.array(dj).reshape(self.num_outputs, 1)
+        return np.array(d).reshape(self.num_outputs, 1)
     
     def build_inputs(self, W, activation):
         activation = np.transpose(activation)[0]
