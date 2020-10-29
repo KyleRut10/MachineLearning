@@ -31,11 +31,13 @@ def data_abalone():
     # Clean data, by removing rows with missing atrributes
     clean(df)
     # standardize the data
-    df = df.drop(['sex'], axis=1)
-    for col in type_abalone()[1]:
+    #df = df.drop(['sex'], axis=1)
+    cat,cont = type_abalone()
+    for col in cont:
         df[col] = standardize(df[col])
     # one hot encoding for catigorical
-
+    for col_label in cat:
+        df = one_hot(col_label, df) 
     # standardize the regression column
     df['response'] = standardize(df['response'])
     # Return the data
@@ -96,13 +98,18 @@ def standardize(col):
     # Output: Z-score of the Column
     return (col - col.mean())/col.std()
 
-def one_hot(col):
+def one_hot(col_label, df):
     # Takes a column of categorical data and converts it into
     # a several columns by on_hot encoding.
     # Input: col - Categorical Data Column
     # Output: out - Pandas Dataframe of new on-hot columns
-    out = pd.DataFrame()
+    # get values oin column
+    col = df[col_label]
+    # add new column for each unique value
     for cat in col.unique():
-        out[cat] = (col == cat)*1
-    return out
+        new_label = '{}-{}'.format(col_label, cat)
+        df[new_label] = (col == cat)*1
+    # drop origional column
+    df = df.drop(columns=[col_label])
+    return df
 
