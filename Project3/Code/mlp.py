@@ -226,6 +226,7 @@ class MLP:
     
     def calc_delta_out_class(self, outputs, targets):
         # TODO: SPENSER
+        # soft max derivative, cross entropy derivative
         pass
 
     def calc_delta(self, outputs, delta_old, W):
