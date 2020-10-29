@@ -45,6 +45,7 @@ class MLP:
         self.layers.append(self.num_outputs)
 
     def train(self, eda=0.01, plot=False):
+        # Hold the average training error for one round on dataset
         training_error = []
         # Build weight matrices...
         self.weights = []
@@ -65,7 +66,7 @@ class MLP:
         # Things to track iteration and convergance things
         converge = False
         # run no more than max_iterations times
-        max_iterations = 100
+        max_iterations = 50
         # The difference between the sum of all the dw for the previous run
         # and the current run
         max_dw_sum = 0.0001
@@ -113,11 +114,12 @@ class MLP:
                 iteration_error.append(error)
 
                 # calculate the intial delta at the output
+                # TODO: Make a calc_delta for soft max derivative
                 delta = self.calc_delta_out(o_out, d)
                 deltas[-1] = delta
                 
                 # calculate the weight changes
-                dw = -np.matmul(np.transpose(delta), x) * self.eda
+                dw = -np.matmul(np.transpose(delta), x) * eda
                 # These can probably be delted
                 #if not isinstance(dw, np.ndarray):
                 #    dw = np.array([dw])
@@ -138,7 +140,7 @@ class MLP:
                     deltas[i] = delta
                     
                     # calculate weight change for layer i
-                    dw = -np.matmul(delta, np.transpose(x)) * self.eda
+                    dw = -np.matmul(delta, np.transpose(x)) * eda
                     weight_updates[i] = dw
                 
                 # preform weight updates
@@ -153,9 +155,11 @@ class MLP:
             # if they are close to zero
             dw_sum_old = 0
             dw_sum_new = 0
+            # sum up all the weights
             for i,old in enumerate(old_weights):
                 dw_sum_old += np.sum(old)
                 dw_sum_new += np.sum(self.weights[i])
+            # take the difference and compare to threshold
             dw_diff = abs(dw_sum_new - dw_sum_old)
             if dw_diff < max_dw_sum*len(self.weights):
                 converge = True
@@ -208,18 +212,18 @@ class MLP:
         return activations 
 
     def calc_delta_out(self, outputs, targets):
-        results = []
+        delta = []
         for j in range(len(outputs)):
             oj = outputs[j][0]
             dj = targets[j][0]
 
-            results.append(-(dj-oj)*oj*(1-oj))
-        results = np.array(results)
-        return results
+            delta.append(-(dj-oj)*oj*(1-oj))
+        delta = np.array(delta)#.reshape(len(delta), 1)
+        return delta
 
     def calc_delta(self, outputs, delta_old, W):
         # hold each node's value for delta
-        results = []
+        delta = []
         for j in range(len(outputs)):
             oj = outputs[j][0]
             
@@ -227,9 +231,9 @@ class MLP:
             for k in range(len(delta_old)):
                 summ += delta_old[k] * W[k][j]
 
-            results.append(oj*(1-oj)*summ)
-        results = np.array(results).reshape(len(results), 1)
-        return results
+            delta.append(oj*(1-oj)*summ)
+        delta = np.array(delta).reshape(len(delta), 1)
+        return delta
     
     def get_class_target(self, class_val):
         dj = []
