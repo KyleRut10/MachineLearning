@@ -108,14 +108,14 @@ class MLP:
                 if self.mode == 'r':
                     # calculate the MSE for regression
                     error = 0.5*np.sum(np.subtract(o_out, d)**2)/len(o_out)
+                    # calculate the intial delta at the output
+                    delta = self.calc_delta_out_regres(o_out, d)
                 else:
                     # TODO: Cross-entropy error
                     error = 0
+                    delta = self.calc_delta_out_class(o_out, d)
                 iteration_error.append(error)
 
-                # calculate the intial delta at the output
-                # TODO: Make a calc_delta for soft max derivative
-                delta = self.calc_delta_out_regres(o_out, d)
                 deltas[-1] = delta
                 
                 # calculate the weight changes
@@ -222,6 +222,10 @@ class MLP:
         # convert to numpy array
         delta = np.array(delta).reshape(len(delta), 1)
         return delta
+    
+    def calc_delta_out_regres(self, outputs, targets):
+        # TODO:
+        pass
 
     def calc_delta(self, outputs, delta_old, W):
         # hold each node's value for delta
