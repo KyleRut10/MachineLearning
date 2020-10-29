@@ -206,9 +206,7 @@ class MLP:
             activations.append(acts)
             # update inputs into next layer
             inputs = self.build_inputs(W, activations[-2])
-       
-            
-        
+         
         return activations 
 
     def calc_delta_out(self, outputs, targets):
@@ -269,3 +267,12 @@ class MLP:
         for i,w in enumerate(self.weights):
             print('layer ', i)
             print(w)
+
+    def print_activations(self, activations):
+        print('Activations (Inputs)')
+        for i,act in enumerate(activations):
+            if i == len(activations)-1:
+                print('Output to network')
+            else:
+                print('Input to layer ', i)
+            print(np.transpose(act))
