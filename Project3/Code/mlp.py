@@ -194,6 +194,7 @@ class MLP:
             # The weights going into layer l
             W = self.weights[l] #np.transpose(self.weights[l])
             # compute activation function for whole layer
+            #print('inputs', inputs)
             z = np.matmul(W, inputs)
             # handle output layer based on regression or classification
             if l == len(self.layers)-1 and self.mode == 'c':
