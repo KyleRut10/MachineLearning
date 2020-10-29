@@ -103,6 +103,8 @@ def data_soybean_small():
     df = pd.read_csv(os.path.join('..', '..', 'data', 'soybean-small.csv'))
     # clean and standardize the data
     df = standardize(type_soybean_small, df)
+    # convert class strings to integers
+    df['class'] = string_to_int(df['class'])
     # Return the data
     return df
 
@@ -174,6 +176,17 @@ def one_hot(col_label, df):
     # drop origional column
     df = df.drop(columns=[col_label])
     return df
+
+
+# convert the string classes to corresponding numerical values
+def string_to_int(col):
+    # get unique list of classes in column
+    uni = col.unique().tolist()
+    new_col = []  # hold new values
+    # go through each value in column and assign it an interger value
+    for val in col:
+        new_col.append(uni.index(val)+1)
+    return new_col
 
 
 import subprocess
