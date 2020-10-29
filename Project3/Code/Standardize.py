@@ -2,8 +2,7 @@ import pandas as pd
 
 def standardize(column):
     # Standardizes a column by z-score normalization
-    
-    return column - mean(column)/column.std
+    return column - column.mean/column.std
 
 def on_hot(col):
     # Takes a column of categorical data and converts it into
