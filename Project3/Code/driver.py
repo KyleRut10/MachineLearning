@@ -75,7 +75,7 @@ def tuning(data, num_hl, mode, eda, max_iterations, filename):
     print('Min error for: {}'.format(', '.join(best_results)))  
 
 if __name__ == '__main__':
-    iterations = 1000
+    iterations = 500
     eda = 0.01
     # for Spencer
     '''
