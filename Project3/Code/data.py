@@ -178,7 +178,7 @@ def one_hot(col_label, df):
     identifier_df = df.pop(identifier)
     df[identifier] = identifier_df
     # drop origional column
-    df = df.drop(columns=[col_label])
+    df = df.drop([col_label], axis=1)
     return df
 
 
