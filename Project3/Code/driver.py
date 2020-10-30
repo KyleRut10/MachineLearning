@@ -75,9 +75,10 @@ def tuning(data, num_hl, mode, eda, max_iterations, filename):
     print('Min error for: {}'.format(', '.join(best_results)))  
 
 if __name__ == '__main__':
-    iterations = 5000
+    iterations = 1000
     eda = 0.01
     # for Spencer
+    '''
     # Abalone dataset
     print('\nAbalone')
     data = data.data_abalone()
@@ -126,4 +127,3 @@ if __name__ == '__main__':
     tuning(data, 1, 'r', eda, iterations, results_path)
     results_path = os.path.join('..', 'networks', 'sb-results-2.pkl')
     tuning(data, 2, 'r', eda, iterations, results_path)
-    '''
