@@ -208,10 +208,9 @@ class MLP:
         
         for l in range(len(self.layers)):
             # The weights going into layer l
-            W = self.weights[l] #np.transpose(self.weights[l])
+            W = self.weights[l]
             # compute activation function for whole layer
-            #print('inputs', inputs)
-            z = np.matmul(W, activations[-1])
+            z = np.matmul(W, activations[-1])  # input to layer
             # handle output layer based on regression or classification
             if l == len(self.layers)-1 and self.mode == 'c':
                 # compute the softmax function at last node if classification
@@ -239,9 +238,9 @@ class MLP:
         return delta
     
     def calc_delta_out_class(self, outputs, targets):
-        # TODO: SPENSER
         # soft max derivative, cross entropy derivative
-        pass
+        delta = np.subtract(targets, outputs)
+        return delta
 
     def calc_delta(self, outputs, delta_old, W):
         # hold each node's value for delta
