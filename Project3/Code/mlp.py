@@ -13,13 +13,13 @@ class MLP:
     # num_outputs: Number output nodes
     # train: df of training data
     # test: df of testing data
-        
+
     # np vectorized version to compute sigmoid function on whole array of
     # values
     sigFunc = lambda t: 1/(1+np.exp(t))
     sig = np.vectorize(sigFunc)
-    
-    def __init__(self, hidden_nodes='', training='', mode='', num_outputs='', 
+
+    def __init__(self, hidden_nodes='', training='', mode='', num_outputs='',
         pkl_file=''):
         # read in saved network from file if file given
         if pkl_file != '':
@@ -56,7 +56,7 @@ class MLP:
         self.layers.extend(hidden_nodes)
         self.layers.append(self.num_outputs)
         self.training_statistics = {'status': 'not trained'}
-    
+
 
     def train(self, eda=0.01, plot=False, max_iterations=50, max_dw_sum=0.0001):
         print('Training the network')
@@ -64,7 +64,7 @@ class MLP:
         training_error = []
         # Build weight matrices...
         self.weights = []
-        
+
         # Nodes are rows and columns are inputs to those nodes
         # W[l]: (n[l], n[l-1]) (h, w)
         for i in range(1, len(self.all_layers)):
@@ -76,8 +76,8 @@ class MLP:
             # Reshape into 2D Numpy array
             self.weights.append(np.array(hw).reshape(h, w))
             #print(self.weights[-1])
-        
-         
+
+
         # Things to track iteration and convergance things
         converge = False
         # run no more than max_iterations times
@@ -98,7 +98,7 @@ class MLP:
                 # compute all the activations in the feedforward step
                 # activatioins[-1] is the final output of the network
                 activations = self.feedforward(pt)
-                
+
                 #############################################################
                 # backward propagation
                 #############################################################
@@ -118,7 +118,7 @@ class MLP:
                     # Ex: if class = 2 from [1,2,3], this would return [0,1,0]
                     d = self.get_class_target(pt[-1])
                 x = self.build_inputs(self.weights[-1], activations[-2])
-                
+
                 # Caclulate error
                 if self.mode == 'r':
                     # calculate the MSE for regression
@@ -133,7 +133,7 @@ class MLP:
                 iteration_error.append(error)
 
                 deltas[-1] = delta
-                
+
                 # calculate the weight changes
                 dw = -np.matmul(np.transpose(delta), x) * eda
                 # These can probably be delted
@@ -142,7 +142,7 @@ class MLP:
                 #if len(dw.shape) == 1:
                 #    dw = dw[None, :]
                 weight_updates[-1] = dw
-                
+
                 # go back through hidden layers and update their weights
                 # subtract 2, because already did the last position
                 for i in range(len(self.weights)-2, -1, -1):
@@ -150,22 +150,22 @@ class MLP:
                     o = activations[i+1]  # outputs of layer
                     x = activations[i]  # inputs to layer
                     w = self.weights[i+1]  # NOTE: why is it i+1????
-                    
+
                     # calculate a new delta
                     delta = self.calc_delta(o, deltas[-1], w)
                     deltas[i] = delta
-                    
+
                     # calculate weight change for layer i
                     dw = -np.matmul(delta, np.transpose(x)) * eda
                     weight_updates[i] = dw
-                
+
                 # preform weight updates
                 for i,w in enumerate(self.weights):
                     self.weights[i] = np.add(w,weight_updates[i])
-                
+
             # average the error for the dataset round
             training_error.append(sum(iteration_error)/len(self.training))
-                
+
 
             # Test for convergence by summing all the weights and seeing
             # if they are close to zero
@@ -187,14 +187,14 @@ class MLP:
 
         # print out the final average error
         print('Average last iteration error: {}'.format(training_error[-1]))
-        
+
         # save the training error so can go back and anlyze later if needed
         self.record_statistics(eda, max_iterations, training_error, iteration)
 
         # make a plot of the error
         if plot:
             self.plot_error()
-    
+
     def feedforward(self, pt):
         # will hold the calculated activations, the input to a layer
         # activations[0] is the input to the first hidden layer
@@ -205,8 +205,8 @@ class MLP:
         inputs = np.array(pt[:-1])
         inputs = inputs.reshape(len(inputs), 1)
         activations.append(inputs)
-        
-        for l,num_nodes in enumerate(range(len(self.layers))):
+
+        for l in range(len(self.layers)):
             # The weights going into layer l
             W = self.weights[l] #np.transpose(self.weights[l])
             # compute activation function for whole layer
@@ -224,8 +224,8 @@ class MLP:
             activations.append(acts)
             # update inputs into next layer
             inputs = self.build_inputs(W, activations[-2])
-         
-        return activations 
+
+        return activations
 
     def calc_delta_out_regres(self, outputs, targets):
         # hold the values for each node's value of delta
@@ -234,13 +234,13 @@ class MLP:
         for j in range(len(outputs)):
             oj = outputs[j][0]  # singe output value
             dj = targets[j][0]  # single target value
-            
+
             # caclulate derivatives
             delta.append(-(dj-oj)*oj*(1-oj))
         # convert to numpy array
         delta = np.array(delta).reshape(len(delta), 1)
         return delta
-    
+
     def calc_delta_out_class(self, outputs, targets):
         # TODO: SPENSER
         # soft max derivative, cross entropy derivative
@@ -251,7 +251,7 @@ class MLP:
         delta = []
         for j in range(len(outputs)):
             oj = outputs[j][0]  # Single output value
-            
+
             # sum over each input into that node
             summ = 0
             for k in range(len(delta_old)):
@@ -260,7 +260,7 @@ class MLP:
             delta.append(oj*(1-oj)*summ)
         delta = np.array(delta).reshape(len(delta), 1)
         return delta
-    
+
     def get_class_target(self, class_val):
         # This will take in what numerical class this is and turn it into
         # an array, for example if the class is 1 out of 1,2,3, this will
@@ -273,7 +273,7 @@ class MLP:
                 d.append(0)
 
         return np.array(d).reshape(self.num_outputs, 1)
-    
+
     def build_inputs(self, W, activation):
         activation = np.transpose(activation)[0]
         inputs = []
@@ -305,8 +305,8 @@ class MLP:
             else:
                 print('Input to layer ', i)
             print(np.transpose(act))
-    
-    def record_statistics(self, eda, max_iterations, training_error, 
+
+    def record_statistics(self, eda, max_iterations, training_error,
         converged_in):
         ns = {'status': 'trained'}
         ns['eda'] = eda
