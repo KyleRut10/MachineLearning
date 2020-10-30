@@ -204,16 +204,14 @@ class MLP:
         # feedforward computation
         # initial inputs into first hidden layer
         # assuming class is in last position, so factor it out
-        inputs = np.array(pt[:-1])
-        inputs = inputs.reshape(len(inputs), 1)
-        activations.append(inputs)
+        activations.append(np.array(pt[:-1]).reshape(len(pt[:-1]), 1))
         
         for l,num_nodes in enumerate(range(len(self.layers))):
             # The weights going into layer l
             W = self.weights[l] #np.transpose(self.weights[l])
             # compute activation function for whole layer
             #print('inputs', inputs)
-            z = np.matmul(W, inputs)
+            z = np.matmul(W, activations[-1])
             # handle output layer based on regression or classification
             if l == len(self.layers)-1 and self.mode == 'c':
                 # compute the softmax function at last node if classification
@@ -222,10 +220,7 @@ class MLP:
             else:
                 acts = self.sig(z)
             # convert to 2D numpy array
-            acts = acts.reshape(len(acts), 1)
-            activations.append(acts)
-            # update inputs into next layer
-            inputs = activations[-1]#self.build_inputs(W, activations[-2])
+            activations.append(acts.reshape(len(acts), 1))
          
         return activations 
 
