@@ -129,7 +129,7 @@ class MLP:
                     # calculate the intial delta at the output
                     delta = self.calc_delta_out_regres(o_out, d)
                 else:
-                    error = -np.log(x[int(pt[-1])])
+                    error = -np.log(o_out[int(pt[-1])])
                     delta = self.calc_delta_out_class(o_out, d)
                 iteration_error.append(error)
 
@@ -215,7 +215,6 @@ class MLP:
                 # compute the softmax function at last node if classification
                 # problem
                 acts = np.exp(z)/np.sum(np.exp(z), axis=0)
-                
             else:
                 acts = self.sig(z)
             # convert to 2D numpy array
