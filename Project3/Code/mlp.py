@@ -215,7 +215,7 @@ class MLP:
                 # compute the softmax function at last node if classification
                 # problem
                 acts = np.exp(z)/np.sum(np.exp(z), axis=0)
-            else:
+            else l < len(self.layers)-1:
                 acts = self.sig(z)
             # convert to 2D numpy array
             activations.append(acts.reshape(len(acts), 1))
@@ -231,9 +231,10 @@ class MLP:
             dj = targets[j][0]  # single target value
 
             # caclulate derivatives
-            delta.append(-(dj-oj)*oj*(1-oj))
+            delta.append(-(dj-oj))#*oj*(1-oj))
         # convert to numpy array
         delta = np.array(delta).reshape(len(delta), 1)
+
         return delta
 
     def calc_delta_out_class(self, outputs, targets):
