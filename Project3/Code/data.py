@@ -1,16 +1,17 @@
 import pandas as pd
 import os
 import numpy as np
-# TODO: Encode all classes to numerical values
 
 
-# glass dataset
+# classification
 def data_glass():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'glass.csv'))
     # Drop the class and index
     #df = df.drop(columns=['index'])
     df = df.drop(['index'], axis=1)
+    # convert class strings to integers
+    df['class'] = string_to_int(df['class'])
     # clean and standardize the data
     df = standardize(type_glass, df)
     # Return the data
@@ -22,7 +23,7 @@ def type_glass():
     continuious = ['ri', 'na', 'mg', 'al', 'si', 'k', 'ca', 'ba', 'fe']
     return catigorical, continuious
 
-
+# regression
 def data_abalone():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'abalone.csv'))
@@ -38,7 +39,7 @@ def type_abalone():
                    'response']
     return catigorical, continuious
 
-
+# regression
 # NOTE: Error values are not between [0,1], something is wrong
 def data_forestfire():
     # Read in the file
@@ -55,7 +56,7 @@ def type_forestfire():
                    'response']
     return catigorical, continuious
 
-
+# regression
 def data_hardware():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'machine.csv'))
@@ -71,7 +72,7 @@ def type_hardware():
     continuious = ['myct', 'mmin', 'mmax', 'cach', 'chmin', 'chmax', 'respone']
     return catigorical, continuious
 
-
+# classification
 def data_breast():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data',
@@ -80,6 +81,8 @@ def data_breast():
     # them in as strings
     df = clean(df)
     df = df.astype(float)
+    # convert class strings to integers
+    df['class'] = string_to_int(df['class'])
     # drop the index
     df = df.drop(['index'], axis=1)
     # clean and standardize the data
@@ -98,6 +101,7 @@ def type_breast():
     return catigorical, continuious
 
 
+# classification
 def data_soybean_small():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'soybean-small.csv'))
@@ -185,7 +189,7 @@ def string_to_int(col):
     new_col = []  # hold new values
     # go through each value in column and assign it an interger value
     for val in col:
-        new_col.append(uni.index(val)+1)
+        new_col.append(uni.index(val))
     return new_col
 
 
