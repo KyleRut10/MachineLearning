@@ -45,13 +45,16 @@ def tuning(data, num_hl, mode, eda, max_iterations, filename):
     networks = []  # hold each trained network
     errors = []  # hold the errors for that network
     max_nodes = len(data.columns.values)+int(len(data.columns.values)*.01)
+    min_nodes = int(len(data.columns.values)*.2)+2
     print('Tuning for {} hidden layers with {} max nodes per layer'.format(
           num_hl, max_nodes))
+    print('Range: {} {}'.format(min_nodes, max_nodes))
     # make all possible permutations for each hidden layer
     combos = list(it.combinations_with_replacement(range(1,max_nodes), num_hl))
     # go through each combo
     for c in combos:
-        print('Testing on combo: {}'.format(c))
+        print(c, end=" ")
+        #print('Testing on combo: {}'.format(c))
         # create and train network
         nn = mlp.MLP(c, data, mode)
         nn.train(eda=eda, max_iterations=max_iterations) 
@@ -98,7 +101,8 @@ if __name__ == '__main__':
     tuning(data, 1, 'r', eda, iterations, results_path)
     results_path = os.path.join('..', 'networks', 'hw-results-2.pkl')
     tuning(data, 2, 'r', eda, iterations, results_path)
-    
+   
+    '''
     # Glass
     print('\nGlass')
     data = data.data_glass()
@@ -122,3 +126,4 @@ if __name__ == '__main__':
     tuning(data, 1, 'r', eda, iterations, results_path)
     results_path = os.path.join('..', 'networks', 'sb-results-2.pkl')
     tuning(data, 2, 'r', eda, iterations, results_path)
+    '''
