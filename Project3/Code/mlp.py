@@ -48,7 +48,7 @@ class MLP:
             self.num_outputs = num_outputs
         # Make a cummulative list of how many nodes in each layer
         # Including inputs as layer
-        self.all_layers = [len(training.columns)-1]
+        self.all_layers = [len(training.columns)-1]  # -1 to remove class
         self.all_layers.extend(hidden_nodes)
         self.all_layers.append(self.num_outputs)
         # not including inputs as layer
@@ -68,8 +68,8 @@ class MLP:
         # Nodes are rows and columns are inputs to those nodes
         # W[l]: (n[l], n[l-1]) (h, w)
         for i in range(1, len(self.all_layers)):
-            h = self.all_layers[i]
-            w = self.all_layers[i-1]
+            h = self.all_layers[i]   # number nodes in layer
+            w = self.all_layers[i-1]   # number inputs to node
             hw = []
             for val in range(h*w):
                 hw.append(rand.uniform(-0.01,0.01))
@@ -206,7 +206,7 @@ class MLP:
         # assuming class is in last position, so factor it out
         activations.append(np.array(pt[:-1]).reshape(len(pt[:-1]), 1))
         
-        for l,num_nodes in enumerate(range(len(self.layers))):
+        for l in range(len(self.layers)):
             # The weights going into layer l
             W = self.weights[l] #np.transpose(self.weights[l])
             # compute activation function for whole layer
