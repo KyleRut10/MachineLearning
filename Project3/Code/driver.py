@@ -50,7 +50,7 @@ def tuning(data, num_hl, mode, eda, max_iterations, filename):
           num_hl, max_nodes))
     print('Range: {} {}'.format(min_nodes, max_nodes))
     # make all possible permutations for each hidden layer
-    combos = list(it.combinations_with_replacement(range(1,max_nodes), num_hl))
+    combos = list(it.combinations_with_replacement(range(min_nodes,max_nodes), num_hl))
     # go through each combo
     for c in combos:
         print(c, end=" ")
