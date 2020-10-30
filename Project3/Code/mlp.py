@@ -129,10 +129,7 @@ class MLP:
                     # calculate the intial delta at the output
                     delta = self.calc_delta_out_regres(o_out, d)
                 else:
-                    p_t = x[int(pt[-1])]  # get the prob of the correct class
-                    #error = 0
                     error = -np.log(x[int(pt[-1])])
-                    #error = np.matmul(d, np.log(x)))
                     delta = self.calc_delta_out_class(o_out, d)
                 iteration_error.append(error)
 
