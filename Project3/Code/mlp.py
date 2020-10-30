@@ -117,7 +117,9 @@ class MLP:
                     # get what the output should be
                     # Ex: if class = 2 from [1,2,3], this would return [0,1,0]
                     d = self.get_class_target(pt[-1])
-                x = self.build_inputs(self.weights[-1], activations[-2])
+                # calculate the inputs into the output layer from the output of
+                # the previous layer and the weights
+                x = np.matmul(self.weights[-1], activations[-2])
                 
                 # Caclulate error
                 if self.mode == 'r':
@@ -194,7 +196,7 @@ class MLP:
         # make a plot of the error
         if plot:
             self.plot_error()
-    
+
     def feedforward(self, pt):
         # will hold the calculated activations, the input to a layer
         # activations[0] is the input to the first hidden layer
@@ -223,7 +225,7 @@ class MLP:
             acts = acts.reshape(len(acts), 1)
             activations.append(acts)
             # update inputs into next layer
-            inputs = self.build_inputs(W, activations[-2])
+            inputs = activations[-1]#self.build_inputs(W, activations[-2])
          
         return activations 
 
@@ -274,16 +276,6 @@ class MLP:
 
         return np.array(d).reshape(self.num_outputs, 1)
     
-    def build_inputs(self, W, activation):
-        activation = np.transpose(activation)[0]
-        inputs = []
-        for node in range(len(W)):
-            ins = []
-            for i,w in enumerate(W[node]):
-                ins.append(w*activation[i])
-            inputs.append(sum(ins))
-        inputs = np.array(inputs).reshape(len(inputs), 1)
-        return inputs
 
     # write the object to a .pkl file so it can be read in later and the
     # same network can be reconstructed
