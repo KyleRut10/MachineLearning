@@ -44,8 +44,8 @@ def save_object(obj, filename):
 def tuning(data, num_hl, mode, eda, max_iterations, filename):
     networks = []  # hold each trained network
     errors = []  # hold the errors for that network
-    max_nodes = len(data.columns.values)+int(len(data.columns.values)*.05)
-    print('Tuning for {} hidden layers with max nodes per layer'.format(
+    max_nodes = len(data.columns.values)+int(len(data.columns.values)*.01)
+    print('Tuning for {} hidden layers with {} max nodes per layer'.format(
           num_hl, max_nodes))
     # make all possible permutations for each hidden layer
     combos = list(it.combinations_with_replacement(range(1,max_nodes), num_hl))
@@ -72,7 +72,53 @@ def tuning(data, num_hl, mode, eda, max_iterations, filename):
     print('Min error for: {}'.format(', '.join(best_results)))  
 
 if __name__ == '__main__':
+    iterations = 5000
+    eda = 0.01
+    # for Spencer
     # Abalone dataset
+    print('\nAbalone')
     data = data.data_abalone()
-    results_path = os.path.join('..', 'networks', 'aba-results.pkl')
-    tuning(data, 1, 'r', 0.01, 20, results_path)    
+    results_path = os.path.join('..', 'networks', 'aba-results-1.pkl')
+    tuning(data, 1, 'r', eda, iterations, results_path)
+    results_path = os.path.join('..', 'networks', 'aba-results-2.pkl')
+    tuning(data, 2, 'r', eda, iterations, results_path)
+    
+    # Forestfire dataset
+    print('\nForestfire')
+    data = data.data_forestfire()
+    results_path = os.path.join('..', 'networks', 'ff-results-1.pkl')
+    tuning(data, 1, 'r', eda, iterations, results_path)
+    results_path = os.path.join('..', 'networks', 'ff-results-2.pkl')
+    tuning(data, 2, 'r', eda, iterations, results_path)
+    
+    # hardware
+    print('\nHardware')
+    data = data.data_hardware()
+    results_path = os.path.join('..', 'networks', 'hw-results-1.pkl')
+    tuning(data, 1, 'r', eda, iterations, results_path)
+    results_path = os.path.join('..', 'networks', 'hw-results-2.pkl')
+    tuning(data, 2, 'r', eda, iterations, results_path)
+    
+    # Glass
+    print('\nGlass')
+    data = data.data_glass()
+    results_path = os.path.join('..', 'networks', 'gl-results-1.pkl')
+    tuning(data, 1, 'r', eda, iterations, results_path)
+    results_path = os.path.join('..', 'networks', 'gl-results-2.pkl')
+    tuning(data, 2, 'r', eda, iterations, results_path)
+
+    # Breast Cancer
+    print('\nBreast Cancer')
+    data = data.data_breast()
+    results_path = os.path.join('..', 'networks', 'br-results-1.pkl')
+    tuning(data, 1, 'r', eda, iterations, results_path)
+    results_path = os.path.join('..', 'networks', 'br-results-2.pkl')
+    tuning(data, 2, 'r', eda, iterations, results_path)
+
+    # Soybean Small
+    print('\nSoybean Small')
+    data = data.data_soybean_small()
+    results_path = os.path.join('..', 'networks', 'sb-results-1.pkl')
+    tuning(data, 1, 'r', eda, iterations, results_path)
+    results_path = os.path.join('..', 'networks', 'sb-results-2.pkl')
+    tuning(data, 2, 'r', eda, iterations, results_path)
