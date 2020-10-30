@@ -58,7 +58,8 @@ class MLP:
         self.training_statistics = {'status': 'not trained'}
 
 
-    def train(self, eda=0.01, plot=False, max_iterations=50, max_dw_sum=0.0001):
+    def train(self, eda=0.01, plot=False, max_iterations=50, error_thresh=0.1,
+        max_dw_sum=0.0001):
         #print('Training the network')
         # Hold the average training error for one round on dataset
         training_error = []
@@ -178,7 +179,11 @@ class MLP:
                 dw_sum_new += np.sum(self.weights[i])
             # take the difference and compare to threshold
             dw_diff = abs(dw_sum_new - dw_sum_old)
-            if dw_diff < max_dw_sum*len(self.weights):
+            if len(training_error) > 1:
+                error_diff = training_error[-1] - training_error[-2]
+            else:
+                error_diff = error_thresh*100
+            if dw_diff < max_dw_sum*len(self.weights) and error_diff < error_thresh:
                 converge = True
                 print('Converged in {} iterations'.format(iteration))
             if iteration >= max_iterations:
