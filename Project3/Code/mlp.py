@@ -128,9 +128,10 @@ class MLP:
                     # calculate the intial delta at the output
                     delta = self.calc_delta_out_regres(o_out, d)
                 else:
-                    # TODO: Cross-entropy error
-                    # TODO: SPENSER
-                    error = 0
+                    p_t = x[int(pt[-1])]  # get the prob of the correct class
+                    #error = 0
+                    error = -np.log(x[int(pt[-1])])
+                    #error = np.matmul(d, np.log(x)))
                     delta = self.calc_delta_out_class(o_out, d)
                 iteration_error.append(error)
 
@@ -215,7 +216,8 @@ class MLP:
             if l == len(self.layers)-1 and self.mode == 'c':
                 # compute the softmax function at last node if classification
                 # problem
-                acts = np.exp(z)/sum(np.exp(z))
+                acts = np.exp(z)/np.sum(np.exp(z), axis=0)
+                
             else:
                 acts = self.sig(z)
             # convert to 2D numpy array
