@@ -48,7 +48,7 @@ class MLP:
             self.num_outputs = num_outputs
         # Make a cummulative list of how many nodes in each layer
         # Including inputs as layer
-        self.all_layers = [len(training.columns)-1]
+        self.all_layers = [len(training.columns)-1]  # -1 to remove class
         self.all_layers.extend(hidden_nodes)
         self.all_layers.append(self.num_outputs)
         # not including inputs as layer
@@ -68,8 +68,8 @@ class MLP:
         # Nodes are rows and columns are inputs to those nodes
         # W[l]: (n[l], n[l-1]) (h, w)
         for i in range(1, len(self.all_layers)):
-            h = self.all_layers[i]
-            w = self.all_layers[i-1]
+            h = self.all_layers[i]   # number nodes in layer
+            w = self.all_layers[i-1]   # number inputs to node
             hw = []
             for val in range(h*w):
                 hw.append(rand.uniform(-0.01,0.01))
@@ -117,7 +117,10 @@ class MLP:
                     # get what the output should be
                     # Ex: if class = 2 from [1,2,3], this would return [0,1,0]
                     d = self.get_class_target(pt[-1])
-                x = self.build_inputs(self.weights[-1], activations[-2])
+
+                # calculate the inputs into the output layer from the output of
+                # the previous layer and the weights
+                x = np.matmul(self.weights[-1], activations[-2])
 
                 # Caclulate error
                 if self.mode == 'r':
@@ -202,16 +205,14 @@ class MLP:
         # feedforward computation
         # initial inputs into first hidden layer
         # assuming class is in last position, so factor it out
-        inputs = np.array(pt[:-1])
-        inputs = inputs.reshape(len(inputs), 1)
-        activations.append(inputs)
+        activations.append(np.array(pt[:-1]).reshape(len(pt[:-1]), 1))
 
         for l in range(len(self.layers)):
             # The weights going into layer l
             W = self.weights[l] #np.transpose(self.weights[l])
             # compute activation function for whole layer
             #print('inputs', inputs)
-            z = np.matmul(W, inputs)
+            z = np.matmul(W, activations[-1])
             # handle output layer based on regression or classification
             if l == len(self.layers)-1 and self.mode == 'c':
                 # compute the softmax function at last node if classification
@@ -220,10 +221,7 @@ class MLP:
             else:
                 acts = self.sig(z)
             # convert to 2D numpy array
-            acts = acts.reshape(len(acts), 1)
-            activations.append(acts)
-            # update inputs into next layer
-            inputs = self.build_inputs(W, activations[-2])
+            activations.append(acts.reshape(len(acts), 1))
 
         return activations
 
@@ -273,17 +271,6 @@ class MLP:
                 d.append(0)
 
         return np.array(d).reshape(self.num_outputs, 1)
-
-    def build_inputs(self, W, activation):
-        activation = np.transpose(activation)[0]
-        inputs = []
-        for node in range(len(W)):
-            ins = []
-            for i,w in enumerate(W[node]):
-                ins.append(w*activation[i])
-            inputs.append(sum(ins))
-        inputs = np.array(inputs).reshape(len(inputs), 1)
-        return inputs
 
     # write the object to a .pkl file so it can be read in later and the
     # same network can be reconstructed

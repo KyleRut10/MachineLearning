@@ -131,7 +131,10 @@ def standardize(type_funct, df):
     # standardize the data
     cat,cont = type_funct()
     for col in cont:
+        #print(col)
+        #print(max(df[col]))
         df[col] = z_score_normalize(df[col])
+        #print(max(df[col]))
     # one hot encoding for catigorical
     for col_label in cat:
         df = one_hot(col_label, df) 
@@ -151,9 +154,6 @@ def z_score_normalize(col):
     # Takes a Raw data Column and standardize it by its z-score
     # Input: col - Raw Data Column
     # Output: Z-score of the Column
-    for i,c in enumerate(col):
-        if isinstance(c, str):
-            print(c, i)
     return (col - col.mean())/col.std()
 
 
