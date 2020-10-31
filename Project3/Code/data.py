@@ -60,7 +60,7 @@ def type_forestfire():
 def data_hardware():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'machine.csv'))
-    df = df.drop(['erp'], axis=1)
+    df = df.drop(columns=['erp'])#, axis=1)
     # clean and standardize the data
     df = standardize(type_hardware, df)
     # Return the data
@@ -69,7 +69,7 @@ def data_hardware():
 
 def type_hardware():
     catigorical = ['vendor name', 'model name']
-    continuious = ['myct', 'mmin', 'mmax', 'cach', 'chmin', 'chmax', 'respone']
+    continuious = ['myct', 'mmin', 'mmax', 'cach', 'chmin', 'chmax', 'response']
     return catigorical, continuious
 
 # classification
