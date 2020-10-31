@@ -312,5 +312,23 @@ class MLP:
 
     def plot_error(self):
         plt.plot(self.training_statistics['training error'], 'o')
+        plt.xlabel('iterations')
         plt.ylabel('error')
+        plt.xlabel('iterations')
         plt.show()
+
+    def print_network(self, activations):
+        print('*** Layer 0***')
+        print('Outputs per node')
+        inputs = [str(round(i[0], 3)) for i in np.transpose(activations[0]).tolist()]
+        print(', '.join(inputs))
+        for i,a in enumerate(activations[1:]):
+            print('***Layer {}***'.format(i+1))
+            inputs = np.matmul(np.transpose(self.weights[i]), activations[i-1])
+            inputs = np.transpose(inputs).tolist()
+            inputs = [str(round(i[0], 3)) for i in inputs]
+            print('Inputs per node')
+            print(', '.join(inputs))
+            outputs = [str(round(i[0], 3)) for i in activations[i]]
+            print('Outputs per node')
+            print(', '.join(outputs))
