@@ -1,5 +1,5 @@
 import pandas as pd
-import data
+import data as dat
 import mlp
 import os
 import itertools as it
@@ -75,23 +75,153 @@ def tuning(data, num_hl, mode, eda, max_iterations, filename):
     print('Min error for: {}'.format(', '.join(best_results)))  
 
 if __name__ == '__main__':
-    iterations = 500
+    iterations = 2500
     eda = 0.01
-    # for Spencer
-    '''
+    ######## 0 Hidden Layers #######
     # Abalone dataset
     print('\nAbalone')
-    data = data.data_abalone()
-    results_path = os.path.join('..', 'networks', 'aba-results-1.pkl')
-    tuning(data, 1, 'r', eda, iterations, results_path)
-    results_path = os.path.join('..', 'networks', 'aba-results-2.pkl')
-    tuning(data, 2, 'r', eda, iterations, results_path)
+    data = dat.data_abalone()
+    nna = mlp.MLP([], data, 'r')
+    nna.train(max_iterations=iterations)
+    nna.save_network('../networks/aba.pkl')
+    
+    # Forestfire dataset
+    print('\nForestfire')
+    data = dat.data_forestfire()
+    nnf = mlp.MLP([], data, 'r')
+    nnf.train(max_iterations=iterations)
+    nnf.save_network('../networks/ff.pkl')
+    
+    # hardware
+    print('\nHardware')
+    data = dat.data_hardware()
+    nnh = mlp.MLP([], data, 'r')
+    nnh.train(max_iterations=iterations)
+    nnh.save_network('../networks/hw.pkl')
+   
+    # Glass
+    print('\nGlass')
+    data = dat.data_glass()
+    nng = mlp.MLP([], data, 'c')
+    nng.train(max_iterations=iterations)
+    nng.save_network('../networks/g.pkl')
+
+    # Breast Cancer
+    print('\nBreast Cancer')
+    data = dat.data_breast()
+    nnb = mlp.MLP([], data, 'c')
+    nnb.train(max_iterations=iterations)
+    nnb.save_network('../networks/bx.pkl')
+
+    # Soybean Small
+    print('\nSoybean Small')
+    data = dat.data_soybean_small()
+    nns = mlp.MLP([], data, 'c')
+    nns.train(max_iterations=iterations)
+    nns.save_network('../networks/s.pkl')
+   
+    ####### 1 Hidden Layer
+    print('One hidden layer')
+    # Abalone dataset
+    print('\nAbalone')
+    data = dat.data_abalone()
+    nna1 = mlp.MLP([10], data, 'r')
+    nna1.train(max_iterations=iterations)
+    nna1.save_network('../networks/aba-10.pkl')
+    
+    # Forestfire dataset
+    print('\nForestfire')
+    data = dat.data_forestfire()
+    nnf1 = mlp.MLP([25], data, 'r')
+    nnf1.train(max_iterations=iterations)
+    nnf1.save_network('../networks/ff-25.pkl')
+    
+    # hardware
+    print('\nHardware')
+    data = dat.data_hardware()
+    nnh1 = mlp.MLP([172], data, 'r')
+    nnh1.train(max_iterations=iterations)
+    nnh1.save_network('../networks/hw-172.pkl')
+   
+    # Glass
+    #print('\nGlass')
+    #data = dat.data_glass()
+    #nng1 = mlp.MLP([4], data, 'c')
+    #nng1.train(max_iterations=iterations)
+    #nng1.save_network('../networks/g-4.pkl')
+
+    # Breast Cancer
+    print('\nBreast Cancer')
+    data = dat.data_breast()
+    nnb1 = mlp.MLP([20], data, 'c')
+    nnb1.train(max_iterations=iterations)
+    nnb1.save_network('../networks/b-20.pkl')
+
+    # Soybean Small
+    print('\nSoybean Small')
+    data = dat.data_soybean_small()
+    nns1 = mlp.MLP([43], data, 'c')
+    nns1.train(max_iterations=iterations)
+    nns1.save_network('../networks/s-43.pkl')
+    
+    ###### 2 Hidden Layers
+    print('Two hidden layers')
+    # Abalone dataset
+    #print('\nAbalone')
+    #data = dat.data_abalone()
+    #nna2 = mlp.MLP([4,8], data, 'r')
+    #nna2.train(max_iterations=iterations)
+    #nna2.save_network('../networks/aba-4-8.pkl')
+    
+    # Forestfire dataset
+    print('\nForestfire')
+    data = dat.data_forestfire()
+    nnf2 = mlp.MLP([18, 30], data, 'r')
+    nnf2.train(max_iterations=iterations)
+    nnf2.save_network('../networks/ff-18-30.pkl')
+    
+    # hardware
+    print('\nHardware')
+    data = dat.data_hardware()
+    print()
+    nnh2 = mlp.MLP([90,20], data, 'r')
+    nnh2.train(max_iterations=iterations)
+    nnh2.save_network('../networks/hw-90-20.pkl')
+   
+    # Glass
+    print('\nGlass')
+    data = dat.data_glass()
+    nng2 = mlp.MLP([9,2], data, 'c')
+    nng2.train(max_iterations=iterations)
+    nng2.save_network('../networks/g-9-2.pkl')
+
+    # Breast Cancer
+    print('\nBreast Cancer')
+    data = dat.data_breast()
+    nnb2 = mlp.MLP([80,10], data, 'c')
+    nnb2.train(max_iterations=iterations)
+    nnb2.save_network('../networks/b-80-10.pkl')
+
+    # Soybean Small
+    print('\nSoybean Small')
+    data = dat.data_soybean_small()
+    nns2 = mlp.MLP([29,15], data, 'c')
+    nns2.train(max_iterations=iterations)
+    nns2.save_network('../networks/s-29-15.pkl')
+
+    '''
+    #results_path = os.path.join('..', 'networks', 'aba-results-1.pkl')
+    #tuning(data, 1, 'r', eda, iterations, results_path)
+    #print()
+    #results_path = os.path.join('..', 'networks', 'aba-results-2.pkl')
+    #tuning(data, 2, 'r', eda, iterations, results_path)
     
     # Forestfire dataset
     print('\nForestfire')
     data = data.data_forestfire()
     results_path = os.path.join('..', 'networks', 'ff-results-1.pkl')
     tuning(data, 1, 'r', eda, iterations, results_path)
+    print()
     results_path = os.path.join('..', 'networks', 'ff-results-2.pkl')
     tuning(data, 2, 'r', eda, iterations, results_path)
     
@@ -100,15 +230,16 @@ if __name__ == '__main__':
     data = data.data_hardware()
     results_path = os.path.join('..', 'networks', 'hw-results-1.pkl')
     tuning(data, 1, 'r', eda, iterations, results_path)
+    print()
     results_path = os.path.join('..', 'networks', 'hw-results-2.pkl')
     tuning(data, 2, 'r', eda, iterations, results_path)
    
-    '''
     # Glass
     print('\nGlass')
     data = data.data_glass()
     results_path = os.path.join('..', 'networks', 'gl-results-1.pkl')
     tuning(data, 1, 'r', eda, iterations, results_path)
+    print()
     results_path = os.path.join('..', 'networks', 'gl-results-2.pkl')
     tuning(data, 2, 'r', eda, iterations, results_path)
 
@@ -117,6 +248,7 @@ if __name__ == '__main__':
     data = data.data_breast()
     results_path = os.path.join('..', 'networks', 'br-results-1.pkl')
     tuning(data, 1, 'r', eda, iterations, results_path)
+    print()
     results_path = os.path.join('..', 'networks', 'br-results-2.pkl')
     tuning(data, 2, 'r', eda, iterations, results_path)
 
@@ -125,5 +257,7 @@ if __name__ == '__main__':
     data = data.data_soybean_small()
     results_path = os.path.join('..', 'networks', 'sb-results-1.pkl')
     tuning(data, 1, 'r', eda, iterations, results_path)
+    print()
     results_path = os.path.join('..', 'networks', 'sb-results-2.pkl')
     tuning(data, 2, 'r', eda, iterations, results_path)
+    '''
