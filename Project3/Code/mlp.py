@@ -154,7 +154,7 @@ class MLP:
                     w = self.weights[i+1]  # NOTE: why is it i+1????
 
                     # calculate a new delta
-                    delta = self.calc_delta(o, deltas[-1], w)
+                    delta = self.calc_delta(o, deltas[i+1], w)
                     deltas[i] = delta
 
                     # calculate weight change for layer i
