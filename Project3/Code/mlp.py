@@ -220,8 +220,7 @@ class MLP:
                 # compute the softmax function at last node if classification
                 # problem
                 acts = np.exp(z)/np.sum(np.exp(z), axis=0)
-            # Do NOT apply sigmoid to output layer
-            elif l < len(self.layers)-1:
+            else:
                 acts = self.sig(z)
             # convert to 2D numpy array
             activations.append(acts.reshape(len(acts), 1))
@@ -231,14 +230,13 @@ class MLP:
     def calc_delta_out_regres(self, outputs, targets):
         # hold the values for each node's value of delta
         delta = []
-        outputs = [sum(outputs)]
         # Calculate deltaj for each output
         for j in range(len(outputs)):
-            oj = outputs[j]#[0]  # singe output value
-            dj = targets[j]#[0]  # single target value
+            oj = outputs[j][0]  # singe output value
+            dj = targets[j][0]  # single target value
 
             # caclulate derivatives
-            delta.append(-(dj-oj))#*oj*(1-oj))
+            delta.append(-(dj-oj)*oj*(1-oj))
         # convert to numpy array
         delta = np.array(delta).reshape(len(delta), 1)
         return delta
