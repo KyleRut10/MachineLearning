@@ -75,29 +75,29 @@ def tuning(data, num_hl, mode, eda, max_iterations, filename):
     print('Min error for: {}'.format(', '.join(best_results)))  
 
 if __name__ == '__main__':
-    iterations = 2500
+    iterations = 5000
     eda = 0.01
     ######## 0 Hidden Layers #######
     # Abalone dataset
-    print('\nAbalone')
-    data = dat.data_abalone()
-    nna = mlp.MLP([], data, 'r')
-    nna.train(max_iterations=iterations)
-    nna.save_network('../networks/aba.pkl')
+    #print('\nAbalone')
+    #data = dat.data_abalone()
+    #nna = mlp.MLP([], data, 'r')
+    #nna.train(max_iterations=iterations)
+    #nna.save_network('../networks/aba.pkl')
     
     # Forestfire dataset
-    print('\nForestfire')
-    data = dat.data_forestfire()
-    nnf = mlp.MLP([], data, 'r')
-    nnf.train(max_iterations=iterations)
-    nnf.save_network('../networks/ff.pkl')
+    #print('\nForestfire')
+    #data = dat.data_forestfire()
+    #nnf = mlp.MLP([], data, 'r')
+    #nnf.train(max_iterations=iterations)
+    #nnf.save_network('../networks/ff.pkl')
     
     # hardware
-    print('\nHardware')
-    data = dat.data_hardware()
-    nnh = mlp.MLP([], data, 'r')
-    nnh.train(max_iterations=iterations)
-    nnh.save_network('../networks/hw.pkl')
+    #print('\nHardware')
+    #data = dat.data_hardware()
+    #nnh = mlp.MLP([], data, 'r')
+    #nnh.train(max_iterations=iterations)
+    #nnh.save_network('../networks/hw.pkl')
    
     # Glass
     print('\nGlass')
