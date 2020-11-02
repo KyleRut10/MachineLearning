@@ -164,7 +164,7 @@ class MLP:
                     dw = -np.matmul(delta, np.transpose(x)) * eda
                     weight_updates[i] = dw
 
-                # preform weight updates
+                # preform weight updates at the end
                 for i,w in enumerate(self.weights):
                     self.weights[i] = np.add(w,weight_updates[i])
 
@@ -230,6 +230,22 @@ class MLP:
 
         return activations
 
+    def run(self, pt):
+        activations = self.feedforward(pt)
+        # Caclulate error
+        o_out = activations[-1]   # output of the network
+        if self.mode == 'r':
+            d = pt[-1]  # target output of network for regression
+            d = np.array(d).reshape(1,1)
+            # calculate the MSE for regression
+            error = 0.5*np.sum(np.subtract(o_out, d)**2)/len(o_out)
+        else:
+            error = -np.log(o_out[int(pt[-1])][0])
+            # account for taking log of 0
+            if error < 0:
+                error = 0
+        return activations, error
+
     def calc_delta_out_regres(self, outputs, targets):
         # hold the values for each node's value of delta
         delta = []
@@ -283,19 +299,19 @@ class MLP:
         with open(filename, 'wb') as output:  # Overwrites any existing file.
             pickle.dump(self, output) # pickle.HIGHEST_PROTOCOL)
 
-    def print_weights(self):
+    def pweights(self):
         print('Weights')
         for i,w in enumerate(self.weights):
-            print('layer ', i)
+            print('layer ', i+1, ' to ', i+2)
             print(w)
 
-    def print_activations(self, activations):
-        print('Activations (Inputs)')
+    def pactivations(self, activations):
+        print('Activations (Outputs)')
         for i,act in enumerate(activations):
             if i == len(activations)-1:
                 print('Output to network')
             else:
-                print('Input to layer ', i)
+                print('Output to layer ', i+1)
             print(np.transpose(act))
 
     def record_statistics(self, eda, max_iterations, training_error,
