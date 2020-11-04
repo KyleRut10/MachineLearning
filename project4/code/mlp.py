@@ -58,12 +58,13 @@ class MLP:
         self.training_statistics = {'status': 'not trained'}
 
 
-    def train(self, eda=0.01, plot=False, max_iterations=5000):
+    def train(self, eda=0.01, plot=False, max_iterations=5):
         #print('Training the network')
         # Hold the average training error for one round on dataset
         training_error = []
         # Build weight matrices...
         self.weights = []
+        self.bias = []
 
         # Nodes are rows and columns are inputs to those nodes
         # W[l]: (n[l], n[l-1]) (h, w)
@@ -77,7 +78,7 @@ class MLP:
             # Reshape into 2D Numpy array
             self.weights.append(np.array(hw).reshape(h, w))
             #print(self.weights[-1])
-
+            self.bias.append(np.array([0 for i in range(h)]).reshape(h, 1)
 
         # Things to track iteration and convergance things
         converge = False
@@ -126,7 +127,8 @@ class MLP:
 
                 # calculate the inputs into the output layer from the output of
                 # the previous layer and the weights
-                x = np.matmul(self.weights[-1], activations[-2])
+                x = np.add(np.matmul(self.weights[-1], activations[-2]), 
+                           self.bias[-1])
 
                 # Caclulate error
                 if self.mode == 'r':
@@ -169,13 +171,13 @@ class MLP:
                     # calculate weight change for layer i
                     dw = -np.matmul(delta, np.transpose(x)) * eda
                     weight_updates[i] = dw
-                
+                ''' 
                 print('############################')
                 print('x', x)
                 for wu in weight_updates:
                     print(wu)
                 print()
-
+                '''
                 # preform weight updates at the end
                 for i,w in enumerate(self.weights):
                     self.weights[i] = np.add(w,weight_updates[i])
