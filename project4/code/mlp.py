@@ -58,8 +58,7 @@ class MLP:
         self.training_statistics = {'status': 'not trained'}
 
 
-    def train(self, eda=0.01, plot=False, max_iterations=50, error_thresh=0.1,
-        max_dw_sum=0.0001):
+    def train(self, eda=0.01, plot=False, max_iterations=5000):
         #print('Training the network')
         # Hold the average training error for one round on dataset
         training_error = []
@@ -73,7 +72,8 @@ class MLP:
             w = self.all_layers[i-1]   # number inputs to node
             hw = []
             for val in range(h*w):
-                hw.append(rand.uniform(-0.01,0.01))
+                #hw.append(rand.uniform(-0.01,0.01))
+                hw.append(rand.uniform(0,0.1))
             # Reshape into 2D Numpy array
             self.weights.append(np.array(hw).reshape(h, w))
             #print(self.weights[-1])
@@ -99,7 +99,8 @@ class MLP:
             rand.shuffle(index)
             randoms = self.training.set_index([index]).sort_index()
             # train the network on each point in the dataset
-            for row_index,pt in randoms.iterrows():
+            for row_index,pt in self.training.iterrows():#randoms.iterrows():
+                print('dp: ', row_index)
                 # compute all the activations in the feedforward step
                 # activatioins[-1] is the final output of the network
                 activations = self.feedforward(pt)
@@ -130,7 +131,7 @@ class MLP:
                 # Caclulate error
                 if self.mode == 'r':
                     # calculate the MSE for regression
-                    error = 0.5*np.sum(np.subtract(o_out, d)**2)/len(o_out)
+                    error = 0.5*np.sum(np.subtract(d, o_out)**2)/len(o_out)
                     # calculate the intial delta at the output
                     delta = self.calc_delta_out_regres(o_out, d)
                 else:
@@ -144,7 +145,8 @@ class MLP:
                 deltas[-1] = delta
 
                 # calculate the weight changes
-                dw = -np.matmul(np.transpose(delta), x) * eda
+                #dw = -np.matmul(np.transpose(delta), x) * eda
+                dw = -np.matmul(delta, x) * eda
                 # These can probably be delted
                 #if not isinstance(dw, np.ndarray):
                 #    dw = np.array([dw])
@@ -167,36 +169,22 @@ class MLP:
                     # calculate weight change for layer i
                     dw = -np.matmul(delta, np.transpose(x)) * eda
                     weight_updates[i] = dw
+                
+                print('############################')
+                print('x', x)
+                for wu in weight_updates:
+                    print(wu)
+                print()
 
                 # preform weight updates at the end
                 for i,w in enumerate(self.weights):
                     self.weights[i] = np.add(w,weight_updates[i])
-
+                #print(self.pweights())
             # average the error for the dataset round
             training_error.append(sum(iteration_error)/len(self.training))
 
-
-            # Test for convergence by summing all the weights and seeing
-            # if they are close to zero
-            dw_sum_old = 0
-            dw_sum_new = 0
-            # sum up all the weights
-            for i,old in enumerate(old_weights):
-                dw_sum_old += np.sum(old)
-                dw_sum_new += np.sum(self.weights[i])
-            # take the difference and compare to threshold
-            dw_diff = abs(dw_sum_new - dw_sum_old)
-            if len(training_error) > 1:
-                error_diff = training_error[-1] - training_error[-2]
-            else:
-                error_diff = error_thresh*100
-            if dw_diff < max_dw_sum*len(self.weights) and error_diff < error_thresh:
-                converge = True
-                print('Converged in {} iterations'.format(iteration))
             if iteration >= max_iterations:
                 converge = True
-                print('Max iterations ({}) reached, stopping'.format(iteration))
-                print('old - new weights = {}'.format(dw_diff))
 
         # print out the final average error
         print('Average last iteration error: {}'.format(training_error[-1]))
