@@ -94,8 +94,12 @@ class MLP:
             #print('*******Training iteration {}***********'.format(iteration))
             # save old weights
             old_weights = self.weights.copy()
+            # randomize the dataset
+            index = [i for i in range(self.training.shape[0])]
+            rand.shuffle(index)
+            randoms = self.training.set_index([index]).sort_index()
             # train the network on each point in the dataset
-            for row_index,pt in self.training.iterrows():
+            for row_index,pt in randoms.iterrows():
                 # compute all the activations in the feedforward step
                 # activatioins[-1] is the final output of the network
                 activations = self.feedforward(pt)
