@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys, os
 import pickle
+from sklearn.metrics import mean_squared_error as mse
 
 
 class MLP:
@@ -100,6 +101,8 @@ class MLP:
             rand.shuffle(index)
             randoms = self.training.set_index([index]).sort_index()
             # train the network on each point in the dataset
+            y_true = []
+            y_predict = []
             for row_index,pt in randoms.iterrows():
                 # compute all the activations in the feedforward step
                 # activatioins[-1] is the final output of the network
@@ -133,6 +136,8 @@ class MLP:
                 if self.mode == 'r':
                     # calculate the squared error for regression
                     error = 0.5*np.sum(np.subtract(d, o_out)**2)
+                    y_true.append(d[0][0])
+                    y_predict.append(o_out[0][0])
                     # calculate the intial delta at the output
                     delta = self.calc_delta_out_regres(o_out, d)
                 else:
@@ -172,7 +177,7 @@ class MLP:
                 #print(self.pweights())
             # average the error for the dataset round
             training_error.append(sum(iteration_error)/len(self.training))
-
+            #training_error.append(mse(y_true, y_predict))
             if iteration >= max_iterations:
                 converge = True
 
