@@ -132,7 +132,7 @@ class MLP:
                 # Caclulate error
                 if self.mode == 'r':
                     # calculate the MSE for regression
-                    error = 0.5*np.sum(np.subtract(d, o_out)**2)/len(o_out)
+                    error = np.sum(np.subtract(d, o_out)**2)/len(o_out)
                     # calculate the intial delta at the output
                     delta = self.calc_delta_out_regres(o_out, d)
                 else:
@@ -147,12 +147,7 @@ class MLP:
 
                 # calculate the weight changes
                 #dw = -np.matmul(np.transpose(delta), x) * eda
-                dw = -np.matmul(delta, x) * eda
-                # These can probably be delted
-                #if not isinstance(dw, np.ndarray):
-                #    dw = np.array([dw])
-                #if len(dw.shape) == 1:
-                #    dw = dw[None, :]
+                dw = -np.matmul(np.transpose(delta), x) * eda
                 weight_updates[-1] = dw
 
                 # go back through hidden layers and update their weights
@@ -170,14 +165,6 @@ class MLP:
                     # calculate weight change for layer i
                     dw = -np.matmul(delta, np.transpose(x)) * eda
                     weight_updates[i] = dw
-                
-                '''
-                print('############################')
-                print('x', x)
-                for wu in weight_updates:
-                    print(wu)
-                print()
-                '''
 
                 # preform weight updates at the end
                 for i,w in enumerate(self.weights):
