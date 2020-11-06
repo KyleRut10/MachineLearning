@@ -64,7 +64,7 @@ class MLP:
         # Hold the average training error for one round on dataset
         training_error = []
         self.initilize_weights()
-
+        
         # Things to track iteration and convergance things
         converge = False
         # run no more than max_iterations times
@@ -363,3 +363,13 @@ class MLP:
             outputs = [str(round(i[0], 3)) for i in activations[i]]
             print('Outputs per node')
             print(', '.join(outputs))
+
+    
+    def set_example_weights(self):
+        self.weights = []
+        self.bias = []
+        self.weights.append(np.array([[.1,.3,.5], [.2,.4,.6]]))
+        self.weights.append(np.array([[.7,.9],[.8,.1]]))
+        self.bias.append(np.array([[.5,.5]]))
+        self.bias.append(np.array([[.5,.5]]))
+
