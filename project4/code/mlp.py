@@ -156,6 +156,8 @@ class MLP:
                 dw = -np.matmul(np.transpose(delta), x) * eda
                 weight_updates[-1] = dw
                 bias_updates[-1] = -delta * eda
+                #import ipdb; ipdb.set_trace()
+                
                 # go back through hidden layers and update their weights
                 # subtract 2, because already did the last position
                 for i in range(len(self.weights)-2, -1, -1):
@@ -175,6 +177,7 @@ class MLP:
                     bias_updates[i] = db
                 
                 # preform weight updates at the end
+                #import ipdb; ipdb.set_trace()
                 for i,w in enumerate(self.weights):
                     self.weights[i] = np.add(w,weight_updates[i])
                     self.bias[i] = np.add(self.bias[i], bias_updates[i])
@@ -207,8 +210,8 @@ class MLP:
         for l in range(len(self.layers)):
             # The weights going into layer l
             W = self.weights[l]
-            # compute activation function for whole layer
-            z = np.matmul(W, activations[-1])  # input to layer
+            # compute input to layer z
+            z = np.add(np.matmul(W, activations[-1]), self.bias[l])
             # handle output layer based on regression or classification
             if l == len(self.layers)-1 and self.mode == 'c':
                 # compute the softmax function at last node if classification
