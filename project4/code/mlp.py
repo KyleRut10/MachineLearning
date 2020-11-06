@@ -131,7 +131,7 @@ class MLP:
 
                 # Caclulate error
                 if self.mode == 'r':
-                    # calculate the MSE for regression
+                    # calculate the squared error for regression
                     error = np.sum(np.subtract(d, o_out)**2)/len(o_out)
                     # calculate the intial delta at the output
                     delta = self.calc_delta_out_regres(o_out, d)
