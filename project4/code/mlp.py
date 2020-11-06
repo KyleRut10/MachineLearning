@@ -114,6 +114,7 @@ class MLP:
                 ###print('Backward propagation')
                 # initiate weight update matrix and delta storage
                 weight_updates = ['' for x in range(len(self.weights))]
+                bias_updates = ['' for x in range(len(self.weights))]
                 deltas = ['' for x in range(len(self.weights))]
 
                 # calculate initial delta at output
@@ -154,7 +155,7 @@ class MLP:
                 #dw = -np.matmul(np.transpose(delta), x) * eda
                 dw = -np.matmul(np.transpose(delta), x) * eda
                 weight_updates[-1] = dw
-
+                bias_updates[-1] = -delta * eda
                 # go back through hidden layers and update their weights
                 # subtract 2, because already did the last position
                 for i in range(len(self.weights)-2, -1, -1):
@@ -170,10 +171,13 @@ class MLP:
                     # calculate weight change for layer i
                     dw = -np.matmul(delta, np.transpose(x)) * eda
                     weight_updates[i] = dw
-
+                    db = -delta * eda
+                    bias_updates[i] = db
+                
                 # preform weight updates at the end
                 for i,w in enumerate(self.weights):
-                    self.weights[i] = np.subtract(w,weight_updates[i])
+                    self.weights[i] = np.add(w,weight_updates[i])
+                    self.bias[i] = np.add(self.bias[i], bias_updates[i])
                 #print(self.pweights())
             # average the error for the dataset round
             training_error.append(sum(iteration_error)/len(self.training))
@@ -210,6 +214,8 @@ class MLP:
                 # compute the softmax function at last node if classification
                 # problem
                 acts = np.exp(z)/np.sum(np.exp(z), axis=0)
+                if np.isnan(np.sum(acts)):
+                    import ipdb; ipdb.set_trace()
             else:
                 acts = self.sig(z)
             # convert to 2D numpy array
