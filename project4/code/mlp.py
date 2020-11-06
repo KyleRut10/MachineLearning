@@ -100,7 +100,7 @@ class MLP:
             rand.shuffle(index)
             randoms = self.training.set_index([index]).sort_index()
             # train the network on each point in the dataset
-            for row_index,pt in self.training.iterrows():#randoms.iterrows():
+            for row_index,pt in randoms.iterrows():
                 # compute all the activations in the feedforward step
                 # activatioins[-1] is the final output of the network
                 activations = self.feedforward(pt)
@@ -132,7 +132,7 @@ class MLP:
                 # Caclulate error
                 if self.mode == 'r':
                     # calculate the squared error for regression
-                    error = np.sum(np.subtract(d, o_out)**2)/len(o_out)
+                    error = 0.5*np.sum(np.subtract(d, o_out)**2)
                     # calculate the intial delta at the output
                     delta = self.calc_delta_out_regres(o_out, d)
                 else:
