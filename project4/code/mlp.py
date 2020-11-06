@@ -181,7 +181,8 @@ class MLP:
         # make a plot of the error
         if plot:
             self.plot_error()
-    
+   
+
     def initilize_weights(self):
         # Build weight matrices...
         self.weights = []
@@ -200,6 +201,7 @@ class MLP:
             self.weights.append(np.array(hw).reshape(h, w))
             #print(self.weights[-1])
             self.bias.append(np.array([0 for i in range(h)]).reshape(h, 1))
+
 
     def feedforward(self, pt):
         # will hold the calculated activations, the input to a layer
@@ -229,6 +231,7 @@ class MLP:
 
         return activations
 
+
     def run(self, pt):
         activations = self.feedforward(pt)
         # Caclulate error
@@ -245,6 +248,7 @@ class MLP:
                 error = 0
         return activations, error
 
+
     def calc_delta_out_regres(self, outputs, targets):
         # hold the values for each node's value of delta
         delta = []
@@ -259,10 +263,12 @@ class MLP:
         delta = np.array(delta).reshape(len(delta), 1)
         return delta
 
+
     def calc_delta_out_class(self, outputs, targets):
         # soft max derivative, cross entropy derivative
         delta = np.subtract(targets, outputs)
         return delta
+
 
     def calc_delta(self, outputs, delta_old, W):
         # hold each node's value for delta
@@ -279,6 +285,7 @@ class MLP:
         delta = np.array(delta).reshape(len(delta), 1)
         return delta
 
+
     def get_class_target(self, class_val):
         # This will take in what numerical class this is and turn it into
         # an array, for example if the class is 1 out of 1,2,3, this will
@@ -292,17 +299,22 @@ class MLP:
 
         return np.array(d).reshape(self.num_outputs, 1)
 
+
     # write the object to a .pkl file so it can be read in later and the
     # same network can be reconstructed
     def save_network(self, filename):
         with open(filename, 'wb') as output:  # Overwrites any existing file.
             pickle.dump(self, output) # pickle.HIGHEST_PROTOCOL)
 
+
     def pweights(self):
         print('Weights')
         for i,w in enumerate(self.weights):
             print('layer ', i+1, ' to ', i+2)
             print(w)
+            print('bias')
+            print(self.bias[i])
+
 
     def pactivations(self, activations):
         print('Activations (Outputs)')
@@ -313,6 +325,7 @@ class MLP:
                 print('Output to layer ', i+1)
             print(np.transpose(act))
 
+
     def record_statistics(self, eda, max_iterations, training_error,
         converged_in):
         ns = {'status': 'trained'}
@@ -322,8 +335,10 @@ class MLP:
         ns['converged in'] = converged_in
         self.training_statistics = ns
 
+
     def print_statistics(self):
         pass
+
 
     def plot_error(self):
         plt.plot(self.training_statistics['training error'], 'o')
@@ -331,6 +346,7 @@ class MLP:
         plt.ylabel('error')
         plt.xlabel('iterations')
         plt.show()
+
 
     def print_network(self, activations):
         print('*** Layer 0***')
