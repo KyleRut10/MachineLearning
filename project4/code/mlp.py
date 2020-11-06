@@ -63,23 +63,7 @@ class MLP:
         #print('Training the network')
         # Hold the average training error for one round on dataset
         training_error = []
-        # Build weight matrices...
-        self.weights = []
-        self.bias = []
-
-        # Nodes are rows and columns are inputs to those nodes
-        # W[l]: (n[l], n[l-1]) (h, w)
-        for i in range(1, len(self.all_layers)):
-            h = self.all_layers[i]   # number nodes in layer
-            w = self.all_layers[i-1]   # number inputs to node
-            hw = []
-            for val in range(h*w):
-                #hw.append(rand.uniform(-0.01,0.01))
-                hw.append(rand.uniform(0,0.1))
-            # Reshape into 2D Numpy array
-            self.weights.append(np.array(hw).reshape(h, w))
-            #print(self.weights[-1])
-            self.bias.append(np.array([0 for i in range(h)]).reshape(h, 1))
+        self.initilize_weights()
 
         # Things to track iteration and convergance things
         converge = False
@@ -197,6 +181,25 @@ class MLP:
         # make a plot of the error
         if plot:
             self.plot_error()
+    
+    def initilize_weights(self):
+        # Build weight matrices...
+        self.weights = []
+        self.bias = []
+
+        # Nodes are rows and columns are inputs to those nodes
+        # W[l]: (n[l], n[l-1]) (h, w)
+        for i in range(1, len(self.all_layers)):
+            h = self.all_layers[i]   # number nodes in layer
+            w = self.all_layers[i-1]   # number inputs to node
+            hw = []
+            for val in range(h*w):
+                #hw.append(rand.uniform(-0.01,0.01))
+                hw.append(rand.uniform(0,0.1))
+            # Reshape into 2D Numpy array
+            self.weights.append(np.array(hw).reshape(h, w))
+            #print(self.weights[-1])
+            self.bias.append(np.array([0 for i in range(h)]).reshape(h, 1))
 
     def feedforward(self, pt):
         # will hold the calculated activations, the input to a layer
