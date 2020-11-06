@@ -16,7 +16,7 @@ class MLP:
 
     # np vectorized version to compute sigmoid function on whole array of
     # values
-    sigFunc = lambda t: 1/(1+np.exp(t))
+    sigFunc = lambda t: 1/(1+np.exp(-t))
     sig = np.vectorize(sigFunc)
 
     def __init__(self, hidden_nodes='', training='', mode='', num_outputs='',
@@ -78,7 +78,7 @@ class MLP:
             # Reshape into 2D Numpy array
             self.weights.append(np.array(hw).reshape(h, w))
             #print(self.weights[-1])
-            self.bias.append(np.array([0 for i in range(h)]).reshape(h, 1)
+            self.bias.append(np.array([0 for i in range(h)]).reshape(h, 1))
 
         # Things to track iteration and convergance things
         converge = False
@@ -101,7 +101,6 @@ class MLP:
             randoms = self.training.set_index([index]).sort_index()
             # train the network on each point in the dataset
             for row_index,pt in self.training.iterrows():#randoms.iterrows():
-                print('dp: ', row_index)
                 # compute all the activations in the feedforward step
                 # activatioins[-1] is the final output of the network
                 activations = self.feedforward(pt)
@@ -171,16 +170,18 @@ class MLP:
                     # calculate weight change for layer i
                     dw = -np.matmul(delta, np.transpose(x)) * eda
                     weight_updates[i] = dw
-                ''' 
+                
+                '''
                 print('############################')
                 print('x', x)
                 for wu in weight_updates:
                     print(wu)
                 print()
                 '''
+
                 # preform weight updates at the end
                 for i,w in enumerate(self.weights):
-                    self.weights[i] = np.add(w,weight_updates[i])
+                    self.weights[i] = np.subtract(w,weight_updates[i])
                 #print(self.pweights())
             # average the error for the dataset round
             training_error.append(sum(iteration_error)/len(self.training))
