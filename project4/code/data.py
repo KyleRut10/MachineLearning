@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 import numpy as np
-
+import random as rand
 
 # classification
 def data_glass():
@@ -93,9 +93,9 @@ def data_breast():
 
 # NOTE: I'm not 100% sure these are correct
 def type_breast():
-    catigorical = ['clump thickness', 'uniformity of cell size', 
-                   'uniformity of cell shape', 'marginal adhesion', 
-                   'single epithelial cell size', 'bare nuclei', 
+    catigorical = ['clump thickness', 'uniformity of cell size',
+                   'uniformity of cell shape', 'marginal adhesion',
+                   'single epithelial cell size', 'bare nuclei',
                    'bland chromatin', 'normal nucleoli', 'mitosis']
     continuious = []
     return catigorical, continuious
@@ -114,15 +114,15 @@ def data_soybean_small():
 
 
 def type_soybean_small():
-    catigorical = ['date', 'plant stand', 'percip', 'temp', 'hail', 
-                   'crop hist', 'area damaged', 'severity', 'seet tmt', 
-                   'germination', 'plant growth', 'leaves', 
-                   'leafspots halo', 'leafspots marg', 'leafspot size', 
-                   'leaf shread', 'leaf malf', 'leaf mild', 'stem', 
-                   'lodging', 'stem cankers', 'canker lesion', 
-                   'fruiting bodies', 'external decay', 'mycelium', 
+    catigorical = ['date', 'plant stand', 'percip', 'temp', 'hail',
+                   'crop hist', 'area damaged', 'severity', 'seet tmt',
+                   'germination', 'plant growth', 'leaves',
+                   'leafspots halo', 'leafspots marg', 'leafspot size',
+                   'leaf shread', 'leaf malf', 'leaf mild', 'stem',
+                   'lodging', 'stem cankers', 'canker lesion',
+                   'fruiting bodies', 'external decay', 'mycelium',
                    'int discolor', 'sclerotia', 'fruit pods', 'fruit spots',
-                   'seed', 'mold growth', 'seed discolor', 'seed size', 
+                   'seed', 'mold growth', 'seed discolor', 'seed size',
                    'shriveling']
     continuious = []
     return catigorical, continuious
@@ -141,16 +141,16 @@ def standardize(type_funct, df):
         #print(max(df[col]))
     # one hot encoding for catigorical
     for col_label in cat:
-        df = one_hot(col_label, df) 
-    return df 
+        df = one_hot(col_label, df)
+    return df
 
 
 def clean(rawdata):
     # A function to remove rows with question marks from the data
-    
+
     raw = rawdata.replace(["?"],np.nan)
     data = raw.dropna(axis=0,how='any')
-    
+
     return data
 
 
@@ -191,6 +191,37 @@ def string_to_int(col):
     for val in col:
         new_col.append(uni.index(val))
     return new_col
+
+
+def get_cross_validate_dfs(df):
+    # Takes in a df and returns a list of 20 different ones
+    # In each of the 10 lists, the first df is the testing one (1/10 of data)
+    # and the second is the training one (9/10 of data)
+
+    # randomize the data set
+    index = [i for i in range(df.shape[0])]
+    rand.shuffle(index)
+    df = df.set_index([index]).sort_index()
+
+    # assign each data point to one of ten groups
+    test_indices = [[] for i in range(10)]
+    for i in range(0,df.shape[0]):
+        index = i%10
+        test_indices[index].append(i)
+
+    # make test and training data sets for each group
+    dfs = []
+    for indices in test_indices:
+        group = []
+        # add the testing points
+        group.append(df.iloc[indices, :])
+        # drop testing points and rest are for training
+        train = df.drop(indices, axis=0)
+        train.reset_index(inplace=True)
+        group.append(train)
+        dfs.append(group)
+
+    return dfs
 
 
 import subprocess
