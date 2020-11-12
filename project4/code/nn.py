@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import random as rand
 # The base code will go here
 # Idea: remove it from mlp and have mlp inherit from this class
 
