@@ -4,6 +4,7 @@ import mlp
 import os
 import itertools as it
 import pickle
+import nn
 
 
 def get_example_dataset():
@@ -85,6 +86,19 @@ def tuning(data, num_hl, mode, eda, max_iterations, filename):
     print('Min error for: {}'.format(', '.join(best_results)))  
 
 if __name__ == '__main__':
+    # example of calc fitness function
+    ff = dat.data_forestfire()
+    # 2 hidden layers with 3 nodes then 10
+    # regression problem
+    # Just going to use the whole dataset, but won't do this when doing actual
+    # experiments
+    nnf = nn.NN([3,10], 'r', ff)
+    # get random weights
+    weights = nnf.initilize_weights()
+    # calculate the fitness for those weights
+    error = nnf.calc_fitness(weights)
+    print('Final error: ', error)
+    '''
     iterations = 5000
     eda = 0.01
     ######## 0 Hidden Layers #######
@@ -219,7 +233,6 @@ if __name__ == '__main__':
     nns2.train(max_iterations=iterations)
     nns2.save_network('../networks/s-29-15.pkl')
 
-    '''
     #results_path = os.path.join('..', 'networks', 'aba-results-1.pkl')
     #tuning(data, 1, 'r', eda, iterations, results_path)
     #print()
