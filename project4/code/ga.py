@@ -34,5 +34,12 @@ class GA(NN):
     def weights_to_chromosome(self, weights):
         # this method will convert the weight matrix for the nerual network
         # into a linear chormosome
-
-        pass
+        chromosome = []
+        # for each layer in the weights array
+        for layer in weights:
+            # for each node in the layer
+            for node in layer:
+                # for each input to the node
+                for inpu in node:
+                    chromosome.append(inpu)
+        return chromosome
