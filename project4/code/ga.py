@@ -1,10 +1,11 @@
 # Inherit from base class and do magical things :)
 from nn import NN
+import numpy as np
 
 class GA(NN):
     def __init__(self, hidden_nodes='', mode='', training='', testing='',
         num_outputs='', pkl_file=''):
-        super.__init__(hidden_nodes, mode, tarining, testing, num_outputs,
+        super().__init__(hidden_nodes, mode, training, testing, num_outputs,
                        pkl_file)
 
 
@@ -43,3 +44,26 @@ class GA(NN):
                 for inpu in node:
                     chromosome.append(inpu)
         return chromosome
+
+
+    def chromosome_to_weights(self, chromosome):
+        # Take a chromosome and turn it into a list of weight matricies for
+        # use in the neural network
+
+        # Nodes are rows and columns are inputs to those nodes
+        # W[l]: (n[l], n[l-1]) (h, w)
+        chrom_position = 0  # starting position on the chromosome for layer
+        weights = []  # hold weight matricies for each layer
+        for i in range(1, len(self.all_layers)):
+            h = self.all_layers[i]   # number nodes in layer
+            w = self.all_layers[i-1]   # number inputs to node
+            
+            # get all the weights in the layer matrix
+            chrom_end_posit = chrom_position + h*w
+            weight_list = chromosome[chrom_position:chrom_end_posit]
+            # reshape into proper matrix
+            weights.append(np.array(weight_list).reshape(-1, w))
+            # set new chromosome starting position
+            chrom_position = chrom_position + h*w
+
+        return weights
