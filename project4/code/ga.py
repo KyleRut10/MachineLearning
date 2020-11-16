@@ -33,6 +33,7 @@ class GA(NN):
         # calculate the fitness for each selected individual
         best_fitness = float('inf')  # trying to minimize this value
         best_index = select[0]  # this will get changed
+        best_chromosome = []
         for sel in select:
             weights = self.chromosome_to_weights(population[sel])
             fitness = self.calc_fitness(weights)
@@ -40,6 +41,7 @@ class GA(NN):
             if fitness < best_fitness:
                 best_fitness = fitness
                 best_index = sel
+                best_chromosome = population[sel]
         #print('best', best_index, best_fitness)
         
         # crossover and mutation
@@ -52,6 +54,16 @@ class GA(NN):
         # value
         if rand.uniform(0,1) <= pm:
             print('preforming mutation')
+            # pick a random locus to mutate
+            mutate_locus = rand.randrange(len(best_chromosome))
+            # pick a random weight within the range of min and max weights
+            min_w = min(best_chromosome)
+            max_w = max(best_chromosome)
+            print('mutating locus: ', mutate_locus)
+            print(best_chromosome[mutate_locus])
+            best_chromosome[mutate_locus] = rand.uniform(min_w, max_w)
+            print(best_chromosome[mutate_locus])
+            
 
         # replacement
 
