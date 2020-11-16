@@ -27,6 +27,26 @@ class GA(NN):
             population.append(chromosome)
 
         # selection
+        # select two parents
+        parent1 = self.tourniment_selection(tsk, population)
+        parent2 = self.tourniment_selection(tsk, population)
+
+
+        # crossover and mutation
+        # if random number is less than probability of crossover, do crossover
+        if rand.uniform(0,1) <= pc:
+            parent1,parent2 = self.crossover(parent1, parent2)
+
+        # if random number less than probability of mutation, mutate with random
+        # value
+        if rand.uniform(0,1) <= pm:
+            parent1 = self.mutate_chromosome(parent1)
+        if rand.uniform(0,1) <= pm:
+            parent2 = self.mutate_chromosome(parent2)
+        
+        # replacement
+    
+    def tourniment_selection(self, tsk, population):
         # tourniment selection, selecting k individuals
         tourniment = []
         select = np.random.permutation(len(population)-1)[0:tsk]
@@ -43,30 +63,36 @@ class GA(NN):
                 best_index = sel
                 best_chromosome = population[sel]
         #print('best', best_index, best_fitness)
-        
-        # crossover and mutation
-        # if random number is less than probability of crossover, do crossover
-        if rand.uniform(0,1) <= pc:
-            print('preforming crossover')
+        return best_chromosome 
+    
+
+    def mutate_chromosome(self, chromosome):
+        print('preforming mutation')
+        # pick a random locus to mutate
+        mutate_locus = rand.randrange(len(chromosome))
+        # pick a random weight within the range of min and max weights
+        min_w = min(chromosome)
+        max_w = max(chromosome)
+        #print('mutating locus: ', mutate_locus)
+        #print(chromosome[mutate_locus])
+        chromosome[mutate_locus] = rand.uniform(min_w, max_w)
+        #print(chromosome[mutate_locus])
+        return chromosome 
 
 
-        # if random number less than probability of mutation, mutate with random
-        # value
-        if rand.uniform(0,1) <= pm:
-            print('preforming mutation')
-            # pick a random locus to mutate
-            mutate_locus = rand.randrange(len(best_chromosome))
-            # pick a random weight within the range of min and max weights
-            min_w = min(best_chromosome)
-            max_w = max(best_chromosome)
-            print('mutating locus: ', mutate_locus)
-            print(best_chromosome[mutate_locus])
-            best_chromosome[mutate_locus] = rand.uniform(min_w, max_w)
-            print(best_chromosome[mutate_locus])
-            
-
-        # replacement
-
+    def crossover(self, chrom1, chrom2):
+        print('preforming crossover')
+        # pick random locus to perform single point crossover at
+        cross_point = rand.randrange(len(chrom1))
+        # keep first half chrom 1
+        new_chrom1 = chrom1[0:cross_point]
+        # add chrom2 after cross point
+        new_chrom1.extend(chrom2[cross_point:])
+        # keep first half chrom 2
+        new_chrom2 = chrom2[0:cross_point]
+        # add crhom1 after cross point
+        new_chrom2.extend(chrom1[cross_point:])
+        return new_chrom1, new_chrom2
 
 
     def weights_to_chromosome(self, weights):
