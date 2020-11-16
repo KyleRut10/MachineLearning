@@ -1,6 +1,7 @@
 # Inherit from base class and do magical things :)
 from nn import NN
 import numpy as np
+import random as rand
 
 class GA(NN):
     def __init__(self, hidden_nodes='', mode='', training='', testing='',
@@ -35,13 +36,22 @@ class GA(NN):
         for sel in select:
             weights = self.chromosome_to_weights(population[sel])
             fitness = self.calc_fitness(weights)
-            print(sel, fitness)
+            #print(sel, fitness)
             if fitness < best_fitness:
                 best_fitness = fitness
                 best_index = sel
-        print('best', best_index, best_fitness)
+        #print('best', best_index, best_fitness)
         
         # crossover and mutation
+        # if random number is less than probability of crossover, do crossover
+        if rand.uniform(0,1) <= pc:
+            print('preforming crossover')
+
+
+        # if random number less than probability of mutation, mutate with random
+        # value
+        if rand.uniform(0,1) <= pm:
+            print('preforming mutation')
 
         # replacement
 
