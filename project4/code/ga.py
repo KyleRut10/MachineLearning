@@ -9,12 +9,13 @@ class GA(NN):
                        pkl_file)
 
 
-    def train(self, pc, pm, num_chrom):
+    def train(self, pc, pm, num_chrom, tsk):
         # Train using the genetic algorithm
         # inputs
         # pc - Probability of crossover occuring
         # pm - probability of mutation occuring
         # num_chrom - number of individuals in the population
+        # tsk - Tourniment selection number individuals selected
 
         population = []  # empty array to hold individuals in population
         # initilize population of size num_chrom
@@ -25,6 +26,9 @@ class GA(NN):
             population.append(chromosome)
 
         # selection
+        # tourniment selection, selecting k individuals
+        tourniment = []
+        select = np.random.permutation(len(population)-1)[0:tsk]
 
         # crossover and mutation
 
