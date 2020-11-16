@@ -29,7 +29,18 @@ class GA(NN):
         # tourniment selection, selecting k individuals
         tourniment = []
         select = np.random.permutation(len(population)-1)[0:tsk]
-
+        # calculate the fitness for each selected individual
+        best_fitness = float('inf')  # trying to minimize this value
+        best_index = select[0]  # this will get changed
+        for sel in select:
+            weights = self.chromosome_to_weights(population[sel])
+            fitness = self.calc_fitness(weights)
+            print(sel, fitness)
+            if fitness < best_fitness:
+                best_fitness = fitness
+                best_index = sel
+        print('best', best_index, best_fitness)
+        
         # crossover and mutation
 
         # replacement
