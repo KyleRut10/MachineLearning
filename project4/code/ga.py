@@ -28,25 +28,49 @@ class GA(NN):
 
         # selection
         # select two parents
-        parent1 = self.tourniment_selection(tsk, population)
-        parent2 = self.tourniment_selection(tsk, population)
-
+        num_parents = 2
+        parents = []
+        for i in range(num_parents):
+            parent = self.best_tourniment_selection(tsk, population)
+            parents.append(parent)
 
         # crossover and mutation
         # if random number is less than probability of crossover, do crossover
+        # TODO: Make this more generalizable
         if rand.uniform(0,1) <= pc:
-            parent1,parent2 = self.crossover(parent1, parent2)
+            parents = self.crossover(parent[0], parent2[1])
 
         # if random number less than probability of mutation, mutate with random
         # value
-        if rand.uniform(0,1) <= pm:
-            parent1 = self.mutate_chromosome(parent1)
-        if rand.uniform(0,1) <= pm:
-            parent2 = self.mutate_chromosome(parent2)
+        for i,parent in enumerate(parents):
+            if rand.uniform(0,1) <= pm:
+                parents[i] = self.mutate_chromosome(parent)
         
         # replacement
+         
+
     
-    def tourniment_selection(self, tsk, population):
+    def worst_tourniment_selection(self, tsk, population):
+        # tourniment selection, selecting k individuals
+        tourniment = []
+        select = np.random.permutation(len(population)-1)[0:tsk]
+        # calculate the fitness for each selected individual
+        worst_fitness = float('-inf')  # trying to maximize this value
+        worst_index = select[0]  # this will get changed
+        worst_chromosome = []
+        for sel in select:
+            weights = self.chromosome_to_weights(population[sel])
+            fitness = self.calc_fitness(weights)
+            #print(sel, fitness)
+            if fitness > worst_fitness:
+                worst_fitness = fitness
+                worst_index = sel
+                worst_chromosome = population[sel]
+        #print('worst', worst_index, worst_fitness)
+        return worst_index, worst_chromosome 
+    
+
+    def best_tourniment_selection(self, tsk, population):
         # tourniment selection, selecting k individuals
         tourniment = []
         select = np.random.permutation(len(population)-1)[0:tsk]
@@ -63,7 +87,7 @@ class GA(NN):
                 best_index = sel
                 best_chromosome = population[sel]
         #print('best', best_index, best_fitness)
-        return best_chromosome 
+        return best_index, best_chromosome 
     
 
     def mutate_chromosome(self, chromosome):
