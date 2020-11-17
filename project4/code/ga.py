@@ -31,15 +31,15 @@ class GA(NN):
         num_parents = 2
         parents = []
         for i in range(num_parents):
-            parent = self.best_tourniment_selection(tsk, population)
+            # best_tourniments_selection returns index,chromosome
+            parent = self.best_tourniment_selection(tsk, population)[1]
             parents.append(parent)
 
         # crossover and mutation
         # if random number is less than probability of crossover, do crossover
         # TODO: Make this more generalizable
         if rand.uniform(0,1) <= pc:
-            parents = self.crossover(parent[0], parent2[1])
-
+            parents = list(self.crossover(parents[0], parents[1]))
         # if random number less than probability of mutation, mutate with random
         # value
         for i,parent in enumerate(parents):
@@ -47,13 +47,17 @@ class GA(NN):
                 parents[i] = self.mutate_chromosome(parent)
         
         # replacement
-         
+        for parent in parents:  
+            index,worst = self.worst_tourniment_selection(tsk, population)
+            print('Replacing {} in population.'.format(index))
+            population[index] = parent
+   
 
-    
     def worst_tourniment_selection(self, tsk, population):
         # tourniment selection, selecting k individuals
         tourniment = []
         select = np.random.permutation(len(population)-1)[0:tsk]
+        print('selecting', select)
         # calculate the fitness for each selected individual
         worst_fitness = float('-inf')  # trying to maximize this value
         worst_index = select[0]  # this will get changed
