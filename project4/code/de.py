@@ -11,7 +11,7 @@ class DE(NN):
                        pkl_file)
 
 
-    def train(self, beta, pc, pr, num_chrom, max_generations=50, plot=False):
+    def train(self, beta, pr, num_chrom, max_generations=50, plot=False):
         # Train using the genetic algorithm
         # inputs
         # num_chrom - number of individuals in the population
@@ -32,7 +32,8 @@ class DE(NN):
         generation = 0
         while not terminate:
             generation += 1
-
+            
+            offspring_fitness = 0
             offspring = []
             # for each memeber of the population
             for index,chrom in enumerate(population):
@@ -40,20 +41,29 @@ class DE(NN):
                 trial = self.get_trial_vector(index, chrom, population, beta)
 
                 # recombination
-                if pc < rand.uniform(0,1):
-                    new_chrom = self.crossover(chrom, trial, pr)
+                new_chrom = self.crossover(chrom, trial, pr)
             
                 # replacement
-
-
+                old_fit = self.calc_fitness(self.chromosome_to_weights(chrom))
+                new_fit = self.calc_fitness(self.chromosome_to_weights(new_chrom))
+                
                 # evaluation
+                # keep the one with the lowest fitness
+                if old_fit <= new_fit:
+                    offspring.append(chrom)
+                    offspring_fitness += old_fit
+                else:
+                    offspring.append(new_chrom)
+                    offspring_fitness += new_fit
+                    
+
            
 
                 break
 
 
             # final evalutation
-            avg_fitness = self.calc_average_fitness(population)
+            avg_fitness = offspring_fitness/len(population)
             avg_fitnesses.append(avg_fitness)
             #print('Avg fitness: ', avg_fitness)
             
