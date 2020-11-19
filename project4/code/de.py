@@ -11,7 +11,7 @@ class DE(NN):
                        pkl_file)
 
 
-    def train(self, num_chrom, max_generations=50, plot=False):
+    def train(self, beta, pc, pr, num_chrom, max_generations=50, plot=False):
         # Train using the genetic algorithm
         # inputs
         # num_chrom - number of individuals in the population
@@ -37,11 +37,12 @@ class DE(NN):
             # for each memeber of the population
             for index,chrom in enumerate(population):
                 # mutation
-                trial = self.get_trial_vector(index, chrom, population)
+                trial = self.get_trial_vector(index, chrom, population, beta)
 
                 # recombination
-
-
+                if pc < rand.uniform(0,1):
+                    new_chrom = self.crossover(chrom, trial, pr)
+            
                 # replacement
 
 
@@ -73,7 +74,7 @@ class DE(NN):
         return fitness/len(population)
     
 
-    def get_trial_vector(self, index, chrom, population):
+    def get_trial_vector(self, index, chrom, population, beta):
         # generate three other chromosomes
         three = np.random.permutation(len(population))[0:3]
         # if the given chromosome is in there, keep trying until not
@@ -83,10 +84,20 @@ class DE(NN):
         x1 = population[three[0]]
         x2 = population[three[1]]
         x3 = population[three[2]]
-        print(three)
+        
+        # Calculate and return trial vector
+        trial = np.add(x1, np.subtract(x2, x3) * beta) 
+        return trial
 
-        #return trial
 
+    def crossover(self, chrom, trial, pr):
+        new_chrom = []
+        for i in range(len(chrom)):
+            if rand.uniform(0,1) < pr:
+                new_chrom.append(chrom[i])
+            else:
+                new_chrom.append(trial[i])
+        return new_chrom
 
     def weights_to_chromosome(self, weights):
         # this method will convert the weight matrix for the nerual network
