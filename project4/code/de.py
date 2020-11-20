@@ -57,9 +57,9 @@ class DE(NN):
                     offspring_fitness += new_fit
                     
 
-           
+            # Set the population to be the offspring
+            population = offspring 
 
-                break
 
 
             # final evalutation
