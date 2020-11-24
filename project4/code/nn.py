@@ -1,8 +1,7 @@
 import numpy as np
 import pandas as pd
 import random as rand
-# The base code will go here
-# Idea: remove it from mlp and have mlp inherit from this class
+import pickle
 
 class NN:
     # Class Variables
@@ -125,6 +124,16 @@ class NN:
 
         return weights
 
+    def run_dataset(self, df):
+        # calculate error for each point in the dataset
+        training_error=[]
+
+        for index,pt in df.iterrows():
+            acts, error = self.run(pt, self.weights)
+            training_error.append(error)
+
+        # take the average error
+        return np.sum(training_error)/len(training_error)
 
     def feedforward(self, pt, weights=''):
         if isinstance(weights, str):
