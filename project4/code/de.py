@@ -3,6 +3,7 @@ from nn import NN
 import numpy as np
 import random as rand
 import matplotlib.pyplot as plt
+from datetime import datetime as dt
 
 class DE(NN):
     def __init__(self, hidden_nodes='', mode='', training='', testing='',
@@ -11,10 +12,11 @@ class DE(NN):
                        pkl_file)
 
 
-    def train(self, beta, pr, num_chrom, max_generations=5000, plot=False):
+    def train(self, beta, pr, num_chrom, max_generations=2000, plot=False):
         # Train using the genetic algorithm
         # inputs
         # num_chrom - number of individuals in the population
+        start_time = dt.now()
 
         population = []  # empty array to hold individuals in population
         # initilize population of size num_chrom
@@ -72,15 +74,16 @@ class DE(NN):
                 terminate = True
     
         print('Final avg. fitness gen ', generation, ': ', avg_fitness)
-        self.training_fitnesses = avg_fitnesses
-        
+        self.record_statistics(beta, pr, num_chrom, max_iterations, 
+                               avg_fitnesses)    
         # make final weights, self.weights
         best_index,best_chrom = self.best_tourniment_selection(len(population),
                                                                population)
         self.weights = self.chromosome_to_weights(best_chrom)
-
+        
+        print('Time elapsed: ', dt.now()-start_time)
         if plot:
-            self.plot_training()
+            self.plot_error()
 
 
     def best_tourniment_selection(self, tsk, population):
@@ -172,10 +175,14 @@ class DE(NN):
 
         return weights
 
-
-    def plot_training(self):
-        plt.plot(self.training_fitnesses, 'o')
-        plt.xlabel('generations')
-        plt.ylabel('error')
-        plt.show()
+    def record_statistics(self, beta, pr, num_chrom, max_iterations, 
+                          training_error):
+        ns = {'status': 'trained'}
+        ns['beta'] = beta
+        ns['max_iterations'] = max_iterations
+        ns['training error'] = training_error
+        ns['pr'] = pr
+        ns['number chromosomes'] = num_chrom
+        self.training_statistics = ns
+    
 
