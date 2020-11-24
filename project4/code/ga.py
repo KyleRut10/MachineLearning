@@ -3,6 +3,7 @@ from nn import NN
 import numpy as np
 import random as rand
 import matplotlib.pyplot as plt
+from datetime import datetime as dt
 
 class GA(NN):
     def __init__(self, hidden_nodes='', mode='', training='', testing='',
@@ -11,14 +12,15 @@ class GA(NN):
                        pkl_file)
 
 
-    def train(self, pc, pm, num_chrom, tsk, max_generations=50):
+    def train(self, pc, pm, num_chrom, tsk, max_generations=50, plot=False):
         # Train using the genetic algorithm
         # inputs
         # pc - Probability of crossover occuring
         # pm - probability of mutation occuring
         # num_chrom - number of individuals in the population
         # tsk - Tourniment selection number individuals selected
-
+        
+        start_time = dt.now()
         population = []  # empty array to hold individuals in population
         # initilize population of size num_chrom
         for i in range(num_chrom):
@@ -79,7 +81,9 @@ class GA(NN):
                                                                population)
         self.weights = self.chromosome_to_weights(best_chrom)
         print('Network error: ', self.calc_fitness(self.weights))
-        self.plot_training()
+        print('Run time: ', dt.now()-start_time)
+        if plot:
+            self.plot_error()
 
     def calc_average_fitness(self, population):
         fitness = 0
