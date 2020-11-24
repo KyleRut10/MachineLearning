@@ -9,8 +9,8 @@ class NN:
     # num_hidden: Number hidden layers
     # hidden_nodes: List of how many hidden nodes there are per layer
     # num_outputs: Number output nodes
-    # train: df of training data
-    # test: df of testing data
+    # training: df of training data
+    # testing: df of testing data
 
     # np vectorized version to compute sigmoid function on whole array of
     # values
@@ -88,6 +88,42 @@ class NN:
 
         # take the average error
         return np.sum(training_error)/len(training_error)
+    
+    def weights_to_chromosome(self, weights):
+        # this method will convert the weight matrix for the nerual network
+        # into a linear chormosome
+        chromosome = []
+        # for each layer in the weights array
+        for layer in weights:
+            # for each node in the layer
+            for node in layer:
+                # for each input to the node
+                for inpu in node:
+                    chromosome.append(inpu)
+        return chromosome
+
+
+    def chromosome_to_weights(self, chromosome):
+        # Take a chromosome and turn it into a list of weight matricies for
+        # use in the neural network
+
+        # Nodes are rows and columns are inputs to those nodes
+        # W[l]: (n[l], n[l-1]) (h, w)
+        chrom_position = 0  # starting position on the chromosome for layer
+        weights = []  # hold weight matricies for each layer
+        for i in range(1, len(self.all_layers)):
+            h = self.all_layers[i]   # number nodes in layer
+            w = self.all_layers[i-1]   # number inputs to node
+            
+            # get all the weights in the layer matrix
+            chrom_end_posit = chrom_position + h*w
+            weight_list = chromosome[chrom_position:chrom_end_posit]
+            # reshape into proper matrix
+            weights.append(np.array(weight_list).reshape(-1, w))
+            # set new chromosome starting position
+            chrom_position = chrom_position + h*w
+
+        return weights
 
 
     def feedforward(self, pt, weights=''):
@@ -166,4 +202,10 @@ class NN:
                 print('Output to layer ', i+1)
             print(np.transpose(act))
 
+    def plot_error(self):
+        plt.plot(self.training_statistics['training error'], 'o')
+        plt.xlabel('iterations')
+        plt.ylabel('error')
+        plt.xlabel('iterations')
+        plt.show()
 
