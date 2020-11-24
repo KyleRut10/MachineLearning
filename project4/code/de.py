@@ -11,7 +11,7 @@ class DE(NN):
                        pkl_file)
 
 
-    def train(self, beta, pr, num_chrom, max_generations=50, plot=False):
+    def train(self, beta, pr, num_chrom, max_generations=5000, plot=False):
         # Train using the genetic algorithm
         # inputs
         # num_chrom - number of individuals in the population
@@ -73,8 +73,35 @@ class DE(NN):
     
         print('Final avg. fitness gen ', generation, ': ', avg_fitness)
         self.training_fitnesses = avg_fitnesses
+        
+        # make final weights, self.weights
+        best_index,best_chrom = self.best_tourniment_selection(len(population),
+                                                               population)
+        self.weights = self.chromosome_to_weights(best_chrom)
+
         if plot:
             self.plot_training()
+
+
+    def best_tourniment_selection(self, tsk, population):
+        # tourniment selection, selecting k individuals
+        tourniment = []
+        select = np.random.permutation(len(population)-1)[0:tsk]
+        # calculate the fitness for each selected individual
+        best_fitness = float('inf')  # trying to minimize this value
+        best_index = select[0]  # this will get changed
+        best_chromosome = []
+        for sel in select:
+            weights = self.chromosome_to_weights(population[sel])
+            fitness = self.calc_fitness(weights)
+            #print(sel, fitness)
+            if fitness < best_fitness:
+                best_fitness = fitness
+                best_index = sel
+                best_chromosome = population[sel]
+        #print('best', best_index, best_fitness)
+        return best_index, best_chromosome 
+    
 
     def calc_average_fitness(self, population):
         fitness = 0
