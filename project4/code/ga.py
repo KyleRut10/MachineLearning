@@ -2,6 +2,7 @@
 from nn import NN
 import numpy as np
 import random as rand
+import matplotlib.pyplot as plt
 
 class GA(NN):
     def __init__(self, hidden_nodes='', mode='', training='', testing='',
@@ -10,7 +11,7 @@ class GA(NN):
                        pkl_file)
 
 
-    def train(self, pc, pm, num_chrom, tsk):
+    def train(self, pc, pm, num_chrom, tsk, max_generations=50):
         # Train using the genetic algorithm
         # inputs
         # pc - Probability of crossover occuring
@@ -25,39 +26,74 @@ class GA(NN):
             weights = self.initilize_weights()
             chromosome = self.weights_to_chromosome(weights)
             population.append(chromosome)
+    
+        avg_fitness = self.calc_average_fitness(population)
+        print('Generation 0 fitness: ', avg_fitness)
+        avg_fitnesses = [avg_fitness]
 
-        # selection
-        # select two parents
-        num_parents = 2
-        parents = []
-        for i in range(num_parents):
-            # best_tourniments_selection returns index,chromosome
-            parent = self.best_tourniment_selection(tsk, population)[1]
-            parents.append(parent)
+        terminate = False
+        generation = 0
+        while not terminate:
+            generation += 1
+            #print('Generation: ', generation)
+            # selection
+            # select two parents
+            num_parents = 2
+            parents = []
+            for i in range(num_parents):
+                # best_tourniment_selection returns index,chromosome
+                parent = self.best_tourniment_selection(tsk, population)[1]
+                parents.append(parent)
 
-        # crossover and mutation
-        # if random number is less than probability of crossover, do crossover
-        # TODO: Make this more generalizable
-        if rand.uniform(0,1) <= pc:
-            parents = list(self.crossover(parents[0], parents[1]))
-        # if random number less than probability of mutation, mutate with random
-        # value
-        for i,parent in enumerate(parents):
-            if rand.uniform(0,1) <= pm:
-                parents[i] = self.mutate_chromosome(parent)
+            # crossover and mutation
+            # if random number is less than prob of crossover, do crossover
+            # TODO: Make this more generalizable
+            if rand.uniform(0,1) <= pc:
+                parents = list(self.crossover(parents[0], parents[1]))
+            # if random number less than prob of mutation, mutate with random
+            # value
+            for i,parent in enumerate(parents):
+                if rand.uniform(0,1) <= pm:
+                    parents[i] = self.mutate_chromosome(parent)
+            
+            # replacement
+            for parent in parents:  
+                index,worst = self.worst_tourniment_selection(tsk, population)
+                #print('Replacing {} in population.'.format(index))
+                population[index] = parent
+            
+            # termination
+            if generation >= max_generations:
+                terminate = True
+            
+            avg_fitness = self.calc_average_fitness(population)
+            avg_fitnesses.append(avg_fitness)
+            #print('Avg fitness: ', avg_fitness)
+    
+        print('Final avg. fitness gen ', generation, ': ', avg_fitness)
         
-        # replacement
-        for parent in parents:  
-            index,worst = self.worst_tourniment_selection(tsk, population)
-            print('Replacing {} in population.'.format(index))
-            population[index] = parent
-   
+        self.training_fitnesses = avg_fitnesses
+        
+        # set the weights
+        best_index,best_chrom = self.best_tourniment_selection(len(population),
+                                                               population)
+        self.weights = self.chromosome_to_weights(best_chrom)
+        print('Network error: ', self.calc_fitness(self.weights))
+        self.plot_training()
+
+    def calc_average_fitness(self, population):
+        fitness = 0
+        for chrom in population:
+            weights = self.chromosome_to_weights(chrom)
+            fitness += self.calc_fitness(weights)
+        return fitness/len(population)
+
 
     def worst_tourniment_selection(self, tsk, population):
         # tourniment selection, selecting k individuals
         tourniment = []
         select = np.random.permutation(len(population)-1)[0:tsk]
-        print('selecting', select)
+        #print('selecting', select)
         # calculate the fitness for each selected individual
         worst_fitness = float('-inf')  # trying to maximize this value
         worst_index = select[0]  # this will get changed
@@ -95,7 +131,7 @@ class GA(NN):
     
 
     def mutate_chromosome(self, chromosome):
-        print('preforming mutation')
+        #print('preforming mutation')
         # pick a random locus to mutate
         mutate_locus = rand.randrange(len(chromosome))
         # pick a random weight within the range of min and max weights
@@ -109,7 +145,7 @@ class GA(NN):
 
 
     def crossover(self, chrom1, chrom2):
-        print('preforming crossover')
+        #print('preforming crossover')
         # pick random locus to perform single point crossover at
         cross_point = rand.randrange(len(chrom1))
         # keep first half chrom 1
@@ -158,3 +194,10 @@ class GA(NN):
             chrom_position = chrom_position + h*w
 
         return weights
+
+
+    def plot_training(self):
+        plt.plot(self.training_fitnesses, 'o')
+        plt.xlabel('generations')
+        plt.ylabel('error')
+        plt.show()
