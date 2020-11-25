@@ -73,8 +73,8 @@ class GA(NN):
             avg_fitness = self.calc_average_fitness(population)
             avg_fitnesses.append(avg_fitness)
             #print('Avg fitness: ', avg_fitness)
-            #print new line after number
-            print()
+        #print new line after number
+        print()
     
         print('Final avg. fitness gen ', generation, ': ', avg_fitness)
         
@@ -86,6 +86,7 @@ class GA(NN):
         self.weights = self.chromosome_to_weights(best_chrom)
         print('Network error: ', self.calc_fitness(self.weights))
         print('Run time: ', dt.now()-start_time)
+        print()
         if plot:
             self.plot_error()
 
