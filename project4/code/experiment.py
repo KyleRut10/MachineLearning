@@ -1,6 +1,8 @@
 import data
 import ga
 import de
+from sklearn.neural_network import MLPRegressor
+from sklearn.neural_network import MLPClassifier
 
 # read in datasets
 # classification
@@ -27,6 +29,58 @@ def run_ga_cv(df, hl, mode, pc, pm, num_chrom, tsk, max_generations):
 
 # run ga bc
 #run_ga_cv(bc, [], 'c', .9, .3, 10, 2, 2000)
+
+
+def bp0hl():
+    print('BP 0 Hidden Layers')
+    print('Breast Cancer')
+    vec = bc.drop('class', axis=1).to_numpy()
+    clas = bc['class'].to_numpy()
+    clf = MLPClassifier(solver='sgd', activation='logistic', max_iter=2000,
+                        hidden_layer_sizes=())
+    clf.fit(vec, clas)
+    print('Iterations: ', clf.n_iter_)
+    print('Final error: ', clf.loss_)
+    print('Glass')
+    vec = g.drop('class', axis=1).to_numpy()
+    clas = g['class'].to_numpy()
+    clf = MLPClassifier(solver='sgd', activation='logistic', max_iter=2000,
+                        hidden_layer_sizes=())
+    clf.fit(vec, clas)
+    print('Iterations: ', clf.n_iter_)
+    print('Final error: ', clf.loss_)
+    print('Soybean Small')
+    vec = sb.drop('class', axis=1).to_numpy()
+    clas = sb['class'].to_numpy()
+    clf = MLPClassifier(solver='sgd', activation='logistic', max_iter=2000,
+                        hidden_layer_sizes=())
+    clf.fit(vec, clas)
+    print('Iterations: ', clf.n_iter_)
+    print('Final error:', clf.loss_)
+    print('Forest Fire')
+    vec = ff.drop('response', axis=1).to_numpy()
+    clas = ff['response'].to_numpy()
+    clf = MLPRegressor(solver='sgd', activation='logistic', max_iter=2000,
+                        hidden_layer_sizes=(c))
+    clf.fit(vec, clas)
+    print('Iterations: ', clf.n_iter_)
+    print('Final error: ', clf.loss_)
+    print('Hardware')
+    vec = hw.drop('response', axis=1).to_numpy()
+    clas = hw['response'].to_numpy()
+    clf = MLPRegressor(solver='sgd', activation='logistic', max_iter=2000,
+                        hidden_layer_sizes=(c))
+    clf.fit(vec, clas)
+    print('Iterations: ', clf.n_iter_)
+    print('Final error: ', clf.loss_)
+    print('Abalone')
+    vec = aba.drop('response', axis=1).to_numpy()
+    clas = aba['response'].to_numpy()
+    clf = MLPRegressor(solver='sgd', activation='logistic', max_iter=2000,
+                        hidden_layer_sizes=(c))
+    clf.fit(vec, clas)
+    print('Iterations: ', clf.n_iter_)
+    print('Final error: ', clf.loss_)
 
 # Genetic Algorithms, 0 hidden layers
 def ga0hl():
@@ -241,3 +295,4 @@ def pso1hl():
 
 def pso2hl():
     pass
+
