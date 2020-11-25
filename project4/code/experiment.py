@@ -192,10 +192,10 @@ def de0hl():
     #deb.train(1, .5, 10, 2000)
     #deb.save_network('../networks/deb.pkl')
 
-    print('Glass')
-    deg = de.DE([], 'c', gl)
-    deg.train(1, .5, 10, 2000)
-    deg.save_network('../networks/deg.pkl')
+    #print('Glass')
+    #deg = de.DE([], 'c', gl)
+    #deg.train(1, .5, 10, 2000)
+    #deg.save_network('../networks/deg.pkl')
 
     print('Soybean Small')
     gas = de.DE([], 'c', sb)
