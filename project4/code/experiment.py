@@ -99,10 +99,10 @@ def ga1hl():
 # Genetic Algorithms, 2 hidden layers
 def ga2hl():
     print('2 Hidden Layers')
-    print('Breast Cancer')
-    gab = ga.GA([71,77], 'c', bc)
-    gab.train(.9, .2, 10, 2, 2000)
-    gab.save_network('../networks/gab1.pkl')
+    #print('Breast Cancer')
+    #gab = ga.GA([71,77], 'c', bc)
+    #gab.train(.9, .2, 10, 2, 2000)
+    #gab.save_network('../networks/gab1.pkl')
 
     print('Glass')
     gag = ga.GA([7,11], 'c', gl)
@@ -132,10 +132,10 @@ def ga2hl():
 
 def de0hl():
     print('0 Hidden Layers')
-    print('Breast Cancer')
-    deb = de.DE([], 'c', bc)
-    deb.train(1, .5, 10, 2000)
-    deb.save_network('../networks/deb.pkl')
+    #print('Breast Cancer')
+    #deb = de.DE([], 'c', bc)
+    #deb.train(1, .5, 10, 2000)
+    #deb.save_network('../networks/deb.pkl')
 
     print('Glass')
     deg = de.DE([], 'c', gl)
