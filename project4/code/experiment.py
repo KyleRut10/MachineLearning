@@ -231,3 +231,13 @@ def de2hl():
     gaa.save_network('../networks/dea1.pkl')
 
 
+def pso0hl():
+    pass
+
+
+def pso1hl():
+    pass
+
+
+def pso2hl():
+    pass
