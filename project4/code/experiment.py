@@ -61,7 +61,7 @@ def bp0hl():
     vec = ff.drop('response', axis=1).to_numpy()
     clas = ff['response'].to_numpy()
     clf = MLPRegressor(solver='sgd', activation='logistic', max_iter=2000,
-                        hidden_layer_sizes=(c))
+                        hidden_layer_sizes=())
     clf.fit(vec, clas)
     print('Iterations: ', clf.n_iter_)
     print('Final error: ', clf.loss_)
@@ -69,7 +69,7 @@ def bp0hl():
     vec = hw.drop('response', axis=1).to_numpy()
     clas = hw['response'].to_numpy()
     clf = MLPRegressor(solver='sgd', activation='logistic', max_iter=2000,
-                        hidden_layer_sizes=(c))
+                        hidden_layer_sizes=())
     clf.fit(vec, clas)
     print('Iterations: ', clf.n_iter_)
     print('Final error: ', clf.loss_)
@@ -77,7 +77,7 @@ def bp0hl():
     vec = aba.drop('response', axis=1).to_numpy()
     clas = aba['response'].to_numpy()
     clf = MLPRegressor(solver='sgd', activation='logistic', max_iter=2000,
-                        hidden_layer_sizes=(c))
+                        hidden_layer_sizes=())
     clf.fit(vec, clas)
     print('Iterations: ', clf.n_iter_)
     print('Final error: ', clf.loss_)
