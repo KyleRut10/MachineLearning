@@ -32,7 +32,10 @@ class DE(NN):
 
         terminate = False
         generation = 0
+        print()
         while not terminate:
+            if generation % 100 == 0:
+                print(generation, end=' ')
             generation += 1
             offspring_fitness = 0
             offspring = []
