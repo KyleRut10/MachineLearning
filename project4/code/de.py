@@ -32,7 +32,6 @@ class DE(NN):
 
         terminate = False
         generation = 0
-        print()
         while not terminate:
             if generation % 100 == 0:
                 print(generation, end=' ')
