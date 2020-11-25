@@ -73,6 +73,8 @@ class GA(NN):
             avg_fitness = self.calc_average_fitness(population)
             avg_fitnesses.append(avg_fitness)
             #print('Avg fitness: ', avg_fitness)
+            #print new line after number
+            print()
     
         print('Final avg. fitness gen ', generation, ': ', avg_fitness)
         

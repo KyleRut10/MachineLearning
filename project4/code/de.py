@@ -73,7 +73,9 @@ class DE(NN):
             # termination
             if generation >= max_generations:
                 terminate = True
-    
+            #print new line after number
+            print()
+            
         print('Final avg. fitness gen ', generation, ': ', avg_fitness)
         self.record_statistics(beta, pr, num_chrom, max_generations, 
                                avg_fitnesses)    
@@ -83,6 +85,7 @@ class DE(NN):
         self.weights = self.chromosome_to_weights(best_chrom)
         
         print('Time elapsed: ', dt.now()-start_time)
+        print()
         if plot:
             self.plot_error()
 
