@@ -73,9 +73,7 @@ class DE(NN):
             # termination
             if generation >= max_generations:
                 terminate = True
-            #print new line after number
-            print()
-            
+        print()
         print('Final avg. fitness gen ', generation, ': ', avg_fitness)
         self.record_statistics(beta, pr, num_chrom, max_generations, 
                                avg_fitnesses)    
