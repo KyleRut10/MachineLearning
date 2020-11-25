@@ -42,8 +42,8 @@ def bp0hl():
     print('Iterations: ', clf.n_iter_)
     print('Final error: ', clf.loss_)
     print('Glass')
-    vec = g.drop('class', axis=1).to_numpy()
-    clas = g['class'].to_numpy()
+    vec = gl.drop('class', axis=1).to_numpy()
+    clas = gl['class'].to_numpy()
     clf = MLPClassifier(solver='sgd', activation='logistic', max_iter=2000,
                         hidden_layer_sizes=())
     clf.fit(vec, clas)
@@ -85,6 +85,7 @@ def bp0hl():
 # Genetic Algorithms, 0 hidden layers
 def ga0hl():
     print('0 Hidden Layers')
+
     print('Breast Cancer')
     gab = ga.GA([], 'c', bc)
     gab.train(.9, .2, 10, 2, 2000)
