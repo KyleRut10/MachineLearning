@@ -43,7 +43,6 @@ class NN:
         else:
             print('***** MODE UNKNOWN *****')
             print('Will not work')
-        #self.num_outputs = 2 # NOTE: doing this fortesting
         if not isinstance(num_outputs, str):
             self.num_outputs = num_outputs
         # Make a cummulative list of how many nodes in each layer
@@ -172,7 +171,6 @@ class NN:
                     import ipdb; ipdb.set_trace()
             else:
                 acts = self.sig(z)
-            #import ipdb; ipdb.set_trace()
             # convert to 2D numpy array
             activations.append(acts.reshape(len(acts), 1))
 

@@ -1,4 +1,3 @@
-# Inherit from base class and do magical things :)
 from nn import NN
 import numpy as np
 import random as rand
@@ -6,6 +5,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime as dt
 
 class GA(NN):
+    # initilize the base class for the basic neural network
     def __init__(self, hidden_nodes='', mode='', training='', testing='',
         num_outputs='', pkl_file=''):
         super().__init__(hidden_nodes, mode, training, testing, num_outputs,
@@ -29,29 +29,33 @@ class GA(NN):
             chromosome = self.weights_to_chromosome(weights)
             population.append(chromosome)
     
+        # caclulate the average fitness before GA starts to run
         avg_fitness = self.calc_average_fitness(population)
         print('Generation 0 fitness: ', avg_fitness)
-        avg_fitnesses = [avg_fitness]
+        avg_fitnesses = [avg_fitness]  # store avg fitness for each generation
 
-        terminate = False
-        generation = 0
+        terminate = False  # termination set to false
+        generation = 0  # Start with generation 0
         while not terminate:
+            # Give us some sanity and show some form of progress while running
             if generation % 100 == 0:
                 print(generation, end=' ')
-            generation += 1
-            #print('Generation: ', generation)
+            generation += 1 # increment the generations
+            
             # selection
             # select two parents
             num_parents = 2
             parents = []
             for i in range(num_parents):
+                # pick the parents based on tourniment selection
                 # best_tourniment_selection returns index,chromosome
+                # get the best chromosome and put into parents array
                 parent = self.best_tourniment_selection(tsk, population)[1]
                 parents.append(parent)
 
             # crossover and mutation
             # if random number is less than prob of crossover, do crossover
-            # TODO: Make this more generalizable
+            # NOTE: This only works for two parents
             if rand.uniform(0,1) <= pc:
                 parents = list(self.crossover(parents[0], parents[1]))
             # if random number less than prob of mutation, mutate with random
@@ -61,24 +65,26 @@ class GA(NN):
                     parents[i] = self.mutate_chromosome(parent)
             
             # replacement
+            # replace the worse member of a tourniment selection
             for parent in parents:  
                 index,worst = self.worst_tourniment_selection(tsk, population)
-                #print('Replacing {} in population.'.format(index))
                 population[index] = parent
             
             # termination
+            # terminate after a specific number of generations
             if generation >= max_generations:
                 terminate = True
             
+            # caclulate the average fitness for this generation
             avg_fitness = self.calc_average_fitness(population)
             avg_fitnesses.append(avg_fitness)
-            #print('Avg fitness: ', avg_fitness)
+        
         #print new line after number
         print()
-    
         print('Final avg. fitness gen ', generation, ': ', avg_fitness)
         
-        self.training_fitnesses = avg_fitnesses
+        self.training_fitnesses = avg_fitnesses  # this way can come back and
+        # print out the error if we want to
         
         # set the weights
         best_index,best_chrom = self.best_tourniment_selection(len(population),
@@ -90,27 +96,39 @@ class GA(NN):
         if plot:
             self.plot_error()
 
+
     def calc_average_fitness(self, population):
+        # caclulate the average fitness for a population
         fitness = 0
         for chrom in population:
+            # convert chromosomes to weights
             weights = self.chromosome_to_weights(chrom)
+            # add fitness for those weights to cumulative fitness
             fitness += self.calc_fitness(weights)
+        # return the average fitness
         return fitness/len(population)
 
 
     def worst_tourniment_selection(self, tsk, population):
         # tourniment selection, selecting k individuals
         tourniment = []
+        # pick the first k indicies of a permutation of all population indices
         select = np.random.permutation(len(population)-1)[0:tsk]
         #print('selecting', select)
         # calculate the fitness for each selected individual
         worst_fitness = float('-inf')  # trying to maximize this value
         worst_index = select[0]  # this will get changed
-        worst_chromosome = []
+        worst_chromosome = []  # store the values for the worst chromosome
+        # for each of the selected indices in the tourniment
         for sel in select:
+            # convert chromosome for index to weights
             weights = self.chromosome_to_weights(population[sel])
+            # caclulate the fitness
             fitness = self.calc_fitness(weights)
             #print(sel, fitness)
+            # if the fitness is worse than worst fitness, make the index with
+            # the better fitness to replace the worst fitness
+            # The worst fitness is the BIGGER of the two
             if fitness > worst_fitness:
                 worst_fitness = fitness
                 worst_index = sel
@@ -126,11 +144,15 @@ class GA(NN):
         # calculate the fitness for each selected individual
         best_fitness = float('inf')  # trying to minimize this value
         best_index = select[0]  # this will get changed
-        best_chromosome = []
+        best_chromosome = []  # store the value for the best chromosome
+        # for each chromosome index in the tourniment
         for sel in select:
+            # convert chromosome to weights
             weights = self.chromosome_to_weights(population[sel])
+            # caclulate fitness
             fitness = self.calc_fitness(weights)
             #print(sel, fitness)
+            # If the new fitness is lower than the best fitness, replace it
             if fitness < best_fitness:
                 best_fitness = fitness
                 best_index = sel
@@ -168,6 +190,7 @@ class GA(NN):
         return new_chrom1, new_chrom2
 
 
+    ''' # use nn.py's methods
     def weights_to_chromosome(self, weights):
         # this method will convert the weight matrix for the nerual network
         # into a linear chormosome
@@ -203,7 +226,7 @@ class GA(NN):
             chrom_position = chrom_position + h*w
 
         return weights
-
+    '''
 
     def plot_training(self):
         plt.plot(self.training_fitnesses, 'o')
