@@ -13,6 +13,7 @@ class DE(NN):
 
 
     def train(self, beta, pr, num_chrom, max_generations=2000, plot=False):
+        print('anger')
         # Train using the genetic algorithm
         # inputs
         # num_chrom - number of individuals in the population
@@ -34,11 +35,12 @@ class DE(NN):
         generation = 0
         while not terminate:
             generation += 1
-            
+            print(generation) 
             offspring_fitness = 0
             offspring = []
             # for each memeber of the population
             for index,chrom in enumerate(population):
+                print('\t', index)
                 # mutation
                 trial = self.get_trial_vector(index, chrom, population, beta)
 
@@ -74,7 +76,7 @@ class DE(NN):
                 terminate = True
     
         print('Final avg. fitness gen ', generation, ': ', avg_fitness)
-        self.record_statistics(beta, pr, num_chrom, max_iterations, 
+        self.record_statistics(beta, pr, num_chrom, max_generations, 
                                avg_fitnesses)    
         # make final weights, self.weights
         best_index,best_chrom = self.best_tourniment_selection(len(population),
