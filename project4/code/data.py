@@ -60,7 +60,7 @@ def type_forestfire():
 def data_hardware():
     # Read in the file
     df = pd.read_csv(os.path.join('..', '..', 'data', 'machine.csv'))
-    df = df.drop(columns=['erp'])#, axis=1)
+    df = df.drop(['erp'], axis=1)
     # clean and standardize the data
     df = standardize(type_hardware, df)
     # Return the data
