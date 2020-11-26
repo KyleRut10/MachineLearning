@@ -1,6 +1,7 @@
 import data
 import ga
 import de
+import pso
 
 # read in datasets
 # classification
@@ -232,12 +233,99 @@ def de2hl():
 
 
 def pso0hl():
-    pass
+    print('0 Hidden Layers')
+    #print('Breast Cancer')
+    #psob = pso.PSO([], 'c', bc)
+    #psob.train(15, 1, 0.2, 4, 4, 100)
+    #psob.save_network('../networks/psob.pkl')
+
+    print('Glass')
+    psog = pso.PSO([], 'c', gl)
+    psog.train(15, 1, 0.2, 4, 4, 300)
+    psog.save_network('../networks/psog.pkl')
+
+    #print('Soybean Small')
+    #psos = pso.PSO([], 'c', sb)
+    #psos.train(15, 1, 0.2, 4, 4, 50)
+    #psos.save_network('../networks/psos.pkl')
+
+    #print('Forest Fire')
+    #psof = pso.PSO([], 'r', ff)
+    #psof.train(15, 1, 0.2, 4, 4, 50)
+    #psof.save_network('../networks/psof.pkl')
+
+    #print('Hardware')
+    #psoh = pso.PSO([], 'r', ff)
+    #psoh.train(15, 1, 0.2, 4, 4, 100)
+    #psoh.save_network('../networks/psoh.pkl')
+
+    #print('Abalone')
+    #psoa = pso.PSO([], 'r', ff)
+    #psoa.train(15, 1, 0.2, 4, 4, 100)
+    #psoa.save_network('../networks/psoa.pkl')
 
 
 def pso1hl():
-    pass
+    print('1 Hidden Layer')
+    #print('Breast Cancer')
+    #psob = pso.PSO([61], 'c', bc)
+    #psob.train(15, 1, 0.2, 4, 4, 100)
+    #psob.save_network('../networks/psob.pkl')
+
+    #print('Glass')
+    #psog = pso.PSO([13], 'c', gl)
+    #psog.train(15, 1, 0.2, 4, 4, 200)
+    #psog.save_network('../networks/psog.pkl')
+
+    print('Soybean Small')
+    psos = pso.PSO([67], 'c', sb)
+    psos.train(15, 1, 0.2, 4, 4, 200)
+    psos.save_network('../networks/psos.pkl')
+
+    #print('Forest Fire')
+    #psof = pso.PSO([42], 'r', ff)
+    #psof.train(15, 1, 0.2, 4, 4, 50)
+    #psof.save_network('../networks/psof.pkl')
+
+    print('Hardware')
+    psoh = pso.PSO([250], 'r', ff)
+    psoh.train(15, 1, 0.2, 4, 4, 100)
+    psoh.save_network('../networks/psoh.pkl')
+
+    print('Abalone')
+    psoa = pso.PSO([13], 'r', ff)
+    psoa.train(15, 1, 0.2, 4, 4, 100)
+    psoa.save_network('../networks/psoa.pkl')
 
 
 def pso2hl():
-    pass
+    print('2 Hidden Layers')
+    print('Breast Cancer')
+    psob = pso.PSO([71,77], 'c', bc)
+    psob.train(15, 1, 0.2, 4, 4, 100)
+    psob.save_network('../networks/psob.pkl')
+
+    print('Glass')
+    psog = pso.PSO([7,11], 'c', gl)
+    psog.train(15, 1, 0.2, 4, 4, 200)
+    psog.save_network('../networks/psog.pkl')
+
+    print('Soybean Small')
+    psos = pso.PSO([33,33], 'c', sb)
+    psos.train(15, 1, 0.2, 4, 4, 200)
+    psos.save_network('../networks/psos.pkl')
+
+    print('Forest Fire')
+    psof = pso.PSO([22,39], 'r', ff)
+    psof.train(15, 1, 0.2, 4, 4, 50)
+    psof.save_network('../networks/psof.pkl')
+
+    print('Hardware')
+    psoh = pso.PSO([229,250], 'r', ff)
+    psoh.train(15, 1, 0.2, 4, 4, 50)
+    psoh.save_network('../networks/psoh.pkl')
+
+    print('Abalone')
+    psoa = pso.PSO([4,15], 'r', ff)
+    psoa.train(15, 1, 0.2, 4, 4, 100)
+    psoa.save_network('../networks/psoa.pkl')
