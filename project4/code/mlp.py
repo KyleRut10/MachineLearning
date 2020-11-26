@@ -45,6 +45,7 @@ class MLP:
         else:
             print('***** MODE UNKNOWN *****')
             print('Will not work')
+        #self.num_outputs = 2 # NOTE: doing this fortesting
         if not isinstance(num_outputs, str):
             self.num_outputs = num_outputs
         # Make a cummulative list of how many nodes in each layer
@@ -64,7 +65,8 @@ class MLP:
         # Hold the average training error for one round on dataset
         training_error = []
         self.initilize_weights()
-        
+        #self.set_example_weights()  # NOTE: Testing
+
         # Things to track iteration and convergance things
         converge = False
         # run no more than max_iterations times
@@ -112,9 +114,10 @@ class MLP:
                     # Ex: if class = 2 from [1,2,3], this would return [0,1,0]
                     d = self.get_class_target(pt[-1])
 
+                #d = np.array([[0.1],[0.05]])  # NOTE: TESTING
                 # calculate the inputs into the output layer from the output of
                 # the previous layer and the weights
-                x = np.add(np.matmul(self.weights[-1], activations[-2]), 
+                x = np.add(np.matmul(self.weights[-1], activations[-2]),
                            self.bias[-1])
 
                 # Caclulate error
@@ -137,11 +140,12 @@ class MLP:
 
                 # calculate the weight changes
                 #dw = -np.matmul(np.transpose(delta), x) * eda
-                dw = -np.matmul(np.transpose(delta), x) * eda
+                #dw = -np.matmul(np.transpose(delta), x) * eda
+                dw = -np.matmul(delta, x) * eda
                 weight_updates[-1] = dw
                 bias_updates[-1] = -delta * eda
                 #import ipdb; ipdb.set_trace()
-                
+
                 # go back through hidden layers and update their weights
                 # subtract 2, because already did the last position
                 for i in range(len(self.weights)-2, -1, -1):
@@ -159,13 +163,16 @@ class MLP:
                     weight_updates[i] = dw
                     db = -delta * eda
                     bias_updates[i] = db
-                
+
                 # preform weight updates at the end
                 #import ipdb; ipdb.set_trace()
+                #print()
                 for i,w in enumerate(self.weights):
+                    #print(weight_updates[i])
                     self.weights[i] = np.add(w,weight_updates[i])
                     self.bias[i] = np.add(self.bias[i], bias_updates[i])
                 #print(self.pweights())
+
             # average the error for the dataset round
             training_error.append(sum(iteration_error)/len(self.training))
             #training_error.append(mse(y_true, y_predict))
@@ -181,7 +188,7 @@ class MLP:
         # make a plot of the error
         if plot:
             self.plot_error()
-   
+
 
     def initilize_weights(self):
         # Build weight matrices...
@@ -226,6 +233,7 @@ class MLP:
                     import ipdb; ipdb.set_trace()
             else:
                 acts = self.sig(z)
+            #import ipdb; ipdb.set_trace()
             # convert to 2D numpy array
             activations.append(acts.reshape(len(acts), 1))
 
@@ -313,7 +321,7 @@ class MLP:
             print('layer ', i+1, ' to ', i+2)
             print(w)
             print('bias')
-            print(self.bias[i])
+            #print(self.bias[i])
 
 
     def pactivations(self, activations):
@@ -364,12 +372,17 @@ class MLP:
             print('Outputs per node')
             print(', '.join(outputs))
 
-    
+
     def set_example_weights(self):
         self.weights = []
         self.bias = []
         self.weights.append(np.array([[.1,.3,.5], [.2,.4,.6]]))
         self.weights.append(np.array([[.7,.9],[.8,.1]]))
-        self.bias.append(np.array([[.5,.5]]))
-        self.bias.append(np.array([[.5,.5]]))
-
+        self.bias.append(np.array([[.5],[.5]]))
+        self.bias.append(np.array([[.5],[.5]]))
+        #self.weights = []
+        #self.weights.append(np.array([[.11, .12],[.21,.08]]))
+        #self.weights.append(np.array([[.14,.15]]))
+        #self.bias = []
+        #self.bias.append(np.array([[0,0]]))
+        #self.bias.append(np.array([[0,0]]))

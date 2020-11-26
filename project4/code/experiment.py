@@ -2,6 +2,8 @@ import data
 import ga
 import de
 import pso
+from sklearn.neural_network import MLPRegressor
+from sklearn.neural_network import MLPClassifier
 
 # read in datasets
 # classification
@@ -29,9 +31,62 @@ def run_ga_cv(df, hl, mode, pc, pm, num_chrom, tsk, max_generations):
 # run ga bc
 #run_ga_cv(bc, [], 'c', .9, .3, 10, 2, 2000)
 
+
+def bp0hl():
+    print('BP 0 Hidden Layers')
+    print('Breast Cancer')
+    vec = bc.drop('class', axis=1).to_numpy()
+    clas = bc['class'].to_numpy()
+    clf = MLPClassifier(solver='sgd', activation='logistic', max_iter=2000,
+                        hidden_layer_sizes=())
+    clf.fit(vec, clas)
+    print('Iterations: ', clf.n_iter_)
+    print('Final error: ', clf.loss_)
+    print('Glass')
+    vec = gl.drop('class', axis=1).to_numpy()
+    clas = gl['class'].to_numpy()
+    clf = MLPClassifier(solver='sgd', activation='logistic', max_iter=2000,
+                        hidden_layer_sizes=())
+    clf.fit(vec, clas)
+    print('Iterations: ', clf.n_iter_)
+    print('Final error: ', clf.loss_)
+    print('Soybean Small')
+    vec = sb.drop('class', axis=1).to_numpy()
+    clas = sb['class'].to_numpy()
+    clf = MLPClassifier(solver='sgd', activation='logistic', max_iter=2000,
+                        hidden_layer_sizes=())
+    clf.fit(vec, clas)
+    print('Iterations: ', clf.n_iter_)
+    print('Final error:', clf.loss_)
+    print('Forest Fire')
+    vec = ff.drop('response', axis=1).to_numpy()
+    clas = ff['response'].to_numpy()
+    clf = MLPRegressor(solver='sgd', activation='logistic', max_iter=2000,
+                        hidden_layer_sizes=())
+    clf.fit(vec, clas)
+    print('Iterations: ', clf.n_iter_)
+    print('Final error: ', clf.loss_)
+    print('Hardware')
+    vec = hw.drop('response', axis=1).to_numpy()
+    clas = hw['response'].to_numpy()
+    clf = MLPRegressor(solver='sgd', activation='logistic', max_iter=2000,
+                        hidden_layer_sizes=())
+    clf.fit(vec, clas)
+    print('Iterations: ', clf.n_iter_)
+    print('Final error: ', clf.loss_)
+    print('Abalone')
+    vec = aba.drop('response', axis=1).to_numpy()
+    clas = aba['response'].to_numpy()
+    clf = MLPRegressor(solver='sgd', activation='logistic', max_iter=2000,
+                        hidden_layer_sizes=())
+    clf.fit(vec, clas)
+    print('Iterations: ', clf.n_iter_)
+    print('Final error: ', clf.loss_)
+
 # Genetic Algorithms, 0 hidden layers
 def ga0hl():
     print('0 Hidden Layers')
+
     print('Breast Cancer')
     gab = ga.GA([], 'c', bc)
     gab.train(.9, .2, 10, 2, 2000)
@@ -100,10 +155,10 @@ def ga1hl():
 # Genetic Algorithms, 2 hidden layers
 def ga2hl():
     print('2 Hidden Layers')
-    print('Breast Cancer')
-    gab = ga.GA([71,77], 'c', bc)
-    gab.train(.9, .2, 10, 2, 2000)
-    gab.save_network('../networks/gab1.pkl')
+    #print('Breast Cancer')
+    #gab = ga.GA([71,77], 'c', bc)
+    #gab.train(.9, .2, 10, 2, 2000)
+    #gab.save_network('../networks/gab1.pkl')
 
     print('Glass')
     gag = ga.GA([7,11], 'c', gl)
@@ -133,20 +188,20 @@ def ga2hl():
 
 def de0hl():
     print('0 Hidden Layers')
-    print('Breast Cancer')
-    deb = de.DE([], 'c', bc)
-    deb.train(1, .5, 10, 2000)
-    deb.save_network('../networks/deb.pkl')
+    #print('Breast Cancer')
+    #deb = de.DE([], 'c', bc)
+    #deb.train(1, .5, 10, 2000)
+    #deb.save_network('../networks/deb.pkl')
 
-    print('Glass')
-    deg = de.DE([], 'c', gl)
-    deg.train(1, .5, 10, 2000)
-    deg.save_network('../networks/deg.pkl')
+    #print('Glass')
+    #deg = de.DE([], 'c', gl)
+    #deg.train(1, .5, 10, 2000)
+    #deg.save_network('../networks/deg.pkl')
 
-    print('Soybean Small')
-    gas = de.DE([], 'c', sb)
-    gas.train(1, .5, 10, 2000)
-    gas.save_network('../networks/des.pkl')
+    #print('Soybean Small')
+    #gas = de.DE([], 'c', sb)
+    #gas.train(1, .5, 10, 2000)
+    #gas.save_network('../networks/des.pkl')
 
     print('Forest Fire')
     gaf = de.DE([], 'r', ff)
@@ -329,3 +384,4 @@ def pso2hl():
     psoa = pso.PSO([4,15], 'r', ff)
     psoa.train(15, 1, 0.2, 4, 4, 100)
     psoa.save_network('../networks/psoa.pkl')
+

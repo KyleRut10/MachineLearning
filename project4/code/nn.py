@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import random as rand
 import pickle
+import matplotlib.pyplot as plt
 
 class NN:
     # Class Variables
@@ -42,7 +43,6 @@ class NN:
         else:
             print('***** MODE UNKNOWN *****')
             print('Will not work')
-        #self.num_outputs = 2 # NOTE: doing this fortesting
         if not isinstance(num_outputs, str):
             self.num_outputs = num_outputs
         # Make a cummulative list of how many nodes in each layer
@@ -58,6 +58,8 @@ class NN:
 
 
     def initilize_weights(self):
+        # Initilize the weights betwen 0 and 0.1 and return weights
+
         # Build weight matrices
         weights = []
         bias = []
@@ -78,9 +80,13 @@ class NN:
         return weights#, bias
 
     def calc_fitness(self, ea_weights):
+        # calculate the fitness of one evolutionary algorithms set of weights
+        # Takes as input the weights in matrix form
+
         # calculate error for each point in the dataset
         training_error=[]
 
+        # for each point in the training dataset calculate the error
         for index,pt in self.training.iterrows():
             acts, error = self.run(pt, ea_weights)
             training_error.append(error)
@@ -125,9 +131,11 @@ class NN:
         return weights
 
     def run_dataset(self, df):
+        # will run and return the error for a given dataframe
         # calculate error for each point in the dataset
         training_error=[]
 
+        # for each point in the dataset, run it and calculate the error
         for index,pt in df.iterrows():
             acts, error = self.run(pt, self.weights)
             training_error.append(error)
@@ -135,7 +143,10 @@ class NN:
         # take the average error
         return np.sum(training_error)/len(training_error)
 
+
     def feedforward(self, pt, weights=''):
+        # run feedforward for one point and return the activations
+
         if isinstance(weights, str):
             weights = self.weights()
         # will hold the calculated activations, the input to a layer
@@ -160,7 +171,6 @@ class NN:
                     import ipdb; ipdb.set_trace()
             else:
                 acts = self.sig(z)
-            #import ipdb; ipdb.set_trace()
             # convert to 2D numpy array
             activations.append(acts.reshape(len(acts), 1))
 
@@ -168,6 +178,7 @@ class NN:
 
 
     def run(self, pt, weights=''):
+        # take a point and return the error for that point and activations
         if isinstance(weights, str):
             weights = self.weights()
         activations = self.feedforward(pt, weights)
@@ -194,6 +205,7 @@ class NN:
 
 
     def pweights(self):
+        # print out the weights to the network
         print('Weights')
         for i,w in enumerate(self.weights):
             print('layer ', i+1, ' to ', i+2)
@@ -203,6 +215,7 @@ class NN:
 
 
     def pactivations(self, activations):
+        # print out a given set of activations
         print('Activations (Outputs)')
         for i,act in enumerate(activations):
             if i == len(activations)-1:
@@ -212,9 +225,8 @@ class NN:
             print(np.transpose(act))
 
     def plot_error(self):
+        # plot the error stored in the training statistics dictionary
         plt.plot(self.training_statistics['training error'], 'o')
-        plt.xlabel('iterations')
         plt.ylabel('error')
         plt.xlabel('iterations')
         plt.show()
-

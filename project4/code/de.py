@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime as dt
 
 class DE(NN):
+    # initilize the base class for the basic neural network
     def __init__(self, hidden_nodes='', mode='', training='', testing='',
         num_outputs='', pkl_file=''):
         super().__init__(hidden_nodes, mode, training, testing, num_outputs,
@@ -33,6 +34,8 @@ class DE(NN):
         terminate = False
         generation = 0
         while not terminate:
+            if generation % 100 == 0:
+                print(generation, end=' ')
             generation += 1
             offspring_fitness = 0
             offspring = []
@@ -71,7 +74,7 @@ class DE(NN):
             # termination
             if generation >= max_generations:
                 terminate = True
-    
+        print()
         print('Final avg. fitness gen ', generation, ': ', avg_fitness)
         self.record_statistics(beta, pr, num_chrom, max_generations, 
                                avg_fitnesses)    
@@ -81,6 +84,7 @@ class DE(NN):
         self.weights = self.chromosome_to_weights(best_chrom)
         
         print('Time elapsed: ', dt.now()-start_time)
+        print()
         if plot:
             self.plot_error()
 
@@ -92,11 +96,15 @@ class DE(NN):
         # calculate the fitness for each selected individual
         best_fitness = float('inf')  # trying to minimize this value
         best_index = select[0]  # this will get changed
-        best_chromosome = []
+        best_chromosome = []  # store the value for the best chromosome
+        # for each chromosome index in the tourniment
         for sel in select:
+            # convert chromosome to weights
             weights = self.chromosome_to_weights(population[sel])
+            # caclulate fitness
             fitness = self.calc_fitness(weights)
             #print(sel, fitness)
+            # If the new fitness is lower than the best fitness, replace it
             if fitness < best_fitness:
                 best_fitness = fitness
                 best_index = sel
@@ -130,7 +138,8 @@ class DE(NN):
 
 
     def crossover(self, chrom, trial, pr):
-        new_chrom = []
+        new_chrom = []  # hold the new chromosome
+        # for each locus in the chromosome, check if there should be crossover
         for i in range(len(chrom)):
             if rand.uniform(0,1) < pr:
                 new_chrom.append(chrom[i])
@@ -138,6 +147,7 @@ class DE(NN):
                 new_chrom.append(trial[i])
         return new_chrom
 
+    '''
     def weights_to_chromosome(self, weights):
         # this method will convert the weight matrix for the nerual network
         # into a linear chormosome
@@ -173,6 +183,7 @@ class DE(NN):
             chrom_position = chrom_position + h*w
 
         return weights
+    '''
 
     def record_statistics(self, beta, pr, num_chrom, max_iterations, 
                           training_error):
